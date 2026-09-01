@@ -65,7 +65,7 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <!-- الهيدر العلوي الفاتح -->
+    <!-- الهيدر العلوي -->
     <header class="bg-white border-b border-slate-200 py-3 px-6 flex justify-between items-center shadow-sm sticky top-0 z-50">
         <div class="flex items-center gap-4">
             <img src="logo3.png" alt="لوجو الكاريزما" class="w-12 h-12 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
@@ -87,7 +87,7 @@
 
     <main class="max-w-[1500px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-6 flex-1 items-start">
         
-        <!-- الجانب الأيمن: قائمة المحتويات والوحدات -->
+        <!-- الجانب الأيمن: القائمة الجانبية -->
         <aside class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-4 sticky top-24 max-h-[85vh]">
             <h3 class="font-black text-slate-800 text-lg border-b border-slate-100 pb-2">المحتويات</h3>
             
@@ -107,7 +107,8 @@
         <!-- الجانب الأيسر: مساحة العرض الرئيسية -->
         <div class="lg:col-span-9 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col min-h-[600px]">
             
-            <div id="lessonTabsContainer" class="flex items-center justify-start gap-8 border-b-2 border-slate-100 mb-6 hidden">
+            <!-- التابات العلوية (تم إزالة الإخفاء hidden لتظهر دائماً) -->
+            <div id="lessonTabsContainer" class="flex items-center justify-start gap-8 border-b-2 border-slate-100 mb-6">
                 <button onclick="window.switchTab('video')" id="tab-video" class="tab-btn active flex items-center gap-2">
                     <i id="icon-tab-video" class="fa-regular fa-circle-play text-blue-500"></i> فيديو الشرح
                 </button>
@@ -119,7 +120,7 @@
                 </button>
             </div>
 
-            <!-- 1. شاشة الانتظار -->
+            <!-- 1. شاشة الانتظار (تظهر قبل اختيار أي درس) -->
             <div id="content-waiting" class="flex-grow flex items-center justify-center">
                 <div class="text-center text-slate-400">
                     <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100 shadow-inner">
@@ -143,11 +144,10 @@
                 </div>
             </div>
 
-            <!-- 3. محتوى مواد القراءة (السكاشن + PDF) -->
+            <!-- 3. محتوى مواد القراءة (النصوص، الصور، روابط الدرايف) -->
             <div id="content-summary" class="flex-grow hidden flex-col gap-4">
                 <h2 class="text-xl font-black text-slate-800 mb-2">المذكرة والمواد المقروءة</h2>
                 
-                <!-- حاوية عرض السكاشن والملازم -->
                 <div id="summaryContentContainer" class="w-full bg-slate-50 rounded-xl border border-slate-200 overflow-y-auto custom-scrollbar flex flex-col min-h-[400px] max-h-[70vh]">
                     <!-- سيتم حقن الشرح والصور ورابط الدرايف هنا -->
                 </div>
@@ -194,6 +194,7 @@
         let allUnits = [];
         let allLessons = [];
         let activeLessonExams = [];
+        window.selectedLessonData = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -283,13 +284,13 @@
                 }
 
                 container.appendChild(item);
-                isPreviousCompleted = isFullyCompleted || true; // احذف "|| true" لتفعيل القفل
+                // للإنتاج الفعلي: اتركها "isFullyCompleted" فقط لتفعيل نظام القفل، تم إيقافه حالياً لسهولة تجربة الكود
+                isPreviousCompleted = isFullyCompleted || true; 
             });
         }
 
         window.loadLessonContent = async function(lesson) {
             document.getElementById('content-waiting').classList.add('hidden');
-            document.getElementById('lessonTabsContainer').classList.remove('hidden');
             document.getElementById('currentLessonTitleVideo').innerText = lesson.lessonTitle;
 
             // --- 1. تحديث الفيديو ---
@@ -308,7 +309,6 @@
             summaryContainer.innerHTML = '';
             let hasSummaryContent = false;
 
-            // أ. عرض سكاشن الشرح (نصوص + صور)
             if (lesson.contentSections && lesson.contentSections.length > 0) {
                 hasSummaryContent = true;
                 let sectionsHtml = '<div class="space-y-6 p-6">';
@@ -326,13 +326,11 @@
                 summaryContainer.innerHTML += sectionsHtml;
             }
 
-            // ب. عرض الـ PDF (رابط جوجل درايف)
             if(lesson.summaryUrl) {
                 hasSummaryContent = true;
                 let pdfLink = lesson.summaryUrl;
                 let iframeHtml = '';
                 
-                // تحويل رابط جوجل درايف تلقائياً ليعمل داخل الموقع
                 if(pdfLink.includes('drive.google.com')) {
                     pdfLink = pdfLink.replace(/\/view.*/, '/preview');
                     iframeHtml = `<iframe src="${pdfLink}" class="w-full h-[600px] border-0 rounded-xl shadow-sm"></iframe>`;
@@ -345,7 +343,7 @@
             }
 
             if (!hasSummaryContent) {
-                summaryContainer.innerHTML = `<div class="flex items-center justify-center h-full text-slate-400 font-bold m-auto">لا توجد مواد مقروءة أو ملازم مرفقة بهذا الدرس.</div>`;
+                summaryContainer.innerHTML = `<div class="flex items-center justify-center h-full text-slate-400 font-bold m-auto py-10">لا توجد مواد مقروءة أو ملازم مرفقة بهذا الدرس.</div>`;
             }
 
             window.updateTabUI();
@@ -365,17 +363,26 @@
         }
 
         window.switchTab = function(tab) {
+            // التحقق إذا لم يقم الطالب باختيار درس
+            if (!window.selectedLessonData) {
+                alert('الرجاء اختيار درس من القائمة الجانبية أولاً.');
+                return;
+            }
+
             ['video', 'summary', 'exam'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.remove('active');
                 document.getElementById(`content-${t}`).classList.add('hidden');
                 document.getElementById(`content-${t}`).classList.remove('flex');
             });
+            document.getElementById('content-waiting').classList.add('hidden');
+            
             document.getElementById(`tab-${tab}`).classList.add('active');
             document.getElementById(`content-${tab}`).classList.remove('hidden');
             document.getElementById(`content-${tab}`).classList.add('flex');
         }
 
         window.updateTabUI = function() {
+            if(!window.selectedLessonData) return;
             let prog = userProgress[window.selectedLessonData.id] || {};
             
             document.getElementById('icon-tab-video').className = prog.video ? 'fa-solid fa-circle-check text-emerald-500 text-lg' : 'fa-regular fa-circle-play text-blue-500 text-lg';
