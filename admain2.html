@@ -639,15 +639,14 @@
         }
 
         // --- رفع الدروس والامتحانات التفاعلية ---
-        window.loadPackagesForUpload = function() {
-            if(!db) return;
-            db.collection('packages').onSnapshot(snap => {
-                const pkgSelect = document.getElementById('uploadPackageSelect');
-                pkgSelect.innerHTML = `<option value="">اختر الباكدج...</option><option value="new_package" style="color:blue;">+ إضافة باكدج جديدة</option>`;
-                snap.forEach(doc => { let opt = document.createElement('option'); opt.value = doc.id; opt.text = window.CharismaSecurity.sanitize(doc.data().title); pkgSelect.appendChild(opt); });
-            }, err => console.error("Packages load error:", err));
-        }
-
+window.loadPackagesForUpload = function() {
+    if(!db) return;
+    db.collection('package').onSnapshot(snap => { // تم التعديل لـ package
+        const pkgSelect = document.getElementById('uploadPackageSelect');
+        pkgSelect.innerHTML = `<option value="">اختر الباكدج...</option><option value="new_package" style="color:blue;">+ إضافة باكدج جديدة</option>`;
+        snap.forEach(doc => { let opt = document.createElement('option'); opt.value = doc.id; opt.text = window.CharismaSecurity.sanitize(doc.data().title); pkgSelect.appendChild(opt); });
+    }, err => console.error("Packages load error:", err));
+}
         window.handlePackageSelectionChange = function() {
             const pkgId = document.getElementById('uploadPackageSelect').value;
             document.getElementById('newPackageGroup').style.display = (pkgId === 'new_package') ? 'flex' : 'none';
