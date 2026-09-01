@@ -16,7 +16,6 @@
             color: #1e293b;
         }
 
-        /* تنسيقات التابات العلوية (مطابقة للصورة) */
         .tab-btn {
             color: #64748b;
             font-weight: 700;
@@ -41,7 +40,6 @@
             border-radius: 4px 4px 0 0;
         }
 
-        /* تنسيقات القائمة الجانبية للدروس */
         .lesson-item {
             transition: all 0.2s;
             border-right: 4px solid transparent;
@@ -93,14 +91,12 @@
         <aside class="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-4 sticky top-24 max-h-[85vh]">
             <h3 class="font-black text-slate-800 text-lg border-b border-slate-100 pb-2">المحتويات</h3>
             
-            <!-- القائمة المنسدلة للوحدات -->
             <div>
                 <select id="unitSelector" onchange="window.filterLessonsByUnit()" class="w-full bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 outline-none cursor-pointer">
                     <option value="">جاري تحميل الوحدات...</option>
                 </select>
             </div>
 
-            <!-- قائمة الدروس -->
             <div id="lessonsContainer" class="space-y-1 overflow-y-auto flex-grow custom-scrollbar pr-1">
                 <div class="text-center text-slate-400 text-xs py-8 font-bold">
                     <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i><br>جاري جلب المحتوى...
@@ -111,8 +107,7 @@
         <!-- الجانب الأيسر: مساحة العرض الرئيسية -->
         <div class="lg:col-span-9 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col min-h-[600px]">
             
-            <!-- التابات العلوية (محاذاة لليمين مثل الصورة) -->
-            <div id="lessonTabsContainer" class="flex items-center justify-start gap-8 border-b-2 border-slate-100 mb-6">
+            <div id="lessonTabsContainer" class="flex items-center justify-start gap-8 border-b-2 border-slate-100 mb-6 hidden">
                 <button onclick="window.switchTab('video')" id="tab-video" class="tab-btn active flex items-center gap-2">
                     <i id="icon-tab-video" class="fa-regular fa-circle-play text-blue-500"></i> فيديو الشرح
                 </button>
@@ -148,12 +143,15 @@
                 </div>
             </div>
 
-            <!-- 3. محتوى مواد القراءة -->
+            <!-- 3. محتوى مواد القراءة (السكاشن + PDF) -->
             <div id="content-summary" class="flex-grow hidden flex-col gap-4">
                 <h2 class="text-xl font-black text-slate-800 mb-2">المذكرة والمواد المقروءة</h2>
-                <div id="pdfViewerContainer" class="w-full h-[600px] bg-slate-50 rounded-xl border border-slate-200 overflow-hidden flex items-center justify-center">
-                    <!-- سيتم حقن الـ iframe هنا -->
+                
+                <!-- حاوية عرض السكاشن والملازم -->
+                <div id="summaryContentContainer" class="w-full bg-slate-50 rounded-xl border border-slate-200 overflow-y-auto custom-scrollbar flex flex-col min-h-[400px] max-h-[70vh]">
+                    <!-- سيتم حقن الشرح والصور ورابط الدرايف هنا -->
                 </div>
+                
                 <div class="flex justify-end mt-4">
                     <button onclick="window.markTaskCompleted('summary')" id="btnMarkSummary" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-lg text-sm flex items-center gap-2 transition-all shadow-md">
                         <i class="fa-solid fa-check"></i> لقد أتممت القراءة
@@ -172,7 +170,6 @@
         </div>
     </main>
 
-    <!-- سكربت الفايربيس والمنطق -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -216,11 +213,9 @@
             if(!currentPackageId) return;
             
             try {
-                // جلب اسم الباقة
                 const pkgSnap = await getDoc(doc(db, "packages", currentPackageId));
                 if(pkgSnap.exists()) document.getElementById('headerPackageName').innerText = pkgSnap.data().title;
 
-                // جلب الوحدات
                 const unitsSnap = await getDocs(query(collection(db, "units"), where("packageId", "==", currentPackageId)));
                 const unitSelect = document.getElementById('unitSelector');
                 unitSelect.innerHTML = '';
@@ -234,7 +229,6 @@
                     unitSelect.appendChild(opt);
                 });
 
-                // جلب الدروس
                 const lessonsSnap = await getDocs(query(collection(db, "lessons"), where("packageId", "==", currentPackageId)));
                 allLessons = [];
                 lessonsSnap.forEach(l => allLessons.push({ id: l.id, ...l.data() }));
@@ -289,17 +283,16 @@
                 }
 
                 container.appendChild(item);
-                // تم إيقاف القفل مؤقتاً لسهولة التجربة (احذف "|| true" لتفعيل القفل الإجباري)
-                isPreviousCompleted = isFullyCompleted || true; 
+                isPreviousCompleted = isFullyCompleted || true; // احذف "|| true" لتفعيل القفل
             });
         }
 
         window.loadLessonContent = async function(lesson) {
-            // إخفاء شاشة الانتظار
             document.getElementById('content-waiting').classList.add('hidden');
+            document.getElementById('lessonTabsContainer').classList.remove('hidden');
             document.getElementById('currentLessonTitleVideo').innerText = lesson.lessonTitle;
 
-            // تحديث الفيديو
+            // --- 1. تحديث الفيديو ---
             const vidContainer = document.getElementById('videoWrapperContainer');
             if (lesson.videoUrl && (lesson.videoUrl.includes('youtube.com') || lesson.videoUrl.includes('youtu.be'))) {
                 let embedUrl = lesson.videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'www.youtube.com/embed/').split('&')[0];
@@ -310,18 +303,54 @@
                 vidContainer.innerHTML = `<span class="text-white font-bold">لا يوجد فيديو</span>`;
             }
 
-            // تحديث الـ PDF
-            const pdfContainer = document.getElementById('pdfViewerContainer');
+            // --- 2. تحديث مواد القراءة (السكاشن + PDF) ---
+            const summaryContainer = document.getElementById('summaryContentContainer');
+            summaryContainer.innerHTML = '';
+            let hasSummaryContent = false;
+
+            // أ. عرض سكاشن الشرح (نصوص + صور)
+            if (lesson.contentSections && lesson.contentSections.length > 0) {
+                hasSummaryContent = true;
+                let sectionsHtml = '<div class="space-y-6 p-6">';
+                lesson.contentSections.forEach(sec => {
+                    sectionsHtml += '<div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">';
+                    if (sec.text) {
+                        sectionsHtml += `<p class="text-slate-800 leading-loose font-bold text-sm mb-4 whitespace-pre-line">${sec.text}</p>`;
+                    }
+                    if (sec.imageUrl) {
+                        sectionsHtml += `<img src="${sec.imageUrl}" class="max-w-full rounded-lg mx-auto shadow-sm border border-slate-100 mt-4" alt="صورة الشرح">`;
+                    }
+                    sectionsHtml += '</div>';
+                });
+                sectionsHtml += '</div>';
+                summaryContainer.innerHTML += sectionsHtml;
+            }
+
+            // ب. عرض الـ PDF (رابط جوجل درايف)
             if(lesson.summaryUrl) {
-                let safeUrl = encodeURIComponent(lesson.summaryUrl);
-                pdfContainer.innerHTML = `<iframe src="https://docs.google.com/gview?url=${safeUrl}&embedded=true" class="w-full h-full border-0"></iframe>`;
-            } else {
-                pdfContainer.innerHTML = `<div class="text-slate-400 font-bold">لا توجد مواد مقروءة مرفقة.</div>`;
+                hasSummaryContent = true;
+                let pdfLink = lesson.summaryUrl;
+                let iframeHtml = '';
+                
+                // تحويل رابط جوجل درايف تلقائياً ليعمل داخل الموقع
+                if(pdfLink.includes('drive.google.com')) {
+                    pdfLink = pdfLink.replace(/\/view.*/, '/preview');
+                    iframeHtml = `<iframe src="${pdfLink}" class="w-full h-[600px] border-0 rounded-xl shadow-sm"></iframe>`;
+                } else {
+                    let safeUrl = encodeURIComponent(pdfLink);
+                    iframeHtml = `<iframe src="https://docs.google.com/gview?url=${safeUrl}&embedded=true" class="w-full h-[600px] border-0 rounded-xl shadow-sm"></iframe>`;
+                }
+                
+                summaryContainer.innerHTML += `<div class="p-6 border-t border-slate-200">${iframeHtml}</div>`;
+            }
+
+            if (!hasSummaryContent) {
+                summaryContainer.innerHTML = `<div class="flex items-center justify-center h-full text-slate-400 font-bold m-auto">لا توجد مواد مقروءة أو ملازم مرفقة بهذا الدرس.</div>`;
             }
 
             window.updateTabUI();
 
-            // جلب الامتحان
+            // --- 3. جلب الامتحان ---
             document.getElementById('examArea').innerHTML = '<div class="text-center text-slate-500 py-10 font-bold"><i class="fa-solid fa-spinner fa-spin"></i> جاري جلب الاختبار...</div>';
             activeLessonExams = [];
             try {
@@ -349,12 +378,10 @@
         window.updateTabUI = function() {
             let prog = userProgress[window.selectedLessonData.id] || {};
             
-            // تحديث الأيقونات في التابات (علامة الصح الخضراء)
             document.getElementById('icon-tab-video').className = prog.video ? 'fa-solid fa-circle-check text-emerald-500 text-lg' : 'fa-regular fa-circle-play text-blue-500 text-lg';
             document.getElementById('icon-tab-summary').className = prog.summary ? 'fa-solid fa-circle-check text-emerald-500 text-lg' : 'fa-regular fa-file-pdf text-blue-500 text-lg';
             document.getElementById('icon-tab-exam').className = prog.exam ? 'fa-solid fa-circle-check text-emerald-500 text-lg' : 'fa-solid fa-list-check text-blue-500 text-lg';
 
-            // تحديث الأزرار السفلية
             const btnV = document.getElementById('btnMarkVideo');
             if(prog.video) { btnV.innerHTML = '<i class="fa-solid fa-check-double"></i> تمت المشاهدة'; btnV.className = 'bg-emerald-100 text-emerald-700 font-bold py-2.5 px-6 rounded-lg text-sm flex items-center gap-2 cursor-default'; }
             else { btnV.innerHTML = '<i class="fa-solid fa-check"></i> تحديد كمكتمل'; btnV.className = 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-lg text-sm flex items-center gap-2 transition-all shadow-md'; }
