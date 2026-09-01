@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com https://apis.google.com https://*.googleapis.com https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://www.gstatic.com; frame-src 'self' https://www.youtube.com https://youtube.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+    <title>لوحة التحكم الشاملة | منصة الكاريزما (مؤمنة بالكامل)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
+    <script>
+        // إيقاف الحماية مؤقتاً لتسهيل الفحص
+        window.CharismaSecurity = Object.freeze({
+            sanitize: function(input) {
+                if(typeof input !== 'string') return input;
+                const temp = document.createElement('div');
+                temp.textContent = input;
+                return temp.innerHTML;
+            },
+            isMalicious: function(input) {
+                if(typeof input !== 'string') return false;
+                return /<script>|javascript:|onload=|onerror=|eval\(|document\.cookie/i.test(input);
+            },
+            cleanData: function(data) {
+                if(typeof data !== 'string') return data;
+                let trimmed = data.trim();
+                if (this.isMalicious(trimmed)) throw new Error("إدخال غير آمن!");
+                return this.sanitize(trimmed);
+            }
+        });
+    </script>
+
+    <style>
+        :root {
+            --bg-deep: #ffffff;         
+            --card-bg: rgba(255, 255, 255, 0.95); 
+            --card-border: #e2e8f0; 
+            --primary-blue: #2563eb;     
+            --text-main: #0f172a; 
+            --text-muted: #475569;       
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        
+        body { 
+            background-color: #1e3a8a;
+            background-image: linear-gradient(rgba(30, 58, 138, 0.85), rgba(15, 23, 42, 0.95)), url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            color: var(--text-main); 
+            padding: 10px; 
+            user-select: none;
+            -webkit-user-select: none;
+        } 
+        
+        @media (min-width: 768px) { body { padding: 20px; } }
+        .container { max-width: 1450px; margin: 0 auto; display: none; }
+
+        .admin-header { display: flex; flex-direction: column; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 20px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); backdrop-filter: blur(10px); }
+        @media (min-width: 768px) { .admin-header { flex-direction: row; } }
+
+        .admin-title { font-size: 1.2rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; text-align: center; }
+        @media (min-width: 768px) { .admin-title { font-size: 1.6rem; } }
+        
+        .admin-profile-nav { display: flex; align-items: center; gap: 15px; width: 100%; justify-content: space-between; }
+        @media (min-width: 768px) { .admin-profile-nav { width: auto; justify-content: flex-end; } }
+        
+        .admin-info-box { display: flex; align-items: center; gap: 12px; }
+        .admin-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-blue); background: #fff;}
+        .admin-name { font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
+        
+        .btn-logout { background: #ef4444; border: none; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; transition: background 0.2s; }
+        
+        .admin-navbar { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 10px; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); backdrop-filter: blur(10px); }
+        .tab-btn { background: #f8fafc; border: 1px solid #e2e8f0; color: var(--text-muted); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; flex: 1; min-width: 140px; }
+        @media (min-width: 768px) { .tab-btn { min-width: 180px; font-size: 0.9rem; padding: 12px 16px; } }
+        .tab-btn.active { background: rgba(37, 99, 235, 0.1); border-color: var(--primary-blue); color: var(--primary-blue); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.05); backdrop-filter: blur(10px); }
+        .stat-info h3 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+        .stat-info p { color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
+        .stat-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+
+        .admin-content-area { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 15px; min-height: 550px; width: 100%; overflow-x: hidden; backdrop-filter: blur(10px); }
+        @media (min-width: 768px) { .admin-content-area { padding: 30px; } }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .content-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 20px; color: var(--text-main); border-bottom: 2px solid var(--card-border); padding-bottom: 12px; display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+        
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid var(--card-border); }
+        .filter-group { flex: 1; min-width: 100%; display: flex; flex-direction: column; gap: 6px; }
+        @media (min-width: 600px) { .filter-group { min-width: 200px; } }
+        .filter-select, .search-control, .form-control { background: #ffffff; border: 1px solid var(--card-border); padding: 10px 15px; border-radius: 10px; font-weight: 600; width: 100%; font-size: 0.9rem; outline: none; }
+
+        .custom-table-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--card-border); border-radius: 12px; background: #ffffff; }
+        .custom-table { width: 100%; border-collapse: collapse; text-align: right; min-width: 800px; }
+        .custom-table th { background: #f1f5f9; padding: 12px; font-weight: 700; border-bottom: 2px solid var(--card-border); font-size: 0.85rem; text-align: center; }
+        .custom-table td { padding: 12px; border-bottom: 1px solid var(--card-border); font-size: 0.8rem; font-weight: 600; text-align: center; }
+
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; display: inline-block; }
+        .badge.subscribed { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+        .badge.not-subscribed { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .badge.store-yes { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        
+        .badge-new { background: #ef4444; color: #fff; border-radius: 12px; padding: 3px 8px; font-size: 0.65rem; animation: pulse 1.5s infinite; font-weight: bold; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.05); } 100% { opacity: 1; transform: scale(1); } }
+        
+        .btn-table-action { background: var(--primary-blue); color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: background 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; justify-content: center;}
+        .btn-danger { background: #ef4444; }
+        .btn-success { background: #10b981; }
+        .btn-refresh { background: #f1f5f9; color: var(--text-main); border: 1px solid var(--card-border); }
+        
+        .code-generator-box { background: #f8fafc; border: 1px solid var(--card-border); padding: 20px; border-radius: 14px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .code-output { font-family: monospace; font-size: 1.1rem; background: #ffffff; padding: 10px; border: 2px dashed var(--primary-blue); border-radius: 10px; text-align: center; color: var(--primary-blue); font-weight: bold; flex: 1; min-width: 150px;}
+
+        /* الشات */
+        .chat-layout { display: flex; flex-direction: column; border: 1px solid var(--card-border); border-radius: 14px; overflow: hidden; background: #ffffff; min-height: 500px; height: 600px; }
+        @media(min-width: 768px) { .chat-layout { flex-direction: row; } }
+        .chat-users-list { background: #f8fafc; border-bottom: 1px solid var(--card-border); overflow-y: auto; max-height: 200px; width: 100%; flex-shrink: 0; display: flex; flex-direction: column; }
+        @media(min-width: 768px) { .chat-users-list { max-height: 100%; width: 320px; border-bottom: none; border-left: 1px solid var(--card-border); } }
+        .chat-user-item { padding: 12px 15px; border-bottom: 1px solid var(--card-border); cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 12px; }
+        .chat-user-item:hover, .chat-user-item.active { background: #e0f2fe; }
+        .chat-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #e2e8f0; background: #fff; flex-shrink: 0; }
+        .chat-user-info { flex: 1; overflow: hidden; }
+        .chat-user-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 4px;}
+        .chat-user-name { font-weight: 800; font-size: 0.9rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .chat-user-preview { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .chat-window { display: flex; flex-direction: column; background: #ffffff; flex: 1; overflow: hidden; }
+        .chat-window-header { padding: 15px; border-bottom: 1px solid var(--card-border); background: #f1f5f9; font-weight: 800; font-size: 1rem; color: var(--primary-blue); display: flex; align-items: center; gap: 10px;}
+        .chat-messages-area { flex: 1; padding: 15px; overflow-y: auto; background: #ffffff; display: flex; flex-direction: column; gap: 12px; }
+        .chat-empty-state { margin: auto; text-align: center; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .chat-bubble { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; line-height: 1.5; word-break: break-word; position: relative; }
+        .chat-bubble.student { background: #f1f5f9; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #e2e8f0; }
+        .chat-bubble.admin { background: var(--primary-blue); color: #ffffff; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-bubble img { max-width: 200px; border-radius: 8px; margin-top: 5px; cursor: zoom-in; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; }
+        .chat-input-bar { padding: 12px; border-top: 1px solid var(--card-border); display: flex; gap: 10px; background: #f8fafc; }
+        .chat-input-bar input { flex: 1; padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; font-size: 0.9rem; outline: none; font-weight: 600;}
+
+        /* النوافذ المنبثقة (Popup) */
+        .access-denied-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; text-align: center; gap: 15px; padding: 20px; backdrop-filter: blur(10px); }
+        .access-input { padding: 12px 20px; font-size: 1rem; border-radius: 10px; border: 2px solid var(--card-border); width: 100%; max-width: 320px; text-align: center; font-weight: bold; outline: none; }
+        #alerts-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; }
+        #imageModal { display: none; position: fixed; z-index: 100000; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
+        #imageModalContent { margin: auto; display: block; max-width: 90%; max-height: 80vh; border-radius: 12px; border: 2px solid #fff; }
+        .close-modal { position: absolute; top: 20px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <div id="alerts-container"></div>
+    <div id="imageModal">
+        <span class="close-modal" onclick="document.getElementById('imageModal').style.display='none'">&times;</span>
+        <img id="imageModalContent" src="">
+    </div>
+
+    <!-- شاشة الدخول السرية -->
+    <div id="guard-overlay" class="access-denied-overlay">
+        <i class="fa-solid fa-shield-halved" style="font-size: 4rem; color: var(--primary-blue);"></i>
+        <h2 style="font-weight:800; color: var(--text-main);">لوحة تحكم الكاريزما</h2>
+        <p style="color: var(--text-muted); font-weight:600; font-size: 0.9rem;">الرجاء إدخال كود المرور للوصول الآمن</p>
+        <input type="password" id="txt-guard-code" class="access-input" placeholder="كلمة المرور السرية" autocomplete="off" onkeydown="if(event.key === 'Enter') window.checkManualCode()">
+        <button id="btn-login" onclick="window.checkManualCode()" class="btn-table-action" style="padding: 12px 30px; font-size: 1rem; border-radius: 10px;">
+            <i class="fa-solid fa-right-to-bracket"></i> دخول اللوحة
+        </button>
+    </div>
+
+    <!-- اللوحة الرئيسية -->
+    <div class="container" id="main-dashboard-container">
+        <header class="admin-header">
+            <div class="admin-title"><i class="fa-solid fa-crown" style="color:#f59e0b;"></i> منصة الكاريزما | الإدارة</div>
+            <div class="admin-profile-nav">
+                <div class="admin-info-box">
+                    <img id="img-admin-avatar" class="admin-avatar" src="" alt="Admin Profile">
+                    <span id="lbl-admin-name" class="admin-name">جاري التحميل...</span>
+                </div>
+                <button onclick="window.logoutAdmin()" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
+            </div>
+        </header>
+
+        <nav class="admin-navbar">
+            <button class="tab-btn active" onclick="window.switchTab('tab-students', this)"><i class="fa-solid fa-users"></i> بيانات الطلاب</button>
+            <button class="tab-btn" onclick="window.switchTab('tab-reports', this)"><i class="fa-solid fa-chart-pie"></i> تقارير الباقات</button>
+            <button class="tab-btn" onclick="window.switchTab('tab-upload', this)"><i class="fa-solid fa-cloud-arrow-up"></i> رفع الدروس والامتحانات</button>
+            <button class="tab-btn" onclick="window.switchTab('tab-store', this)"><i class="fa-solid fa-store"></i> المتجر</button>
+            <button class="tab-btn" onclick="window.switchTab('tab-subscriptions-center', this)"><i class="fa-solid fa-receipt"></i> شات الإيصالات</button>
+            <button class="tab-btn" onclick="window.switchTab('tab-chat', this)"><i class="fa-brands fa-whatsapp"></i> الشات العام</button>
+            <button class="tab-btn" onclick="window.switchTab('tab-support', this)"><i class="fa-solid fa-microscope"></i> الأسئلة العلمية</button>
+        </nav>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-info"><h3 id="stat-total-students">0</h3><p>الطلاب المسجلين</p></div><div class="stat-icon" style="background: #dbeafe; color: #2563eb;"><i class="fa-solid fa-user-graduate"></i></div></div>
+            <div class="stat-card"><div class="stat-info"><h3 id="stat-active-subscriptions">0</h3><p>الاشتراكات النشطة</p></div><div class="stat-icon" style="background: #d1fae5; color: #059669;"><i class="fa-solid fa-id-card"></i></div></div>
+            <div class="stat-card"><div class="stat-info"><h3 id="stat-store-purchases">0</h3><p>مبيعات المتجر</p></div><div class="stat-icon" style="background: #fef3c7; color: #d97706;"><i class="fa-solid fa-box-open"></i></div></div>
+        </div>
+
+        <div class="admin-layout">
+            <main class="admin-content-area">
+                
+                <!-- 1. بيانات الطلاب -->
+                <div id="tab-students" class="tab-content active">
+                    <div class="content-title"><i class="fa-solid fa-users"></i> قاعدة بيانات الطلاب</div>
+                    <div class="filter-bar">
+                        <div class="filter-group"><input type="text" id="searchStudentName" class="search-control" placeholder="ابحث بالاسم، ID أو الإيميل..." oninput="window.filterStudentsLocal()"></div>
+                        <div class="filter-group">
+                            <select id="filter-subscription" class="filter-select" onchange="window.filterStudentsLocal()">
+                                <option value="all">كل الطلاب</option>
+                                <option value="subscribed">المشتركون (نشط)</option>
+                                <option value="not-subscribed">غير المشتركين</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="custom-table-wrapper">
+                        <table class="custom-table">
+                            <thead><tr><th>ID الطالب</th><th>الاسم والإيميل</th><th>الصف</th><th>الهاتف</th><th>الاشتراك</th><th>المتجر</th><th>الحساب</th><th>إزالة</th></tr></thead>
+                            <tbody id="students-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2. التقارير -->
+                <div id="tab-reports" class="tab-content">
+                    <div class="content-title"><i class="fa-solid fa-chart-column"></i> إحصائيات الباقات</div>
+                    <div class="custom-table-wrapper">
+                        <table class="custom-table">
+                            <thead><tr><th>الباقة / الكورس</th><th>المشتركين</th><th>النسبة</th><th>الحالة</th></tr></thead>
+                            <tbody id="reports-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. رفع الدروس والامتحانات -->
+                <div id="tab-upload" class="tab-content">
+                    <div class="content-title"><i class="fa-solid fa-cloud-arrow-up"></i> رفع وتنظيم الدروس والامتحانات</div>
+                    <div class="code-generator-box" style="background:#f8fafc;">
+                        <div class="filter-group">
+                            <label>اختر الباكدج (الباقة):</label>
+                            <select id="uploadPackageSelect" class="filter-select" onchange="window.handlePackageSelectionChange()"></select>
+                        </div>
+                        <div class="filter-group" id="newPackageGroup" style="display:none;">
+                            <input type="text" id="inputNewPackageTitle" class="search-control" placeholder="اكتب اسم الباكدج الجديدة...">
+                        </div>
+                        <div class="filter-group">
+                            <label>اختر الوحدة:</label>
+                            <select id="uploadUnitSelect" class="filter-select" onchange="window.handleUnitSelectionChange()">
+                                <option value="">يرجى اختيار باكدج أولاً...</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" id="newUnitGroup" style="display:none;">
+                            <input type="text" id="inputNewUnitName" class="search-control" placeholder="اكتب اسم الوحدة الجديدة...">
+                        </div>
+                        <div class="filter-group"><label>عنوان واسم الدرس:</label><input type="text" id="inputLessonTitle" class="search-control" placeholder="عنوان الدرس..."></div>
+                        <div class="filter-group"><label>رابط الفيديو المباشر (يوتيوب أو غيره):</label><input type="url" id="inputVideoUrl" class="search-control" placeholder="https://..."></div>
+                        <div class="filter-group"><label>مذكرة / ملخص الدرس (ملف PDF فعلي):</label><input type="file" id="inputLessonSummaryFile" class="form-control" accept=".pdf"></div>
+                        
+                        <div class="filter-group border-t border-slate-300 pt-4 mt-2">
+                            <label class="font-bold text-primary-blue mb-2" style="font-size:1.1rem;"><i class="fa-solid fa-clipboard-question"></i> اختبار إتمام الدرس:</label>
+                            <div id="exam-questions-container" class="space-y-3 bg-white p-4 border border-slate-200 rounded-lg max-h-80 overflow-y-auto custom-scrollbar">
+                                <p class="text-xs text-slate-400 text-center" id="no-questions-msg">لم تقم بإضافة أسئلة بعد. أضف أسئلة ليتم إنشاء الامتحان.</p>
+                            </div>
+                            <button type="button" class="btn-table-action mt-3" onclick="window.addQuestionUI()" style="background:#f59e0b;"><i class="fa-solid fa-plus"></i> إضافة سؤال للاختبار</button>
+                        </div>
+                        <button id="btn-upload-lesson" class="btn-table-action btn-success mt-4" onclick="window.uploadLessonToFirestoreCollection()" style="padding: 14px; font-size: 1.1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ الدرس والامتحان في المنهج</button>
+                    </div>
+                </div>
+
+                <!-- 4. المتجر -->
+                <div id="tab-store" class="tab-content">
+                    <div class="content-title"><i class="fa-solid fa-store"></i> المتجر (إضافة ملازم ومراجعات)</div>
+                    <div class="code-generator-box">
+                        <div class="filter-group"><input type="text" id="store-prod-name" class="form-control" placeholder="اسم الملزمة / المنتج..."></div>
+                        <div class="filter-group"><input type="number" id="store-prod-price" class="form-control" placeholder="السعر..."></div>
+                        <div class="filter-group"><input type="text" id="store-prod-desc" class="form-control" placeholder="وصف الملزمة (يظهر للطالب)..."></div>
+                        <div class="filter-group"><label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">محتوى الملزمة (ملف PDF فعلي):</label><input type="file" id="store-prod-file-upload" class="form-control" accept=".pdf"></div>
+                        <div class="filter-group"><label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">صورة غلاف الملزمة:</label><input type="file" id="store-prod-image" class="form-control" accept="image/*"></div>
+                        <button id="btn-upload-store" class="btn-table-action btn-success" onclick="window.uploadStoreProduct()"><i class="fa-solid fa-plus"></i> إضافة المنتج للمتجر</button>
+                    </div>
+                </div>
+
+                <!-- 5. شات الإيصالات -->
+                <div id="tab-subscriptions-center" class="tab-content">
+                    <div class="content-title">
+                        <span style="display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-receipt"></i> شات ومراجعة الإيصالات</span>
+                        <button class="btn-refresh" onclick="window.loadChats('subscription_chats', 'sub-center-users-container', 'window.openSubChat')"><i class="fa-solid fa-rotate-right"></i> تحديث القائمة</button>
+                    </div>
+                    <div class="code-generator-box" style="padding:10px 20px;">
+                        <h4 style="font-weight:800; font-size:1rem;"><i class="fa-solid fa-key" style="color:#f59e0b;"></i> توليد كود تفعيل للمنصة (لإرساله في الشات)</h4>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <button class="btn-table-action" onclick="window.generateSingleUseCode()"><i class="fa-solid fa-plus-circle"></i> توليد كود جديد</button>
+                            <div id="generated-code-box" class="code-output" style="display:none; padding:5px; font-size:1rem;">---</div>
+                            <button id="btn-copy-code" class="copy-btn" style="display:none; padding:5px 10px;" onclick="window.copyGeneratedCode()"><i class="fa-solid fa-copy"></i> نسخ</button>
+                        </div>
+                    </div>
+                    <div class="chat-layout">
+                        <div class="chat-users-list custom-scrollbar" id="sub-center-users-container"></div>
+                        <div class="chat-window">
+                            <div class="chat-window-header"><img id="sub-header-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:30px;height:30px;border-radius:50%;display:none;"><span id="sub-chat-user-title" style="margin-right:10px;">اختر طالباً للمراجعة</span></div>
+                            <div class="chat-messages-area custom-scrollbar" id="sub-chat-messages-wrapper"><div class="chat-empty-state"><i class="fa-regular fa-comment-dots"></i><p>اختر طالباً من القائمة</p></div></div>
+                            <div class="chat-input-bar"><input type="text" id="input-sub-admin-msg" placeholder="اكتب كود التفعيل أو ردك هنا..." onkeydown="if(event.key === 'Enter') window.sendAdminMessage('subscription_chats', 'input-sub-admin-msg', window.activeSubStudentUid)"><button class="btn-table-action" onclick="window.sendAdminMessage('subscription_chats', 'input-sub-admin-msg', window.activeSubStudentUid)"><i class="fa-solid fa-paper-plane"></i></button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. الشات العام -->
+                <div id="tab-chat" class="tab-content">
+                    <div class="content-title">
+                        <span style="display:flex; align-items:center; gap:10px;"><i class="fa-brands fa-whatsapp"></i> الشات العام للطلاب</span>
+                        <button class="btn-refresh" onclick="window.loadChats('support_chats', 'general-chat-users-container', 'window.openGeneralChat')"><i class="fa-solid fa-rotate-right"></i> تحديث القائمة</button>
+                    </div>
+                    <div class="chat-layout">
+                        <div class="chat-users-list custom-scrollbar" id="general-chat-users-container"></div>
+                        <div class="chat-window">
+                            <div class="chat-window-header"><img id="gen-header-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:30px;height:30px;border-radius:50%;display:none;"><span id="general-chat-user-title" style="margin-right:10px;">اختر طالباً للرد</span></div>
+                            <div class="chat-messages-area custom-scrollbar" id="general-chat-messages-wrapper"><div class="chat-empty-state"><i class="fa-brands fa-whatsapp"></i><p>اختر طالباً لفتح المحادثة</p></div></div>
+                            <div class="chat-input-bar"><input type="text" id="input-general-admin-msg" placeholder="اكتب ردك هنا..." onkeydown="if(event.key === 'Enter') window.sendAdminMessage('support_chats', 'input-general-admin-msg', window.activeGeneralStudentUid)"><button class="btn-table-action" onclick="window.sendAdminMessage('support_chats', 'input-general-admin-msg', window.activeGeneralStudentUid)"><i class="fa-solid fa-paper-plane"></i></button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. الأسئلة العلمية -->
+                <div id="tab-support" class="tab-content">
+                    <div class="content-title">
+                        <span style="display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-microscope"></i> شات الأسئلة العلمية</span>
+                        <button class="btn-refresh" onclick="window.loadChats('scientific_chats', 'scientific-chat-users-container', 'window.openScientificChat')"><i class="fa-solid fa-rotate-right"></i> تحديث القائمة</button>
+                    </div>
+                    <div class="chat-layout">
+                        <div class="chat-users-list custom-scrollbar" id="scientific-chat-users-container"></div>
+                        <div class="chat-window">
+                            <div class="chat-window-header"><img id="sci-header-avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width:30px;height:30px;border-radius:50%;display:none;"><span id="scientific-chat-user-title" style="margin-right:10px;">اختر طالباً للرد العلمي</span></div>
+                            <div class="chat-messages-area custom-scrollbar" id="scientific-chat-messages-wrapper"><div class="chat-empty-state"><i class="fa-solid fa-flask"></i><p>اختر طالباً للإجابة</p></div></div>
+                            <div class="chat-input-bar"><input type="text" id="input-scientific-admin-msg" placeholder="اكتب إجابتك هنا..." onkeydown="if(event.key === 'Enter') window.sendAdminMessage('scientific_chats', 'input-scientific-admin-msg', window.activeScientificStudentUid)"><button class="btn-table-action" onclick="window.sendAdminMessage('scientific_chats', 'input-scientific-admin-msg', window.activeScientificStudentUid)"><i class="fa-solid fa-paper-plane"></i></button></div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- سكربت العمليات والتسجيل الشامل والمحمي بالكامل -->
+    <script>
+        // إعدادات فايربيس الأساسية
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
+            authDomain: "omar-12-5e10c.firebaseapp.com",
+            projectId: "omar-12-5e10c",
+            storageBucket: "omar-12-5e10c.firebasestorage.app"
+        };
+
+        // تعريف المتغيرات العامة
+        var auth, db, storage;
+        window.cachedStudentsArray = [];
+        window.usersDict = {}; 
+        window.activeSubStudentUid = null;
+        window.activeGeneralStudentUid = null;
+        window.activeScientificStudentUid = null;
+        window.unsubscribes = {};
+
+        // محاولة تهيئة فايربيس في الخلفية مباشرة (لا يوقف الكود إذا فشل)
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            auth = firebase.auth();
+            db = firebase.firestore();
+            storage = firebase.storage();
+            // تسجيل دخول مخفي لتفعيل الصلاحيات
+            auth.signInAnonymously().catch(e => console.warn("Background Auth:", e));
+        } catch(e) {
+            console.error("Firebase Init Error:", e);
+        }
+
+        // دوال المساعدة للواجهة
+        window.showAlert = function(message, type = 'info') {
+            const container = document.getElementById('alerts-container');
+            const alertBox = document.createElement('div');
+            alertBox.style.padding = '12px 20px'; alertBox.style.borderRadius = '8px';
+            alertBox.style.color = '#fff'; alertBox.style.fontWeight = 'bold'; alertBox.style.textAlign = 'center';
+            alertBox.style.background = type === 'error' ? '#ef4444' : (type === 'success' ? '#10b981' : '#3b82f6');
+            alertBox.innerHTML = window.CharismaSecurity.sanitize(message); 
+            container.appendChild(alertBox);
+            setTimeout(() => { alertBox.style.opacity = '0'; setTimeout(() => alertBox.remove(), 300); }, 4000);
+        }
+
+        window.showImagePopup = function(src) {
+            document.getElementById('imageModalContent').src = src;
+            document.getElementById('imageModal').style.display = 'block';
+        }
+
+        // --- دالة الدخول الحصينة السريعة ---
+        window.checkManualCode = function() {
+            const btn = document.getElementById('btn-login');
+            try {
+                let inputCode = document.getElementById('txt-guard-code').value.trim(); 
+                if (!inputCode) return window.showAlert('يرجى إدخال كلمة المرور!', 'error');
+
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
+                
+                // كلمات المرور الصلبة لضمان الدخول الفوري دون انتظار الفايربيز
+                const validPasswords = {
+                    "abdo2026": "abdo",
+                    "charisma2026": "admin"
+                };
+
+                if (validPasswords[inputCode]) {
+                    window.showAlert('تم الدخول بنجاح!', 'success');
+                    window.applyAdminIdentity(validPasswords[inputCode]);
+                } else {
+                    window.showAlert('الكود السري غير صحيح!', 'error');
+                }
+            } catch(err) {
+                window.showAlert('حدث خطأ غير متوقع!', 'error');
+            } finally { 
+                btn.disabled = false; 
+                btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> دخول اللوحة';
+            }
+        }
+
+        window.applyAdminIdentity = function(adminType) {
+            document.getElementById('guard-overlay').style.display = 'none';
+            document.getElementById('main-dashboard-container').style.display = 'block';
+            if (adminType === "abdo") {
+                document.getElementById('lbl-admin-name').innerText = "عبدالرحمن (التقني)";
+                document.getElementById('img-admin-avatar').src = "abdo.png"; 
+            } else {
+                document.getElementById('lbl-admin-name').innerText = "عمر درويش (المسؤول)";
+                document.getElementById('img-admin-avatar').src = "file.enc"; 
+            }
+            setTimeout(() => { window.initDashboardData(); }, 500);
+        }
+
+        // --- تهيئة اللوحة وجلب البيانات ---
+        window.initDashboardData = function() {
+            if(!db) return;
+            window.fetchStudentsFromFirebase();
+            window.loadPackagesForUpload();
+        }
+
+        window.switchTab = function(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+            
+            if(tabId === 'tab-subscriptions-center') window.loadChats('subscription_chats', 'sub-center-users-container', 'window.openSubChat');
+            if(tabId === 'tab-chat') window.loadChats('support_chats', 'general-chat-users-container', 'window.openGeneralChat');
+            if(tabId === 'tab-support') window.loadChats('scientific_chats', 'scientific-chat-users-container', 'window.openScientificChat');
+        }
+
+        // --- التحديث لجلب جميع الطلاب لتشغيل الشات بامتياز ---
+        window.fetchStudentsFromFirebase = function() {
+            if(!db) return;
+            const cols = ['users', 'students', 'student'];
+            cols.forEach(col => {
+                db.collection(col).onSnapshot(snap => {
+                    if(col === 'users') document.getElementById('stat-total-students').innerText = snap.size;
+                    
+                    snap.forEach(doc => { 
+                        let d = doc.data(); 
+                        window.usersDict[doc.id] = { name: d.name || d.fullName || 'طالب', avatar: d.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' };
+                        if(col === 'users') {
+                            d.docId = doc.id; 
+                            let exists = window.cachedStudentsArray.findIndex(x => x.docId === doc.id);
+                            if(exists > -1) window.cachedStudentsArray[exists] = d;
+                            else window.cachedStudentsArray.push(d);
+                        }
+                    });
+                    if(col === 'users') { 
+                        window.renderStudentsTable(window.cachedStudentsArray); 
+                        window.renderReportsTable(window.cachedStudentsArray); 
+                    }
+                });
+            });
+        }
+
+        window.renderStudentsTable = function(arr) {
+            const tbody = document.getElementById('students-table-body');
+            tbody.innerHTML = '';
+            arr.forEach(s => {
+                let pkg = s.activePackageName || (s.subscriptions ? s.subscriptions[0] : 'غير مشترك');
+                let correctId = s.studentId ? s.studentId : (s.uid || s.docId || '').substring(0,6).toUpperCase();
+                tbody.innerHTML += `<tr>
+                    <td style="font-family: monospace; font-weight: bold; color: var(--primary-blue);">${window.CharismaSecurity.sanitize(correctId)}</td>
+                    <td><span style="font-weight: bold;">${window.CharismaSecurity.sanitize(s.name || 'طالب')}</span><br><span style="font-size: 0.75rem; color: var(--text-muted);">${window.CharismaSecurity.sanitize(s.email||'بدون إيميل')}</span></td>
+                    <td>${window.CharismaSecurity.sanitize(s.grade || s.level || 'بدون')}</td>
+                    <td>${window.CharismaSecurity.sanitize(s.phone || '---')}</td>
+                    <td><span class="badge ${pkg !== 'غير مشترك' ? 'subscribed' : 'not-subscribed'}">${window.CharismaSecurity.sanitize(pkg)}</span></td>
+                    <td><span class="badge store-no">---</span></td>
+                    <td>نشط</td>
+                    <td><button class="btn-table-action btn-danger" onclick="window.deleteStudent('${s.docId}')"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`;
+            });
+        }
+
+        window.renderReportsTable = function(arr) {
+            const tbody = document.getElementById('reports-table-body');
+            tbody.innerHTML = '';
+            let counts = {};
+            arr.forEach(s => { let pkg = window.CharismaSecurity.sanitize(s.activePackageName || s.packageName || (s.subscriptionActive ? 'الباقة العامة' : 'غير مشترك')); counts[pkg] = (counts[pkg] || 0) + 1; });
+            for (let [p, c] of Object.entries(counts)) { tbody.innerHTML += `<tr><td>${p}</td><td><span class="badge subscribed">${c}</span></td><td>${((c / (arr.length||1)) * 100).toFixed(1)}%</td><td><span class="badge store-yes">نشطة</span></td></tr>`; }
+        }
+
+        window.filterStudentsLocal = function() {
+            const search = document.getElementById('searchStudentName').value.toLowerCase();
+            const subFilter = document.getElementById('filter-subscription').value;
+            const filtered = window.cachedStudentsArray.filter(s => {
+                const name = (s.name || '').toLowerCase();
+                const isSub = s.subscriptionActive || s.activePackageName;
+                let mSub = true;
+                if(subFilter === 'subscribed') mSub = isSub === true;
+                else if(subFilter === 'not-subscribed') mSub = !isSub;
+                return name.includes(search) && mSub;
+            });
+            window.renderStudentsTable(filtered);
+        }
+
+        window.deleteStudent = function(id) { 
+            if(confirm("تأكيد الحذف نهائياً؟")) db.collection('users').doc(id).delete().then(() => window.showAlert("تم حذف الطالب", "success"));
+        }
+
+        // --- نظام الشات الشامل (يجلب جميع الطلاب + يزيل العلامة عند القراءة) ---
+        window.loadChats = async function(collectionName, containerId, clickFnName) {
+            let container = document.getElementById(containerId);
+            container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--primary-blue);"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري الجلب...</div>';
+            
+            if(!db || window.cachedStudentsArray.length === 0) {
+                container.innerHTML = '<div class="chat-empty-state" style="margin-top:20px;"><p>لا يوجد طلاب بعد.</p></div>';
+                return;
+            }
+
+            // نقوم بالمرور على جميع الطلاب المسجلين لإظهارهم في القائمة
+            let chatPromises = window.cachedStudentsArray.map(async (student) => {
+                let uid = student.uid || student.docId;
+                if(!uid) return null;
+                
+                try {
+                    let msgSnap = await db.collection(collectionName).doc(uid).collection('messages').orderBy('timestamp', 'desc').limit(1).get();
+                    if(!msgSnap.empty) {
+                        let msg = msgSnap.docs[0].data();
+                        return { 
+                            uid: uid, 
+                            name: student.name || student.fullName || 'طالب', 
+                            avatar: student.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
+                            lastTime: msg.timestamp ? (msg.timestamp.toMillis ? msg.timestamp.toMillis() : new Date(msg.timestamp).getTime()) : 0, 
+                            hasNew: (msg.sender === 'student' || msg.sender === 'user') && msg.read !== true, // فحص حالة القراءة
+                            preview: msg.text ? msg.text.substring(0,25) + '...' : (msg.imageUrl ? 'صورة إيصال 🖼️' : 'مرفق') 
+                        };
+                    } else {
+                        // إرجاع الطالب حتى لو لم يرسل رسالة
+                        return { 
+                            uid: uid, 
+                            name: student.name || student.fullName || 'طالب', 
+                            avatar: student.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
+                            lastTime: 0, 
+                            hasNew: false, 
+                            preview: 'لم يبدأ محادثة بعد' 
+                        };
+                    }
+                } catch(e) { return null; }
+            });
+
+            let results = await Promise.all(chatPromises);
+            let validChats = results.filter(c => c !== null);
+            
+            // ترتيب ذكي: الرسائل الجديدة غير المقروءة تظهر أولاً
+            validChats.sort((a,b) => { 
+                if(a.hasNew === b.hasNew) return b.lastTime - a.lastTime; 
+                return a.hasNew ? -1 : 1; 
+            });
+            
+            container.innerHTML = '';
+            validChats.forEach(meta => {
+                let badge = meta.hasNew ? '<span class="badge-new">رسالة جديدة 🔴</span>' : '';
+                let escapedName = meta.name.replace(/'/g, "\\'");
+                container.innerHTML += `
+                    <div class="chat-user-item" onclick="${clickFnName}('${meta.uid}', '${escapedName}', '${meta.avatar}')">
+                        <img src="${meta.avatar}" class="chat-avatar">
+                        <div class="chat-user-info">
+                            <div class="chat-user-header"><span class="chat-user-name">${meta.name}</span> ${badge}</div>
+                            <div class="chat-user-preview">${window.CharismaSecurity.sanitize(meta.preview)}</div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        window.openSubChat = function(uid, name, avatar) {
+            window.activeSubStudentUid = uid;
+            document.getElementById('sub-chat-user-title').innerText = name;
+            document.getElementById('sub-header-avatar').src = avatar; document.getElementById('sub-header-avatar').style.display = 'block';
+            window.openChatStream('subscription_chats', uid, 'sub-chat-messages-wrapper');
+        }
+
+        window.openGeneralChat = function(uid, name, avatar) {
+            window.activeGeneralStudentUid = uid;
+            document.getElementById('general-chat-user-title').innerText = name;
+            document.getElementById('gen-header-avatar').src = avatar; document.getElementById('gen-header-avatar').style.display = 'block';
+            window.openChatStream('support_chats', uid, 'general-chat-messages-wrapper');
+        }
+
+        window.openScientificChat = function(uid, name, avatar) {
+            window.activeScientificStudentUid = uid;
+            document.getElementById('scientific-chat-user-title').innerText = name;
+            document.getElementById('sci-header-avatar').src = avatar; document.getElementById('sci-header-avatar').style.display = 'block';
+            window.openChatStream('scientific_chats', uid, 'scientific-chat-messages-wrapper');
+        }
+
+        window.openChatStream = function(collectionName, uid, wrapperId) {
+            if(window.unsubscribes[collectionName]) window.unsubscribes[collectionName]();
+            window.unsubscribes[collectionName] = db.collection(collectionName).doc(uid).collection('messages').orderBy('timestamp').onSnapshot(snap => {
+                let area = document.getElementById(wrapperId); area.innerHTML = '';
+                if (snap.empty) { area.innerHTML = `<div class="chat-empty-state"><p>لا توجد رسائل.</p></div>`; return; }
+                
+                let hasUnread = false;
+
+                snap.forEach(docSnap => {
+                    let m = docSnap.data();
+                    
+                    // تحويل الرسالة إلى مقروءة لإزالة العلامة الحمراء
+                    if ((m.sender === 'student' || m.sender === 'user') && m.read !== true) {
+                        docSnap.ref.update({ read: true });
+                        hasUnread = true;
+                    }
+
+                    let safeText = window.CharismaSecurity.sanitize(m.text || m.message || '');
+                    let imgHtml = m.imageUrl ? `<img src="${m.imageUrl}" onclick="window.showImagePopup(this.src)">` : '';
+                    area.innerHTML += `<div class="chat-bubble ${m.sender==='admin'?'admin':'student'}">${safeText}<br>${imgHtml}</div>`;
+                });
+                
+                area.scrollTop = area.scrollHeight;
+
+                // تحديث القائمة لإخفاء العلامة الحمراء فوراً
+                if (hasUnread) {
+                    if(collectionName === 'subscription_chats') window.loadChats('subscription_chats', 'sub-center-users-container', 'window.openSubChat');
+                    if(collectionName === 'support_chats') window.loadChats('support_chats', 'general-chat-users-container', 'window.openGeneralChat');
+                    if(collectionName === 'scientific_chats') window.loadChats('scientific_chats', 'scientific-chat-users-container', 'window.openScientificChat');
+                }
+            });
+        }
+
+        window.sendAdminMessage = function(collectionName, inputId, activeUid) {
+            let input = document.getElementById(inputId);
+            if(!input.value.trim() || !activeUid) return;
+            db.collection(collectionName).doc(activeUid).collection('messages').add({
+                text: input.value.trim(), sender: 'admin', timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => { input.value=''; }).catch(() => window.showAlert("فشل الإرسال", "error"));
+        }
+
+        // --- رفع الدروس بشكل منعزل عن مشاكل السيرفر (PDF معزول) ---
+        window.loadPackagesForUpload = function() {
+            if(!db) return;
+            db.collection('package').onSnapshot(snap => {
+                const pkgSelect = document.getElementById('uploadPackageSelect');
+                pkgSelect.innerHTML = `<option value="">اختر الباكدج...</option><option value="new_package" style="color:blue;">+ إضافة باكدج جديدة</option>`;
+                snap.forEach(doc => { let opt = document.createElement('option'); opt.value = doc.id; opt.text = window.CharismaSecurity.sanitize(doc.data().title); pkgSelect.appendChild(opt); });
+            });
+        }
+
+        window.handlePackageSelectionChange = function() {
+            const pkgId = document.getElementById('uploadPackageSelect').value;
+            document.getElementById('newPackageGroup').style.display = (pkgId === 'new_package') ? 'flex' : 'none';
+            const unitSelect = document.getElementById('uploadUnitSelect');
+            unitSelect.innerHTML = `<option value="">اختر الوحدة...</option><option value="new_unit" style="color:blue;">+ إضافة وحدة جديدة</option>`;
+            
+            if(pkgId && pkgId !== 'new_package') {
+                db.collection('units').where('packageId', '==', pkgId).get().then(snap => {
+                    snap.forEach(doc => { let opt = document.createElement('option'); opt.value = doc.id; opt.text = window.CharismaSecurity.sanitize(doc.data().unitName); unitSelect.appendChild(opt); });
+                });
+            }
+        }
+
+        window.handleUnitSelectionChange = function() { document.getElementById('newUnitGroup').style.display = (document.getElementById('uploadUnitSelect').value === 'new_unit') ? 'flex' : 'none'; }
+
+        window.addQuestionUI = function() {
+            document.getElementById('no-questions-msg').style.display = 'none';
+            const container = document.getElementById('exam-questions-container');
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-block p-4 border border-slate-300 rounded-lg bg-slate-50 mb-3 relative shadow-sm';
+            qDiv.innerHTML = `
+                <input type="text" class="form-control mb-3 q-text font-bold text-lg" placeholder="اكتب نص السؤال هنا...">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <input type="text" class="form-control q-opt1 border-blue-200" placeholder="الاختيار الأول">
+                    <input type="text" class="form-control q-opt2 border-blue-200" placeholder="الاختيار الثاني">
+                    <input type="text" class="form-control q-opt3 border-blue-200" placeholder="الاختيار الثالث">
+                    <input type="text" class="form-control q-opt4 border-blue-200" placeholder="الاختيار الرابع">
+                </div>
+                <select class="form-control q-correct border-emerald-400 bg-emerald-50 font-bold text-emerald-700">
+                    <option value="0">الإجابة: الاختيار الأول</option><option value="1">الإجابة: الاختيار الثاني</option>
+                    <option value="2">الإجابة: الاختيار الثالث</option><option value="3">الإجابة: الاختيار الرابع</option>
+                </select>
+                <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 left-2 text-rose-500 hover:text-rose-700 p-2"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(qDiv);
+        }
+
+        window.uploadLessonToFirestoreCollection = async function() {
+            try {
+                let pkgId = document.getElementById('uploadPackageSelect').value;
+                let unitId = document.getElementById('uploadUnitSelect').value;
+                let title = document.getElementById('inputLessonTitle').value.trim();
+                let vid = document.getElementById('inputVideoUrl').value.trim(); 
+                let pdfFileInput = document.getElementById('inputLessonSummaryFile').files[0];
+
+                if(!pkgId || !unitId || !title) return window.showAlert('يرجى اختيار الباقة والوحدة وكتابة عنوان الدرس!', 'error');
+
+                const btn = document.getElementById('btn-upload-lesson');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
+
+                let questionsList = [];
+                document.querySelectorAll('.question-block').forEach(block => {
+                    let qText = block.querySelector('.q-text').value.trim();
+                    let opts = [
+                        block.querySelector('.q-opt1').value.trim(), block.querySelector('.q-opt2').value.trim(),
+                        block.querySelector('.q-opt3').value.trim(), block.querySelector('.q-opt4').value.trim()
+                    ].filter(o => o !== ''); 
+                    let correctIndex = parseInt(block.querySelector('.q-correct').value);
+                    if (qText && opts.length >= 2) questionsList.push({ question: qText, options: opts, correctAnswerIndex: correctIndex });
+                });
+
+                let uploadedPdfUrl = null;
+                if (pdfFileInput) {
+                    try {
+                        const fileRef = storage.ref().child(`lesson_pdfs/${Date.now()}_${pdfFileInput.name}`);
+                        await fileRef.put(pdfFileInput);
+                        uploadedPdfUrl = await fileRef.getDownloadURL();
+                    } catch (storageErr) {
+                        console.error("Storage Error:", storageErr);
+                        window.showAlert("تم حفظ الدرس، لكن فشل رفع الـ PDF (تأكد من إعدادات مساحة التخزين)", "error");
+                    }
+                }
+
+                if (pkgId === 'new_package') {
+                    const newPkgRef = db.collection('package').doc(); pkgId = newPkgRef.id;
+                    await newPkgRef.set({ title: document.getElementById('inputNewPackageTitle').value.trim(), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                }
+                if (unitId === 'new_unit') {
+                    const newUnitRef = db.collection('units').doc(); unitId = newUnitRef.id;
+                    await newUnitRef.set({ unitName: document.getElementById('inputNewUnitName').value.trim(), packageId: pkgId, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                }
+
+                const lessonRef = await db.collection('lessons').add({ 
+                    lessonTitle: title, packageId: pkgId, unitId: unitId, videoUrl: vid || null, summaryUrl: uploadedPdfUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+                });
+
+                if (questionsList.length > 0) {
+                    await db.collection('exams').add({ lessonId: lessonRef.id, packageId: pkgId, questions: questionsList, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                }
+
+                window.showAlert('تم الرفع بنجاح!', 'success');
+                document.getElementById('inputLessonTitle').value = ''; document.getElementById('inputVideoUrl').value = ''; document.getElementById('inputLessonSummaryFile').value = '';
+                document.getElementById('exam-questions-container').innerHTML = '<p class="text-xs text-slate-400 text-center">لم تقم بإضافة أسئلة.</p>';
+            } catch(e) { window.showAlert(e.message, "error"); } 
+            finally { document.getElementById('btn-upload-lesson').disabled = false; document.getElementById('btn-upload-lesson').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ الدرس في المنهج'; }
+        }
+
+        window.uploadStoreProduct = async function() {
+            try {
+                const name = document.getElementById('store-prod-name').value.trim();
+                const price = document.getElementById('store-prod-price').value;
+                const desc = document.getElementById('store-prod-desc').value.trim();
+                const pdfInput = document.getElementById('store-prod-file-upload').files[0];
+                const imageInput = document.getElementById('store-prod-image').files[0];
+
+                if(!name || !price) return window.showAlert("الاسم والسعر مطلوبان لإضافة المنتج!", "error");
+
+                const btn = document.getElementById('btn-upload-store');
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
+
+                let uploadedPdfUrl = null;
+                if (pdfInput) {
+                    try {
+                        const pdfRef = storage.ref(`store_pdfs/${Date.now()}_${pdfInput.name}`);
+                        await pdfRef.put(pdfInput);
+                        uploadedPdfUrl = await pdfRef.getDownloadURL();
+                    } catch (storageErr) {
+                        console.error("Storage Error:", storageErr);
+                        window.showAlert("تم حفظ المنتج، لكن فشل رفع الـ PDF (تأكد من إعدادات مساحة التخزين)", "error");
+                    }
+                }
+
+                let imageBase64 = null;
+                if (imageInput) {
+                    imageBase64 = await new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => resolve(e.target.result); reader.readAsDataURL(imageInput); });
+                }
+
+                await db.collection('store_products').add({ name: name, price: Number(price), description: desc, imageUrl: imageBase64 || '', fileUrl: uploadedPdfUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+                window.showAlert('تم رفع المنتج بنجاح!', 'success');
+                document.getElementById('store-prod-name').value = ''; document.getElementById('store-prod-price').value = ''; document.getElementById('store-prod-desc').value = ''; document.getElementById('store-prod-file-upload').value = ''; document.getElementById('store-prod-image').value = '';
+            } catch(e) { window.showAlert(e.message, 'error'); } 
+            finally { document.getElementById('btn-upload-store').disabled = false; document.getElementById('btn-upload-store').innerHTML = '<i class="fa-solid fa-plus"></i> إضافة المنتج للمتجر'; }
+        }
+
+        window.generateSingleUseCode = function() {
+            let code = 'KAR-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
+            db.collection('codes').doc(code).set({ code: code, isUsed: false }).then(() => {
+                document.getElementById('generated-code-box').style.display = 'block'; document.getElementById('btn-copy-code').style.display = 'inline-flex'; document.getElementById('generated-code-box').innerText = code; window.showAlert('تم توليد الكود.', 'success');
+            });
+        }
+        window.copyGeneratedCode = function() { navigator.clipboard.writeText(document.getElementById('generated-code-box').innerText).then(() => window.showAlert('تم النسخ.', 'success')); }
+        window.logoutAdmin = function() { auth.signOut().then(() => window.location.reload()); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الكاريزما | مستر عمر درويش</title>
+    
+    <!-- === SEO & Meta Tags === -->
+    <meta name="description" content="منصة الكاريزما التعليمية، دليلك للوصول للقمة والحصول على أعلى الدرجات في التاريخ والدراسات الاجتماعية مع مستر عمر درويش.">
+    <meta name="keywords" content="الكاريزما التعليمية, مستر عمر درويش, دراسات اجتماعية, تاريخ, جغرافيا, منصة تعليمية, ثانوية عامة, إعدادي, دروس أونلاين">
+    <meta property="og:title" content="منصة الكاريزما | مستر عمر درويش">
+    <meta property="og:description" content="أقوى منصة تعليمية للتاريخ والدراسات مع المؤرخ والجغرافي الأول مستر عمر درويش.">
+    <meta property="og:image" content="mr.jpeg">
+    <link rel="icon" type="image/png" href="file.enc">
+
+    <!-- === طبقات الأمان (Security Layers) === -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; font-src 'self' https: data:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+
+    <!-- استيراد مكتبات التصميم والأيقونات -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script>
+        // === نظام الحماية الشامل لتعقيم البيانات ===
+        window.CharismaSecurity = {
+            sanitizeInput: (str) => {
+                if (typeof str !== 'string') return str;
+                return str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+            },
+            isValidURL: (url) => /^(https?:\/\/|data:image|mr2\.png|mr\.jpeg)/i.test(url),
+            safeRender: (data) => window.CharismaSecurity.sanitizeInput(String(data)),
+            isSpamming: (() => {
+                let lastClick = 0;
+                return () => {
+                    const now = Date.now();
+                    if (now - lastClick < 1000) return true;
+                    lastClick = now;
+                    return false;
+                };
+            })()
+        };
+
+        window.CharismaEncryption = {
+            encryptData: (data) => {
+                if (!data) return data;
+                try { return btoa(unescape(encodeURIComponent(JSON.stringify(data)))); } catch (e) { return data; }
+            },
+            decryptData: (encryptedData) => {
+                if (!encryptedData) return encryptedData;
+                try { return JSON.parse(decodeURIComponent(escape(atob(encryptedData)))); } catch (e) { return encryptedData; }
+            }
+        };
+
+        // منع الفحص والسرقة
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && e.keyCode === 85)) {
+                return false;
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.88), rgba(30, 58, 138, 0.88), rgba(15, 23, 42, 0.88)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        /* الأنيميشن الجديد لحركة البوكس بأكمله */
+        @keyframes floatAnimation {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating-box {
+            animation: floatAnimation 4s ease-in-out infinite;
+        }
+
+        .anim-header { animation: fadeInDown 0.8s ease-out forwards; }
+        .anim-image { animation: scaleIn 0.8s ease-out 0.4s forwards; }
+
+        .store-section { padding: 90px 20px; background: transparent; color: #fff; }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        .store-header {
+            display: flex; align-items: center; gap: 20px; margin-bottom: 40px;
+            background: rgba(15, 23, 42, 0.6); padding: 20px 25px;
+            border-radius: 20px; border: 1px solid rgba(59, 130, 246, 0.2); backdrop-filter: blur(10px);
+        }
+        .teacher-avatar img {
+            width: 75px; height: 75px; border-radius: 50%; object-fit: cover;
+            border: 2px solid #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+        .store-title-group .section-title {
+            font-size: 1.8rem; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 12px; margin-bottom: 5px;
+        }
+        .cap-icon { color: #38bdf8; }
+        .store-title-group .section-subtitle { color: #94a3b8; font-size: 0.95rem; margin: 0; }
+
+        .empty-store-box {
+            background: rgba(15, 23, 42, 0.4); border: 2px dashed rgba(59, 130, 246, 0.3);
+            border-radius: 20px; padding: 50px 20px; text-align: center; backdrop-filter: blur(8px);
+        }
+        .empty-icon-wrapper {
+            color: #38bdf8; margin-bottom: 15px; background: rgba(56, 189, 248, 0.1);
+            width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; margin-left: auto; margin-right: auto;
+        }
+        .empty-store-box h3 { font-size: 1.3rem; color: #f8fafc; margin-bottom: 8px; font-weight: 600; }
+        .empty-store-box p { color: #94a3b8; font-size: 1rem; margin: 0; }
+
+        @media (max-width: 768px) {
+            .store-header { flex-direction: column; text-align: center; }
+            .store-title-group .section-title { justify-content: center; font-size: 1.5rem; }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen overflow-x-hidden w-full relative">
+
+    <!-- شريط التنقل العلوي -->
+<header class="w-full bg-white/95 backdrop-blur-md text-slate-800 px-3 md:px-6 h-20 sticky top-0 z-50 shadow-sm border-b border-slate-200 flex items-center">
+        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <!-- الشعار -->
+            <a href="#home" class="flex items-center shrink-0">
+                <img src="mr.jpeg" alt="منصة الكاريزما" class="w-14 h-14 md:w-20 md:h-20 object-contain drop-shadow-sm">
+            </a>
+
+            <!-- روابط التنقل السريع للكمبيوتر -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-slate-600">
+                <a href="#home" class="hover:text-blue-600 transition-colors">الرئيسية</a>
+                <a href="#packages" class="hover:text-blue-600 transition-colors">الباقات</a>
+                <a href="#charisma-store" class="hover:text-blue-600 transition-colors">الكاريزما استور</a>
+                <a href="#about" class="hover:text-blue-600 transition-colors">عن المستر</a>
+                <a href="#contact" class="hover:text-blue-600 transition-colors">التواصل</a>
+            </nav>
+
+            <!-- حاوية الحساب وأزرار القائمة الجانبية -->
+            <div class="flex items-center gap-2">
+                <div id="authContainer" class="flex items-center gap-2">
+                    
+                    <!-- القائمة المنسدلة لتسجيل الدخول -->
+                    <div id="loginBtn" class="relative group">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 md:px-5 py-2 rounded-xl text-xs md:text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer">
+                            <span>تسجيل الدخول</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] mt-0.5"></i>
+                        </button>
+                        <!-- محتوى القائمة المنسدلة لتسجيل الدخول -->
+                        <div class="absolute right-0 mt-2 w-44 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 flex flex-col overflow-hidden">
+                            <a href="login.html" class="px-4 py-3 text-sm text-slate-200 hover:bg-blue-600 hover:text-white transition-colors flex items-center gap-3 font-bold">
+                                <i class="fa-solid fa-user-graduate text-blue-400 group-hover:text-white"></i> طالب
+                            </a>
+                            <a href="admain-log in.html" class="px-4 py-3 text-sm text-slate-200 hover:bg-blue-600 hover:text-white transition-colors flex items-center gap-3 border-t border-slate-800 font-bold">
+                                <i class="fa-solid fa-user-shield text-emerald-400 group-hover:text-white"></i> أدمن
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- القائمة المنسدلة الجديدة لإنشاء حساب -->
+                    <div id="signupBtn" class="relative group">
+                        <button class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-3 md:px-5 py-2 rounded-xl text-xs md:text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer">
+                            <span>إنشاء حساب</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] mt-0.5"></i>
+                        </button>
+                        <!-- محتوى القائمة المنسدلة لإنشاء حساب -->
+                        <div class="absolute right-0 mt-2 w-44 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 flex flex-col overflow-hidden">
+                            <a href="login.html" class="px-4 py-3 text-sm text-slate-200 hover:bg-slate-700 hover:text-white transition-colors flex items-center gap-3 font-bold">
+                                <i class="fa-solid fa-user-plus text-blue-400 group-hover:text-white"></i> طالب جديد
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- حاوية الطالب (تظهر عند تسجيل الدخول) -->
+                    <div id="userProfileContainer" style="display: none;" class="items-center gap-1.5 md:gap-3 bg-slate-100 border border-slate-200 px-2.5 py-1.5 rounded-xl text-slate-800">
+                        <img id="userAvatar" src="4.jpg" alt="صورة الطالب" class="w-7 h-7 md:w-9 md:h-9 rounded-full object-cover border-2 border-blue-600 shadow-sm shrink-0">
+                        <span id="userNameDisplay" class="font-bold text-[11px] md:text-sm max-w-[70px] sm:max-w-[100px] md:max-w-none truncate">أهلاً يا بطل</span>
+                        <a href="dashboard.html" class="bg-blue-600 text-white hover:bg-blue-700 font-extrabold px-2 py-1 rounded-lg text-[10px] md:text-xs transition-all shadow-sm shrink-0">لوحة التحكم</a>
+                        <button id="logoutBtn" class="bg-rose-600 text-white hover:bg-rose-700 font-bold px-2 py-1 rounded-lg text-[10px] md:text-xs transition-all shrink-0">خروج</button>
+                    </div>
+                </div>
+
+                <button id="menuToggleBtn" class="md:hidden text-slate-800 hover:text-blue-600 focus:outline-none p-1 shrink-0">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- القائمة الجانبية (Side Menu) للجوال -->
+    <div id="sideMenu" class="fixed inset-y-0 right-0 w-72 bg-slate-900 text-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col p-6 border-l border-slate-800">
+        <div class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+            <span class="font-black text-lg text-blue-400">قائمة المنصة</span>
+            <button id="closeMenuBtn" class="text-slate-400 hover:text-white p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <nav class="flex flex-col gap-4 text-base font-bold text-slate-200">
+            <a href="#home" class="mobile-link hover:text-blue-400 py-2 border-b border-slate-800/50 transition-colors">الرئيسية</a>
+            <a href="#packages" class="mobile-link hover:text-blue-400 py-2 border-b border-slate-800/50 transition-colors">الباقات</a>
+            <a href="#charisma-store" class="mobile-link hover:text-blue-400 py-2 border-b border-slate-800/50 transition-colors">الكاريزما استور</a>
+            <a href="#about" class="mobile-link hover:text-blue-400 py-2 border-b border-slate-800/50 transition-colors">عن المستر</a>
+            <a href="#contact" class="mobile-link hover:text-blue-400 py-2 transition-colors">التواصل</a>
+        </nav>
+        <div class="mt-auto pt-6 border-t border-slate-800 text-center text-xs text-slate-400">
+            منصة الكاريزما © 2026
+        </div>
+    </div>
+    <div id="menuOverlay" class="fixed inset-0 bg-black/60 z-40 hidden backdrop-blur-sm transition-opacity"></div>
+
+<!-- أداة جلب بيانات الطالب وتفعيل الحساب والهيدر ديناميكياً -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBRVM5XsqU0VpteirIsHsudcumcm1v_lAk",
+            authDomain: "omar-3fd07.firebaseapp.com",
+            projectId: "omar-3fd07",
+            storageBucket: "omar-3fd07.firebasestorage.app",
+            messagingSenderId: "506303815561",
+            appId: "1:506303815561:web:f615de9d8e096e870a0b58",
+            measurementId: "G-5S2SHRG7YY"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // تعريف أزرار تسجيل الدخول وإنشاء حساب
+        const loginBtnWrapper = document.getElementById('loginBtn');
+        const signupBtnWrapper = document.getElementById('signupBtn'); // الزرار الجديد
+        const userProfileContainer = document.getElementById('userProfileContainer');
+        const userNameDisplay = document.getElementById('userNameDisplay');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // دالة إظهار الطالب وإخفاء الأزرار
+        function showLoggedInUser(name, avatar) {
+            if(loginBtnWrapper) loginBtnWrapper.style.display = 'none';
+            if(signupBtnWrapper) signupBtnWrapper.style.display = 'none'; // إخفاء زر إنشاء حساب
+            userProfileContainer.style.display = 'flex';
+
+            if (name) {
+                const firstName = window.CharismaSecurity.safeRender(name.split(' ')[0]);
+                userNameDisplay.textContent = `أهلاً ${firstName}`;
+            }
+            if (avatar) {
+                userAvatar.src = window.CharismaSecurity.isValidURL(avatar) ? avatar : "mr2.png";
+            }
+        }
+
+        // دالة إخفاء الطالب وإظهار الأزرار
+        function showLoggedOutState() {
+            if(loginBtnWrapper) loginBtnWrapper.style.display = 'block';
+            if(signupBtnWrapper) signupBtnWrapper.style.display = 'block'; // إظهار زر إنشاء حساب
+            userProfileContainer.style.display = 'none';
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+
+                    let name = user.displayName || user.email.split('@')[0];
+                    let avatar = user.photoURL || "mr2.png";
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.name) name = data.name;
+                        if (data.avatarUrl) avatar = data.avatarUrl;
+                    }
+                    showLoggedInUser(name, avatar);
+                } catch (error) {
+                    showLoggedInUser(user.displayName || "بطل", user.photoURL || "mr2.png");
+                }
+            } else {
+                let foundName = null;
+                let foundAvatar = "mr.jpeg";
+
+                const directName = localStorage.getItem('userName') || localStorage.getItem('studentName') || localStorage.getItem('name');
+                if (directName && directName.length < 50) { foundName = directName; }
+
+                ['user', 'loggedUser', 'studentData', 'currentUser'].forEach(k => {
+                    try {
+                        const val = localStorage.getItem(k);
+                        if (val) {
+                            const parsed = JSON.parse(val);
+                            if (parsed.name) foundName = parsed.name;
+                            else if (parsed.fullName) foundName = parsed.fullName;
+                            if (parsed.avatar) foundAvatar = parsed.avatar;
+                            else if (parsed.avatarUrl) foundAvatar = parsed.avatarUrl;
+                        }
+                    } catch (e) { }
+                });
+
+                const directAvatar = localStorage.getItem('studentAvatar') || localStorage.getItem('userAvatar') || localStorage.getItem('avatar');
+                if (directAvatar) { foundAvatar = directAvatar; }
+
+                if (foundName) { showLoggedInUser(foundName, foundAvatar); } 
+                else { showLoggedOutState(); }
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                localStorage.clear();
+                window.location.reload();
+            } catch (error) { }
+        });
+
+        // تحكم القائمة الجانبية للموبايل
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            const isOpen = sideMenu.classList.contains('translate-x-0');
+            if (isOpen) {
+                sideMenu.classList.remove('translate-x-0');
+                sideMenu.classList.add('translate-x-full');
+                menuOverlay.classList.add('hidden');
+            } else {
+                sideMenu.classList.remove('translate-x-full');
+                sideMenu.classList.add('translate-x-0');
+                menuOverlay.classList.remove('hidden');
+            }
+        }
+
+        menuToggleBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        menuOverlay.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+    </script>
+    <!-- الواجهة الرئيسية -->
+    <section id="home" class="relative min-h-[85vh] flex items-center pt-16 pb-16 px-6 lg:px-16 scroll-mt-24">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+            <div class="col-span-1 lg:col-span-7 text-right anim-header">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-200 text-xs font-bold mb-6">
+                    <i class="fa-solid fa-star text-blue-300"></i>
+                    <span>المؤرخ والجغرافي الأول</span>
+                </span>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight mb-6 text-white">
+                    مع الكاريزما.. <br>
+                    <span class="text-blue-400">التاريخ في امان لسنين قدام</span>
+                </h1>
+                <div class="text-blue-100 font-bold text-lg mb-6 bg-blue-900/80 border-r-4 border-blue-400 p-3 rounded-l-xl">
+                    "طلاب الكاريزما سابقين بسنين ضوئية"
+                </div>
+                <p class="text-slate-200 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl">
+                    رحلتك للدرجة النهائية في الدراسات الاجتماعية والتاريخ والجغرافيا تبدأ من هنا مع مستر عمر درويش.
+                </p>
+
+                <div class="bg-blue-950/70 border border-blue-500/40 p-4 rounded-2xl max-w-sm mb-8 shadow-lg backdrop-blur-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-600/30 flex items-center justify-center text-blue-300">
+                        <i class="fa-solid fa-users text-xl"></i>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-black text-blue-400 flex items-center gap-1">
+                            <span id="heroCounter" data-target="4000">0</span>
+                            <span>+</span>
+                        </div>
+                        <span class="text-slate-300 text-xs font-bold">طالب وطالبة من المشتركين معنا</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="#packages" class="bg-blue-500 hover:bg-blue-600 text-white font-extrabold px-8 py-3.5 rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center gap-2">
+                        <span>استكشف المنصة والباقات</span>
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- تم نقل حركة الأنيميشن (floating-box) للبوكس كله مش للصورة بس -->
+            <div class="hidden lg:flex lg:col-span-5 justify-center relative anim-image">
+                <div class="relative p-3.5 bg-gradient-to-b from-blue-500/30 via-slate-900/80 to-blue-950/90 rounded-3xl border-2 border-blue-400/50 shadow-2xl backdrop-blur-md floating-box">
+                    <div class="absolute -top-3.5 right-6 bg-blue-600 text-white text-[11px] font-extrabold px-4 py-1 rounded-full shadow-md border border-blue-300">مستر عمر درويش</div>
+                    <img src="file.enc" alt="مستر عمر درويش" class="w-70 sm:w-96 object-cover rounded-2xl drop-shadow-2xl border border-blue-500/30">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- سكشن الباقات - حل كامل لظهوره في الموبايل واللاب توب (تم إزالة أي Hidden) -->
+    <section id="packages" class="py-24 px-4 sm:px-6 lg:px-16 border-t border-slate-700/50 bg-slate-900/40 backdrop-blur-sm scroll-mt-24">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="text-center mb-12">
+                <span class="text-blue-400 font-bold text-sm bg-blue-600/20 px-4 py-1.5 rounded-full border border-blue-400/30">المجموعات الدراسية</span>
+                <h2 class="text-3xl lg:text-4xl font-black text-white mt-4">اختر باقتك وانطلق نحو التفوق</h2>
+                <p class="text-slate-300 mt-3 text-lg">باقات مخصصة لتغطي المنهج بالكامل بأعلى جودة وشرح تفاعلي</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-16">
+                <button onclick="filterPackages('all')" class="filter-btn active bg-blue-600 text-white font-extrabold px-5 py-2.5 rounded-full shadow-md shadow-blue-600/20 transition-all text-sm">جميع الباقات</button>
+                <button onclick="filterPackages('bac')" class="filter-btn bg-slate-800/80 text-slate-200 border border-slate-600 hover:border-blue-400 font-bold px-5 py-2.5 rounded-full transition-all text-sm shadow-sm">باقات البكالوريا</button>
+                <button onclick="filterPackages('prep')" class="filter-btn bg-slate-800/80 text-slate-200 border border-slate-600 hover:border-amber-400 font-bold px-5 py-2.5 rounded-full transition-all text-sm shadow-sm">باقات الإعدادي</button>
+            </div>
+
+            <div id="packagesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 justify-center">
+
+                <!-- 1. باقة ملوك البكالوريا -->
+                <div data-category="bac" data-package-id="ملوك البكالوريا - 2بكالوريا" class="package-card bg-slate-900/90 border-2 border-blue-500 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-xl relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-2 bg-blue-600 text-white text-[11px] font-extrabold px-4 py-1 rounded-full">الأكثر طلباً</span>
+                    <div class="w-32 h-32 mb-4 relative mt-3">
+                        <div class="absolute inset-0 bg-blue-400/20 rounded-full blur-xl"></div>
+                        <img src="2ع.png" alt="ملوك البكالوريا" class="w-32 h-32 object-cover rounded-full border-4 border-blue-500 relative z-10 shadow-md">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-2">ملوك البكالوريا - 2بكالوريا</h3>
+                    <p class="text-slate-300 text-xs mb-4">تخصص البكالوريا - المنهج الجديد مع تقارير ومتابعة مستمرة.</p>
+                    <ul class="text-right w-full text-slate-200 text-xs mb-6 space-y-2.5 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 shrink-0"></i> المنهج الجديد بالكامل</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 shrink-0"></i> تقارير ومتابعة مستمرة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 shrink-0"></i> شرح تفاعلي ومبسط</li>
+                    </ul>
+                    <div class="text-blue-400 font-black text-2xl mb-6 flex items-baseline justify-center gap-1">
+                        150 <span class="text-xs font-semibold text-slate-300">ج.م/شهرياً</span>
+                    </div>
+                    <a href="checkout.html?title=ملوك البكالوريا - 2بكالوريا&price=150&period=شهرياً&image=2ع.png&desc=تخصص البكالوريا - المنهج الجديد مع تقارير ومتابعة مستمرة." onclick="checkSubscription(event, 'package_1')" class="sub-btn mt-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-md text-sm inline-block text-center">اشترك الآن</a>
+                </div>
+
+                <!-- 2. باقة أبطال 1 إعدادي -->
+                <div data-category="prep" data-package-id="أبطال 1 إعدادي" class="package-card bg-slate-900/90 border-2 border-amber-500 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-xl relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-2 bg-amber-500 text-white text-[11px] font-extrabold px-4 py-1 rounded-full">مراجعات وإمتحانات</span>
+                    <div class="w-32 h-32 mb-4 relative mt-3">
+                        <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-xl"></div>
+                        <img src="1.png" alt="أبطال 1 اعدادي" class="w-32 h-32 object-cover rounded-full border-4 border-amber-500 relative z-10 shadow-md">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-2">أبطال 1 إعدادي</h3>
+                    <p class="text-slate-300 text-xs mb-4">مراجعات الوحدات وامتحان الشهور للضمان التام للدرجة النهائية.</p>
+                    <ul class="text-right w-full text-slate-200 text-xs mb-6 space-y-2.5 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> مراجعات الوحدات كاملة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> امتحان الشهور والتدريبات</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> متابعة خاصة للمستوى</li>
+                    </ul>
+                    <div class="text-amber-400 font-black text-2xl mb-6 flex items-baseline justify-center gap-1">
+                        50 <span class="text-xs font-semibold text-slate-300">ج.م/للمراجعة</span>
+                    </div>
+                    <a href="checkout.html?title=أبطال 1 إعدادي&price=50&period=للمراجعة / شهرياً&image=1.png&desc=مراجعات الوحدات وامتحان الشهور للضمان التام للدرجة النهائية." onclick="checkSubscription(event, 'package_2')" class="sub-btn mt-auto w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-md text-sm inline-block text-center">احجز مكانك الآن</a>
+                </div>
+
+                <!-- 3. باقة التاريخ المكثف -->
+                <div data-category="bac" data-package-id="التاريخ المكثف - اولى بكالوريا" class="package-card bg-slate-900/90 border border-slate-700 hover:border-blue-400 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-lg relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-2 bg-blue-900/80 text-blue-300 text-[11px] font-extrabold px-4 py-1 rounded-full border border-blue-500/30">باقات مبهرة</span>
+                    <div class="w-32 h-32 mb-4 relative mt-3">
+                        <div class="absolute inset-0 bg-blue-500/10 rounded-full blur-xl"></div>
+                        <img src="تاريخ.png" alt="التاريخ المكثف" class="w-32 h-32 object-cover rounded-full border-2 border-slate-600 relative z-10">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-2">التاريخ المكثف - اولى بكالوريا</h3>
+                    <p class="text-slate-300 text-xs mb-4">باقة تضمن التفوق المطلق.</p>
+                    <ul class="text-right w-full text-slate-300 text-xs mb-6 space-y-2.5 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 shrink-0"></i> شرح مكثف ومبسط للتاريخ</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 shrink-0"></i> شيت مجاني مع كل محاضرة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400 shrink-0"></i> متابعة مستمرة وتفاعل دائم</li>
+                    </ul>
+                    <div class="text-blue-400 font-black text-2xl mb-6 flex items-baseline justify-center gap-1">
+                        50 <span class="text-xs font-semibold text-slate-300">ج.م/شهرياً</span>
+                    </div>
+                    <a href="checkout.html?title=التاريخ المكثف - اولى بكالوريا&price=50&period=شهرياً&image=تاريخ.png&desc=باقة تضمن التفوق المطلق في مادة التاريخ." onclick="checkSubscription(event, 'package_3')" class="sub-btn mt-auto w-full bg-blue-600/30 hover:bg-blue-600 text-blue-200 hover:text-white font-bold py-2.5 rounded-xl border border-blue-500/50 transition-all text-sm inline-block text-center">اشترك الآن</a>
+                </div>
+
+                <!-- 4. باقة منهج 3 إعدادي -->
+                <div data-category="prep" data-package-id="منهج 3 إعدادي" class="package-card bg-slate-900/90 border border-slate-700 hover:border-amber-400 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-lg relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-2 bg-amber-900/80 text-amber-300 text-[11px] font-extrabold px-4 py-1 rounded-full border border-amber-500/30">المنهج الجديد</span>
+                    <div class="w-32 h-32 mb-4 relative mt-3">
+                        <div class="absolute inset-0 bg-amber-500/10 rounded-full blur-xl"></div>
+                        <img src="3ع.png" alt="منهج 3 اعدادي" class="w-32 h-32 object-cover rounded-full border-2 border-slate-600 relative z-10">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-2">منهج 3 إعدادي</h3>
+                    <p class="text-slate-300 text-xs mb-4">شرح تفصيلي للمنهج الجديد بأعلى كفاءة وامتحانات دورية.</p>
+                    <ul class="text-right w-full text-slate-300 text-xs mb-6 space-y-2.5 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> امتحان مكثف على كل درس</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> متابعة دورية ومستمرة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> امتحانات إلكترونية</li>
+                    </ul>
+                    <div class="text-amber-400 font-black text-2xl mb-6 flex items-baseline justify-center gap-1">
+                        150 <span class="text-xs font-semibold text-slate-300">ج.م/شهرياً</span>
+                    </div>
+                    <a href="checkout.html?title=منهج 3 إعدادي&price=150&period=شهرياً&image=3ع.png&desc=شرح تفصيلي للمنهج الجديد بأعلى كفاءة وامتحانات دورية." onclick="checkSubscription(event, 'package_4')" class="sub-btn mt-auto w-full bg-amber-500/30 hover:bg-amber-500 text-amber-200 hover:text-white font-bold py-2.5 rounded-xl border border-amber-500/50 transition-all text-sm inline-block text-center">احجز الآن</a>
+                </div>
+
+                <!-- 5. باقة منهج 2 إعدادي -->
+                <div data-category="prep" data-package-id="منهج 2 إعدادي" class="package-card bg-slate-900/90 border border-slate-700 hover:border-amber-400 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-lg relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-2 bg-amber-900/80 text-amber-300 text-[11px] font-extrabold px-4 py-1 rounded-full border border-amber-500/30">المنهج الجديد</span>
+                    <div class="w-32 h-32 mb-4 relative mt-3">
+                        <div class="absolute inset-0 bg-amber-500/10 rounded-full blur-xl"></div>
+                        <img src="2ع.png" alt="منهج 2 اعدادي" class="w-32 h-32 object-cover rounded-full border-2 border-slate-600 relative z-10">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-2">منهج 2 إعدادي</h3>
+                    <p class="text-slate-300 text-xs mb-4">شرح متكامل للمنهج ومتابعة دورية لاختبارات الشهر.</p>
+                    <ul class="text-right w-full text-slate-300 text-xs mb-6 space-y-2.5 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> شرح مبسط وشامل للدرس</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> اختبارات دورية ومتابعة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> مراجعات الشهور النهائية</li>
+                    </ul>
+                    <div class="text-amber-400 font-black text-2xl mb-6 flex items-baseline justify-center gap-1">
+                        100 <span class="text-xs font-semibold text-slate-300">ج.م/شهرياً</span>
+                    </div>
+                    <a href="checkout.html?title=منهج 2 إعدادي&price=100&period=شهرياً&image=2ع.png&desc=شرح متكامل للمنهج ومتابعة دورية لاختبارات الشهر." onclick="checkSubscription(event, 'package_5')" class="sub-btn mt-auto w-full bg-amber-500/30 hover:bg-amber-500 text-amber-200 hover:text-white font-bold py-2.5 rounded-xl border border-amber-500/50 transition-all text-sm inline-block text-center">احجز الآن</a>
+                </div>
+
+                <!-- 6. باقة الترم: ملوك البكالوريا - 2بكالوريا (الترم) -->
+                <div data-category="bac" data-package-id="ملوك البكالوريا - 2بكالوريا - الترم" class="package-card bg-slate-900/95 border-2 border-amber-500 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-2xl relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-3 bg-amber-500 text-white text-xs font-extrabold px-4 py-1 rounded-full shadow">باقة الترم</span>
+                    <div class="w-32 h-32 mb-5 relative mt-2">
+                        <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-xl"></div>
+                        <img src="2ع.png" alt="ملوك البكالوريا" class="w-32 h-32 object-cover rounded-full border-4 border-amber-500 relative z-10 shadow-lg mx-auto">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-1">ملوك البكالوريا - 2بكالوريا - الترم</h3>
+                    <p class="text-slate-300 text-xs mb-4">الترم بالكامل من البداية لحد النتيجة بضمان التفوق.</p>
+                    <div class="w-full border-t border-slate-800/80 my-2"></div>
+                    <ul class="text-right w-full text-slate-200 text-xs mb-6 space-y-2.5 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> الترم بالكامل من البداية للنتيجة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> مراجعات شاملة وامتحانات نهائية</li>
+                    </ul>
+                    <div class="w-full bg-slate-800/90 border border-slate-700/80 p-3 rounded-2xl flex items-center justify-center gap-3 mb-5">
+                        <div class="bg-amber-500 text-white font-black text-xl px-4 py-1.5 rounded-xl shadow">300</div>
+                        <div class="text-right">
+                            <span class="block text-xs text-slate-300 font-bold">ج.م</span>
+                            <span class="block text-[11px] text-amber-400 font-extrabold">الترم بالكامل</span>
+                        </div>
+                    </div>
+                    <a href="checkout.html?title=ملوك البكالوريا - 2بكالوريا (الترم)&price=300&period=الترم بالكامل&image=2ع.png&desc=الترم بالكامل من البداية لحد النتيجة بضمان التفوق." onclick="checkSubscription(event, 'package_term_1')" class="sub-btn mt-auto w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm inline-block text-center">اشترك في باقة الترم</a>
+                </div>
+
+                <!-- 7. باقة الترم: أبطال 1 إعدادي (الترم) -->
+                <div data-category="prep" data-package-id=" ابطال 1 اعدادي -الترم" class="package-card bg-slate-900/95 border border-slate-700 hover:border-amber-500 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-xl relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-3 bg-amber-500 text-white text-xs font-extrabold px-4 py-1 rounded-full shadow">باقة الترم</span>
+                    <div class="w-32 h-32 mb-5 relative mt-2">
+                        <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-xl"></div>
+                        <img src="1.png" alt="أبطال 1 اعدادي" class="w-32 h-32 object-cover rounded-full border-4 border-amber-500 relative z-10 shadow-lg mx-auto">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-1"> ابطال 1 اعدادي -الترم</h3>
+                    <p class="text-slate-300 text-xs mb-4">الترم بالكامل من البداية لحد النتيجة لأولى إعدادي.</p>
+                    <div class="w-full border-t border-slate-800/80 my-2"></div>
+                    <ul class="text-right w-full text-slate-300 text-xs mb-6 space-y-2.5 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> الترم بالكامل من البداية للنتيجة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> تغطية شاملة للمنهج وامتحانات</li>
+                    </ul>
+                    <div class="w-full bg-slate-800/90 border border-slate-700/80 p-3 rounded-2xl flex items-center justify-center gap-3 mb-5">
+                        <div class="bg-amber-500 text-white font-black text-xl px-4 py-1.5 rounded-xl shadow">200</div>
+                        <div class="text-right">
+                            <span class="block text-xs text-slate-300 font-bold">ج.م</span>
+                            <span class="block text-[11px] text-amber-400 font-extrabold">الترم بالكامل</span>
+                        </div>
+                    </div>
+                    <a href="checkout.html?title=أبطال 1 إعدادي (الترم)&price=200&period=الترم بالكامل&image=1.png&desc=الترم بالكامل من البداية لحد النتيجة لأولى إعدادي." onclick="checkSubscription(event, 'package_term_2')" class="sub-btn mt-auto w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm inline-block text-center">اشترك في باقة الترم</a>
+                </div>
+
+                <!-- 8. باقة الترم: التاريخ المكثف - اولى بكالوريا (الترم) -->
+                <div data-category="bac" data-package-id="التاريخ المكثف - اولى بكالوريا- الترم" class="package-card bg-slate-900/95 border border-slate-700 hover:border-amber-500 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-xl relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-3 bg-amber-500 text-white text-xs font-extrabold px-4 py-1 rounded-full shadow">باقة الترم</span>
+                    <div class="w-32 h-32 mb-5 relative mt-2">
+                        <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-xl"></div>
+                        <img src="تاريخ.png" alt="التاريخ المكثف" class="w-32 h-32 object-cover rounded-full border-4 border-amber-500 relative z-10 shadow-lg mx-auto">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-1">التاريخ المكثف - اولى بكالوريا- الترم</h3>
+                    <p class="text-slate-300 text-xs mb-4">الترم بالكامل من البداية لحد النتيجة لمادة التاريخ.</p>
+                    <div class="w-full border-t border-slate-800/80 my-2"></div>
+                    <ul class="text-right w-full text-slate-300 text-xs mb-6 space-y-2.5 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> الترم بالكامل من البداية للنتيجة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> بنوك معطيات وباراجات شاملة</li>
+                    </ul>
+                    <div class="w-full bg-slate-800/90 border border-slate-700/80 p-3 rounded-2xl flex items-center justify-center gap-3 mb-5">
+                        <div class="bg-amber-500 text-white font-black text-xl px-4 py-1.5 rounded-xl shadow">250</div>
+                        <div class="text-right">
+                            <span class="block text-xs text-slate-300 font-bold">ج.م</span>
+                            <span class="block text-[11px] text-amber-400 font-extrabold">الترم بالكامل</span>
+                        </div>
+                    </div>
+                    <a href="checkout.html?title=التاريخ المكثف - اولى بكالوريا (الترم)&price=250&period=الترم بالكامل&image=تاريخ.png&desc=الترم بالكامل من البداية لحد النتيجة لمادة التاريخ." onclick="checkSubscription(event, 'package_term_3')" class="sub-btn mt-auto w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm inline-block text-center">اشترك في باقة الترم</a>
+                </div>
+
+                <!-- 9. باقة الترم: منهج 3 إعدادي (الترم) -->
+                <div data-category="prep" data-package-id="منهج 3 إعدادي - الترم" class="package-card bg-slate-900/95 border border-slate-700 hover:border-amber-500 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-xl relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-3 bg-amber-500 text-white text-xs font-extrabold px-4 py-1 rounded-full shadow">باقة الترم</span>
+                    <div class="w-32 h-32 mb-5 relative mt-2">
+                        <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-xl"></div>
+                        <img src="3ع.png" alt="منهج 3 اعدادي" class="w-32 h-32 object-cover rounded-full border-4 border-amber-500 relative z-10 shadow-lg mx-auto">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-1">منهج 3 إعدادي - الترم</h3>
+                    <p class="text-slate-300 text-xs mb-4">الترم كامل من البداية لحد النتيجة لأحدث المناهج.</p>
+                    <div class="w-full border-t border-slate-800/80 my-2"></div>
+                    <ul class="text-right w-full text-slate-300 text-xs mb-6 space-y-2.5 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> الترم كامل من البداية للنتيجة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> مراجعات نهائية وامتحانات شاملة</li>
+                    </ul>
+                    <div class="w-full bg-slate-800/90 border border-slate-700/80 p-3 rounded-2xl flex items-center justify-center gap-3 mb-5">
+                        <div class="bg-amber-500 text-white font-black text-xl px-4 py-1.5 rounded-xl shadow">450</div>
+                        <div class="text-right">
+                            <span class="block text-xs text-slate-300 font-bold">ج.م</span>
+                            <span class="block text-[11px] text-amber-400 font-extrabold">الترم كامل</span>
+                        </div>
+                    </div>
+                    <a href="checkout.html?title=منهج 3 إعدادي (الترم)&price=450&period=الترم بالكامل&image=3ع.png&desc=الترم كامل من البداية لحد النتيجة لأحدث المناهج." onclick="checkSubscription(event, 'package_term_4')" class="sub-btn mt-auto w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm inline-block text-center">اشترك في باقة الترم</a>
+                </div>
+
+                <!-- 10. باقة الترم: كتيبة 2ع (الترم) -->
+                <div data-category="prep" data-package-id="كتيبة 2ع" class="package-card bg-slate-900/95 border border-slate-700 hover:border-amber-500 rounded-3xl p-6 text-center transition-all duration-300 hover:-translate-y-2 flex flex-col items-center shadow-xl relative overflow-hidden pt-8 text-white">
+                    <span class="absolute top-3 bg-amber-500 text-white text-xs font-extrabold px-4 py-1 rounded-full shadow">باقة الترم</span>
+                    <div class="w-32 h-32 mb-5 relative mt-2">
+                        <div class="absolute inset-0 bg-amber-400/20 rounded-full blur-xl"></div>
+                        <img src="2ع.png" alt="كتيبة 2 اعدادي" class="w-32 h-32 object-cover rounded-full border-4 border-amber-500 relative z-10 shadow-lg mx-auto">
+                    </div>
+                    <h3 class="font-black text-xl text-white mb-1">كتيبة 2ع</h3>
+                    <p class="text-slate-300 text-xs mb-4">الترم كامل من البداية لحد النتيجة للصف الثاني الإعدادي.</p>
+                    <div class="w-full border-t border-slate-800/80 my-2"></div>
+                    <ul class="text-right w-full text-slate-300 text-xs mb-6 space-y-2.5 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> الترم كامل من البداية للنتيجة</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400 shrink-0"></i> اختبارات دورية ومتابعة خاصة</li>
+                    </ul>
+                    <div class="w-full bg-slate-800/90 border border-slate-700/80 p-3 rounded-2xl flex items-center justify-center gap-3 mb-5">
+                        <div class="bg-amber-500 text-white font-black text-xl px-4 py-1.5 rounded-xl shadow">250</div>
+                        <div class="text-right">
+                            <span class="block text-xs text-slate-300 font-bold">ج.م</span>
+                            <span class="block text-[11px] text-amber-400 font-extrabold">الترم كامل</span>
+                        </div>
+                    </div>
+                    <a href="checkout.html?title=كتيبة 2ع (الترم)&price=250&period=الترم بالكامل&image=2ع.png&desc=الترم كامل من البداية لحد النتيجة للصف الثاني الإعدادي." onclick="checkSubscription(event, 'package_term_5')" class="sub-btn mt-auto w-full bg-amber-500 hover:bg-amber-600 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm inline-block text-center">اشترك في باقة الترم</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- رسالة التنبيه المنسقة للموبايل واللاب توب بالـ SVG بدون إيموجي -->
+        <div id="customAlertModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+            <div class="bg-slate-900 border-2 border-red-500/60 rounded-3xl max-w-md w-[92%] sm:w-full mx-auto p-5 sm:p-6 text-white text-center relative shadow-2xl animate-fade-in">
+                <div class="w-16 h-16 bg-red-500/20 text-red-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-black border border-red-500/40">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="text-xl font-black mb-2 text-red-400">تنبيه اشتراك سابق!</h3>
+                <p id="customAlertText" class="text-slate-300 text-xs sm:text-sm mb-6 leading-relaxed"></p>
+                <div class="flex gap-3">
+                    <button onclick="closeCustomAlert()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-md text-sm">تراجع</button>
+                    <button onclick="confirmCheckout()" class="w-1/2 bg-red-600 hover:bg-red-700 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-md text-sm">متابعة</button>
+                </div>
+            </div>
+        </div>
+
+        <script type="module">
+            import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+            import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+            import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+            const firebaseConfigStore = {
+                apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
+                authDomain: "omar-12-5e10c.firebaseapp.com",
+                projectId: "omar-12-5e10c",
+                storageBucket: "omar-12-5e10c.firebasestorage.app",
+                messagingSenderId: "259543055483",
+                appId: "1:259543055483:web:45590ba2be3a52ce8776de",
+                measurementId: "G-RJCWWZJYJT"
+            };
+
+            const allApps = getApps();
+            let storeApp = allApps.find(app => app.name === "StoreApp");
+            if (!storeApp) { storeApp = initializeApp(firebaseConfigStore, "StoreApp"); }
+
+            const auth = getAuth(storeApp);
+            const db = getFirestore(storeApp);
+
+            window.userSubscriptions = [];
+            window.pendingCheckoutUrl = null;
+
+            function registerSubscriptionLocally(pkgIdentifier) {
+                if (!pkgIdentifier) return;
+                const cleanIdentifier = window.CharismaSecurity.safeRender(String(pkgIdentifier).trim().toLowerCase());
+
+                const cards = document.querySelectorAll('.package-card');
+                cards.forEach(card => {
+                    const pkgId = card.getAttribute('data-package-id')?.trim().toLowerCase() || '';
+                    const cardTitle = card.querySelector('h3')?.innerText?.trim().toLowerCase() || '';
+
+                    if (pkgId === cleanIdentifier || cardTitle.includes(cleanIdentifier) || cleanIdentifier.includes(pkgId)) {
+                        const originalPkgId = card.getAttribute('data-package-id');
+                        if (originalPkgId && !window.userSubscriptions.includes(originalPkgId)) {
+                            window.userSubscriptions.push(originalPkgId);
+                        }
+                        const btn = card.querySelector('.sub-btn');
+                        if (btn) {
+                            btn.innerText = "عرض الدروس";
+                            btn.className = "sub-btn mt-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-md text-sm inline-block text-center";
+                            btn.onclick = function (e) { e.preventDefault(); window.location.href = "dashboard.html"; };
+                        }
+                        if (originalPkgId) localStorage.setItem('subscribed_' + originalPkgId, 'true');
+                    }
+                });
+            }
+
+            onAuthStateChanged(auth, async (user) => {
+                let allSubs = [];
+                if (user) {
+                    try {
+                        let userDoc = await getDoc(doc(db, "users", user.uid));
+                        if (!userDoc.exists()) userDoc = await getDoc(doc(db, "student", user.uid));
+                        if (userDoc.exists()) {
+                            const data = userDoc.data();
+                            const rawSubs = data.subscriptions || data.packages || data.subscription || [];
+                            if (Array.isArray(rawSubs)) allSubs.push(...rawSubs);
+                            else if (typeof rawSubs === 'object' && rawSubs !== null) allSubs.push(...Object.keys(rawSubs));
+                            else if (typeof rawSubs === 'string') allSubs.push(rawSubs);
+                        }
+                    } catch (err) {}
+                }
+
+                const localPackages = JSON.parse(localStorage.getItem('userSubscribedPackages')) || [];
+                localPackages.forEach(p => { if (p.title) allSubs.push(p.title); });
+
+                const allCards = document.querySelectorAll('.package-card');
+                allCards.forEach(card => {
+                    const pkgId = card.getAttribute('data-package-id');
+                    if (pkgId && localStorage.getItem('subscribed_' + pkgId) === 'true') allSubs.push(pkgId);
+                });
+
+                allSubs.forEach(sub => registerSubscriptionLocally(sub));
+            });
+
+            window.checkSubscription = function (event, pkgId) {
+                event.preventDefault();
+                if (window.CharismaSecurity.isSpamming()) return;
+
+                const checkoutUrl = event.currentTarget.href;
+
+                if (window.userSubscriptions.includes(pkgId) || event.currentTarget.innerText === "عرض الدروس") {
+                    window.location.href = "dashboard.html";
+                    return;
+                }
+
+                if (window.userSubscriptions.length > 0) {
+                    const activeNames = window.userSubscriptions.map(id => {
+                        const card = document.querySelector(`[data-package-id="${id}"]`);
+                        return card ? card.querySelector('h3').innerText : id;
+                    }).join('، ');
+
+                    const alertTextEl = document.getElementById('customAlertText');
+                    if (alertTextEl) {
+                        alertTextEl.innerHTML = `أنت مشترك بالفعل في الباقة التالية: <br><span class="text-amber-400 font-bold mt-1 inline-block">${window.CharismaSecurity.safeRender(activeNames)}</span><br><br>هل أنت متأكد من رغبتك في الانتقال لصفحة الدفع لباقة إضافية؟`;
+                    }
+
+                    window.pendingCheckoutUrl = checkoutUrl;
+                    const modal = document.getElementById('customAlertModal');
+                    if (modal) modal.classList.remove('hidden');
+                    return;
+                }
+                window.location.href = checkoutUrl;
+            }
+
+            window.confirmCheckout = function () {
+                if (window.pendingCheckoutUrl) window.location.href = window.pendingCheckoutUrl;
+            }
+
+            window.closeCustomAlert = function () {
+                const modal = document.getElementById('customAlertModal');
+                if (modal) modal.classList.add('hidden');
+                window.pendingCheckoutUrl = null;
+            }
+
+            // فحص كاريزما استور الذكي
+            loadStoreProducts();
+            window.buyStoreProduct = function (title, price, image, desc, fileUrl) {
+                sessionStorage.setItem('currentStoreImg', image);
+                sessionStorage.setItem('currentStoreDesc', desc);
+                window.location.href = `elkarizma.html?title=${encodeURIComponent(title)}&price=${price}&fileUrl=${encodeURIComponent(fileUrl)}`;
+            };
+
+            async function loadStoreProducts() {
+                const container = document.querySelector('.store-content-area');
+                if (!container) return;
+
+                try {
+                    const q = query(collection(db, "store_products"), orderBy("createdAt", "desc"));
+                    const snapshot = await getDocs(q);
+
+                    if (snapshot.empty) return;
+
+                    let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 w-full">';
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const safeName = window.CharismaSecurity.safeRender(data.name || 'منتج كاريزما');
+                        const safeDesc = window.CharismaSecurity.safeRender(data.description || '');
+                        const safePrice = window.CharismaSecurity.safeRender(data.price || 0);
+                        const safeImg = window.CharismaSecurity.isValidURL(data.imageUrl) ? data.imageUrl : 'mr.jpeg';
+                        const fileUrl = data.fileUrl || '';
+
+                        let isOwned = localStorage.getItem('ownedProduct_' + safeName.trim()) === 'true';
+                        if (!isOwned && window.userSubscriptions && window.userSubscriptions.length > 0) {
+                            if (window.userSubscriptions.some(sub => sub.toLowerCase().includes(safeName.toLowerCase()) || safeName.toLowerCase().includes(sub.toLowerCase()))) {
+                                isOwned = true;
+                            }
+                        }
+
+                        let actionBtnHTML = '';
+                        if (isOwned && fileUrl) {
+                            actionBtnHTML = `<a href="${fileUrl}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all text-center flex items-center gap-1 justify-center w-full"><i class="fa-solid fa-eye"></i> عرض الملزمة</a>`;
+                        } else {
+                            actionBtnHTML = `<button onclick="buyStoreProduct(decodeURIComponent('${encodeURIComponent(safeName)}'), '${safePrice}', decodeURIComponent('${encodeURIComponent(safeImg)}'), decodeURIComponent('${encodeURIComponent(safeDesc)}'), decodeURIComponent('${encodeURIComponent(fileUrl)}'))" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all text-center w-full"><i class="fa-solid fa-cart-shopping"></i> شراء الآن</button>`;
+                        }
+
+                        html += `
+                        <div class="bg-slate-900/80 border border-blue-500/30 rounded-2xl overflow-hidden hover:border-blue-400 transition-all shadow-lg flex flex-col group text-right">
+                            <img src="${safeImg}" alt="${safeName}" class="w-full h-48 object-cover border-b border-blue-500/30 group-hover:scale-105 transition-transform duration-300">
+                            <div class="p-5 flex flex-col flex-grow">
+                                <h3 class="text-lg font-bold text-white mb-2">${safeName}</h3>
+                                <p class="text-slate-400 text-xs mb-4 line-clamp-2 flex-grow">${safeDesc}</p>
+                                <div class="flex justify-between items-center mt-auto border-t border-slate-700/50 pt-4">
+                                    <div class="text-blue-400 font-black text-xl flex items-baseline gap-1 shrink-0">
+                                        ${safePrice} <span class="text-xs text-slate-300 font-bold">ج.م</span>
+                                    </div>
+                                    <div class="shrink-0 w-28">
+                                        ${actionBtnHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    });
+                    html += '</div>';
+                    container.innerHTML = html;
+                } catch (err) { }
+            }
+        </script>
+    </section>
+
+    <!-- Charisma Store Section (مظبوط للموبايل بدون إخفاء) -->
+    <section id="charisma-store" class="store-section scroll-mt-24">
+        <div class="container w-full px-4 sm:px-0">
+            <div class="store-header">
+                <div class="teacher-avatar">
+                    <img src="file.enc" alt="مستر عمر درويش">
+                </div>
+                <div class="store-title-group">
+                    <h2 class="section-title">
+                        <i class="fa-solid fa-store text-blue-400"></i>
+                        منتجات الكاريزما ستور
+                    </h2>
+                    <p class="section-subtitle">كل اللي محتاجه عشان تسيطر على المادة وتوصل للدرجة النهائية مع مستر عمر درويش</p>
+                </div>
+            </div>
+            <div class="store-content-area">
+                <div class="empty-store-box">
+                    <div class="empty-icon-wrapper">
+                        <i class="fa-solid fa-box-open text-2xl text-blue-400"></i>
+                    </div>
+                    <h3>لا يوجد منتجات حالياً</h3>
+                    <p>لسه مأضفناش حاجة، تابعنا قريباً عشان تلاقي أقوى الملازم والملخصات الحصرية!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- سكشن عن المستر -->
+    <section id="about" class="py-24 px-6 lg:px-16 border-t border-slate-700/50 reveal bg-slate-900/50 backdrop-blur-sm scroll-mt-24">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-blue-400 font-bold text-sm bg-blue-600/20 px-4 py-1.5 rounded-full border border-blue-400/30">قصة نجاح الكاريزما</span>
+                <h2 class="text-3xl lg:text-4xl font-black text-white mt-4">تعرف عن قرب على مستر عمر درويش</h2>
+                <p class="text-slate-300 mt-2 text-sm">حيث تجتمع الخبرة الأكاديمية بالمتعة، الإبداع، وصناعة الأبطال</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-slate-900/80 border border-slate-700 hover:border-blue-400 rounded-3xl p-8 text-right relative overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md">
+                    <div class="w-14 h-14 bg-blue-600/20 border border-blue-400/30 rounded-2xl flex items-center justify-center text-blue-400 font-black mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-gift text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">حصة بطل حصة</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">لأننا نؤمن بالتحفيز المستمر، بنوزع هدايا كتير ومكافآت عينية تشعل حماسة الأبطال طوال الترم.</p>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-700 hover:border-blue-400 rounded-3xl p-8 text-right relative overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md">
+                    <div class="w-14 h-14 bg-blue-600/20 border border-blue-400/30 rounded-2xl flex items-center justify-center text-blue-400 font-black mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-chart-line text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">متابعة أول بأول</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">تواصل دائم وتقارير مفصلة عن مستوى كل طالب مع ولي الأمر لضمان التفوق المستمر.</p>
+                </div>
+                <div class="bg-slate-900/80 border border-slate-700 hover:border-blue-400 rounded-3xl p-8 text-right relative overflow-hidden group transition-all duration-300 hover:-translate-y-2 shadow-md">
+                    <div class="w-14 h-14 bg-blue-600/20 border border-blue-400/30 rounded-2xl flex items-center justify-center text-blue-400 font-black mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-bus text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">رحلات تاريخية ميدانية</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">بنطلع رحلات لكل الأماكن التاريخية لندرس المنهج على أرض الواقع بكل متعة!</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-950/85 text-white rounded-3xl p-8 lg:p-12 shadow-xl relative overflow-hidden border border-slate-800">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 pb-6 border-b border-slate-800">
+                    <div class="text-right">
+                        <span class="text-xs font-extrabold text-blue-400 uppercase tracking-widest bg-blue-500/10 px-3 py-1 rounded-md border border-blue-500/20">السيرة والاعتمادات</span>
+                        <h3 class="text-2xl lg:text-3xl font-black text-white mt-2">من هو عمر درويش؟</h3>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 text-3xl shadow-inner">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-right">
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="text-blue-400 font-black text-sm mb-2 flex items-center gap-2 justify-end">
+                            <span>التخصص الأكاديمي</span>
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <p class="text-slate-300 text-xs leading-relaxed">باحث بكلية الآداب قسم تاريخ العصور الوسطى.</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="text-blue-400 font-black text-sm mb-2 flex items-center gap-2 justify-end">
+                            <span>المبادرة الرائدة</span>
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <p class="text-slate-300 text-xs leading-relaxed">صاحب مبادرة همتي تعليم أمتي لنشر العلم والثقافة.</p>
+                    </div>
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800">
+                        <div class="text-blue-400 font-black text-sm mb-2 flex items-center gap-2 justify-end">
+                            <span>الشهادات الدولية</span>
+                            <i class="fa-solid fa-certificate"></i>
+                        </div>
+                        <p class="text-slate-300 text-xs leading-relaxed">حاصل على شهادات خبرة من الجامعة الأمريكية، جامعة مدريد بأسبانيا، وجامعة كارولينا بأمريكا الشمالية.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- سكشن اتصل بنا -->
+    <section id="contact" class="py-24 px-6 lg:px-16 border-t border-slate-700/50 reveal bg-slate-900/40 backdrop-blur-sm scroll-mt-24">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="col-span-1 lg:col-span-7 text-right">
+                <span class="text-blue-400 font-bold text-sm bg-blue-600/20 px-4 py-1.5 rounded-full border border-blue-400/30">تواصل معنا</span>
+                <h2 class="text-3xl lg:text-4xl font-black text-white mt-4 mb-6">نحن هنا دائماً لمساعدتك والإجابة عن استفساراتك</h2>
+                <p class="text-slate-300 text-base mb-8">يمكنك التواصل المباشر مع الدعم الفني أو متابعة صفحتنا الرسمية لمعرفة كل جديد.</p>
+
+                <div class="space-y-4">
+                    <a href="https://www.facebook.com/share/18uWH1SFtt/" target="_blank" class="flex items-center gap-4 bg-slate-900/80 border border-slate-700 hover:border-blue-400 p-4 rounded-2xl transition-all group shadow-sm">
+                        <div class="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all text-2xl">
+                            <i class="fa-brands fa-facebook"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-white font-bold text-sm">صفحة الفيسبوك الرسمية</span>
+                            <span class="text-slate-300 text-xs">تابع أحدث المنشورات والتنبيهات</span>
+                        </div>
+                    </a>
+                    <a href="https://wa.me/201208085967" target="_blank" class="flex items-center gap-4 bg-slate-900/80 border border-slate-700 hover:border-blue-400 p-4 rounded-2xl transition-all group shadow-sm">
+                        <div class="w-12 h-12 rounded-xl bg-blue-600/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all text-2xl">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-white font-bold text-sm">التواصل عبر واتساب</span>
+                            <span class="text-slate-300 text-xs">متاحون للرد على مدار الساعة</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="hidden lg:flex lg:col-span-5 justify-center relative">
+                <div class="absolute w-72 h-72 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+                <img src="file.enc" alt="مستر عمر درويش" class="w-80 object-cover rounded-3xl border border-slate-700 shadow-xl">
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر الجديد الاحترافي والمطابق للصورة بتصميم الكاريزما -->
+    <footer class="bg-slate-950 pt-16 pb-8 border-t border-slate-800 relative overflow-hidden">
+        <!-- تأثير الخلفية المضيئة -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_center,rgba(30,58,138,0.15),transparent_50%)] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-right">
+                
+                <!-- القسم الأيمن: الشعار والوصف -->
+                <div class="space-y-6 text-right md:order-last">
+                    <div class="flex items-center gap-3 justify-end">
+                        <h3 class="text-3xl font-black text-white">منصة الكاريزما</h3>
+                        <div class="bg-blue-600 p-3 rounded-2xl shadow-lg shadow-blue-600/30">
+                            <!-- يمكنك تغيير مسار اللوجو هنا -->
+                            <img src="mr2.png" alt="لوجو الكاريزما" class="w-15 h-20 object-contain">
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed ml-auto">
+                        منصة تعليمية متكاملة تهدف إلى تقديم محتوى تعليمي مميز يساعدك على التعلم بذكاء والتقدم بثقة وتوفير الوقت والمجهود لبلوغ أهدافك الدراسية بأحدث الأساليب الذكية مع مستر عمر درويش.
+                    </p>
+                    <div class="flex items-center justify-end gap-3 pt-2">
+                        <a href="https://wa.me/201208085967" target="_blank" class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-400 transition-all shadow-sm"><i class="fa-brands fa-whatsapp text-lg"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-400 transition-all shadow-sm"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/share/18uWH1SFtt/" target="_blank" class="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-blue-400 hover:border-blue-400 transition-all shadow-sm"><i class="fa-brands fa-facebook-f"></i></a>
+                    </div>
+                </div>
+
+                <!-- القسم الأوسط: الدعم والمساعدة -->
+                <div class="text-right md:order-2">
+                    <h4 class="text-white font-bold text-lg mb-6 border-b-2 border-blue-600 pb-2 inline-block">الدعم والمساعدة</h4>
+                    <ul class="space-y-4">
+                        <li><a href="faq.html" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">الأسئلة الشائعة</a></li>
+                        <li><a href="privacy.html" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">سياسة الخصوصية</a></li>
+                        <li><a href="terms.html" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">شروط الاستخدام</a></li>
+                        <li><a href="developer.html" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">تطوير المنصة IBDA3</a></li>
+                        <li><a href="support.html" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">الدعم الفني</a></li>
+                    </ul>
+                </div>
+
+                <!-- القسم الأيسر: روابط سريعة -->
+                <div class="text-right md:order-first">
+                    <h4 class="text-white font-bold text-lg mb-6 border-b-2 border-blue-600 pb-2 inline-block">روابط سريعة</h4>
+                    <ul class="space-y-4">
+                        <li><a href="#packages" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">الدورات التعليمية</a></li>
+                        <li><a href="#charisma-store" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">الكاريزما استور</a></li>
+                        <li><a href="#about" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">عن المنصة</a></li>
+                        <li><a href="#contact" class="text-slate-400 hover:text-blue-400 transition-colors text-sm font-semibold">تواصل معنا</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- الشريط السفلي وحقوق الملكية بتنسيق IBDA3 المطلوب -->
+            <div class="border-t border-slate-800 pt-6 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-400">
+                
+                <!-- جهة اليسار: الشروط والسياسة -->
+                <div class="flex gap-4 md:order-first">
+                    <a href="#" class="hover:text-blue-400 font-semibold transition-colors">سياسة الخصوصية</a>
+                    <span class="text-slate-600">•</span>
+                    <a href="#" class="hover:text-blue-400 font-semibold transition-colors">شروط الخدمة</a>
+                </div>
+
+                <!-- جهة اليمين والوسط: الحقوق واسم المطور -->
+                <div class="flex flex-col md:flex-row items-center gap-2 md:gap-6 md:order-last">
+                    <span class="font-bold text-sm flex items-center justify-center gap-1">
+                        جميع الحقوق محفوظة © 2026 منصة الكاريزما 
+                        <i class="fa-solid fa-heart text-blue-500 text-sm"></i>
+                    </span>
+                    <span class="hidden md:inline-block text-slate-600">|</span>
+                    <span class="flex items-center gap-2 font-semibold">
+                        Developed by 
+                        <a href="https://github.com/" target="_blank" class="text-blue-400 text-2xl font-black hover:text-blue-300 transition-colors inline-flex items-center gap-2 mx-1">
+                            IBDA3 TEAM 
+                            <!-- امتداد صورة لوجو الشركة هتحطه هنا -->
+                            <img src="IBDA3.jfif" alt="IBDA3 Team" class="w-8 h-8 object-contain inline-block">
+                        </a>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+<script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfigStore = {
+            apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
+            authDomain: "omar-12-5e10c.firebaseapp.com",
+            projectId: "omar-12-5e10c",
+            storageBucket: "omar-12-5e10c.firebasestorage.app",
+            messagingSenderId: "259543055483",
+            appId: "1:259543055483:web:45590ba2be3a52ce8776de",
+            measurementId: "G-RJCWWZJYJT"
+        };
+
+        const allApps = getApps();
+        let storeApp = allApps.find(app => app.name === "StoreApp");
+        if (!storeApp) { storeApp = initializeApp(firebaseConfigStore, "StoreApp"); }
+
+        const auth = getAuth(storeApp);
+        const db = getFirestore(storeApp);
+
+        window.userSubscriptions = [];
+        window.pendingCheckoutUrl = null;
+
+        function registerSubscriptionLocally(pkgIdentifier) {
+            if (!pkgIdentifier) return;
+            const cleanIdentifier = window.CharismaSecurity.safeRender(String(pkgIdentifier).trim().toLowerCase());
+
+            const cards = document.querySelectorAll('.package-card');
+            cards.forEach(card => {
+                const pkgId = card.getAttribute('data-package-id')?.trim().toLowerCase() || '';
+                const cardTitle = card.querySelector('h3')?.innerText?.trim().toLowerCase() || '';
+
+                if (pkgId === cleanIdentifier || cardTitle.includes(cleanIdentifier) || cleanIdentifier.includes(pkgId)) {
+                    const originalPkgId = card.getAttribute('data-package-id');
+                    if (originalPkgId && !window.userSubscriptions.includes(originalPkgId)) {
+                        window.userSubscriptions.push(originalPkgId);
+                    }
+                    const btn = card.querySelector('.sub-btn');
+                    if (btn) {
+                        btn.innerText = "عرض الدروس";
+                        btn.className = "sub-btn mt-auto w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl transition-all shadow-md text-sm inline-block text-center";
+                        btn.onclick = function (e) { e.preventDefault(); window.location.href = "dashboard.html"; };
+                    }
+                    if (originalPkgId) localStorage.setItem('subscribed_' + originalPkgId, 'true');
+                }
+            });
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            let allSubs = [];
+            if (user) {
+                try {
+                    let userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (!userDoc.exists()) userDoc = await getDoc(doc(db, "student", user.uid));
+                    if (userDoc.exists()) {
+                        const data = userDoc.data();
+                        const rawSubs = data.subscriptions || data.packages || data.subscription || [];
+                        if (Array.isArray(rawSubs)) allSubs.push(...rawSubs);
+                        else if (typeof rawSubs === 'object' && rawSubs !== null) allSubs.push(...Object.keys(rawSubs));
+                        else if (typeof rawSubs === 'string') allSubs.push(rawSubs);
+                    }
+                } catch (err) {}
+            }
+
+            const localPackages = JSON.parse(localStorage.getItem('userSubscribedPackages')) || [];
+            localPackages.forEach(p => { if (p.title) allSubs.push(p.title); });
+
+            const allCards = document.querySelectorAll('.package-card');
+            allCards.forEach(card => {
+                const pkgId = card.getAttribute('data-package-id');
+                if (pkgId && localStorage.getItem('subscribed_' + pkgId) === 'true') allSubs.push(pkgId);
+            });
+
+            allSubs.forEach(sub => registerSubscriptionLocally(sub));
+        });
+
+        window.checkSubscription = function (event, pkgId) {
+            event.preventDefault();
+            if (window.CharismaSecurity.isSpamming()) return;
+
+            const checkoutUrl = event.currentTarget.href;
+
+            if (window.userSubscriptions.includes(pkgId) || event.currentTarget.innerText === "عرض الدروس") {
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            if (window.userSubscriptions.length > 0) {
+                const activeNames = window.userSubscriptions.map(id => {
+                    const card = document.querySelector(`[data-package-id="${id}"]`);
+                    return card ? card.querySelector('h3').innerText : id;
+                }).join('، ');
+
+                const alertTextEl = document.getElementById('customAlertText');
+                if (alertTextEl) {
+                    alertTextEl.innerHTML = `أنت مشترك بالفعل في الباقة التالية: <br><span class="text-amber-400 font-bold mt-1 inline-block">${window.CharismaSecurity.safeRender(activeNames)}</span><br><br>هل أنت متأكد من رغبتك في الانتقال لصفحة الدفع لباقة إضافية؟`;
+                }
+
+                window.pendingCheckoutUrl = checkoutUrl;
+                const modal = document.getElementById('customAlertModal');
+                if (modal) modal.classList.remove('hidden');
+                return;
+            }
+            window.location.href = checkoutUrl;
+        }
+
+        window.confirmCheckout = function () {
+            if (window.pendingCheckoutUrl) window.location.href = window.pendingCheckoutUrl;
+        }
+
+        window.closeCustomAlert = function () {
+            const modal = document.getElementById('customAlertModal');
+            if (modal) modal.classList.add('hidden');
+            window.pendingCheckoutUrl = null;
+        }
+
+        // فحص كاريزما استور الذكي (تمت إضافة دمج الزر المحدث هنا)
+        loadStoreProducts();
+        window.buyStoreProduct = function (title, price, image, desc, fileUrl) {
+            sessionStorage.setItem('currentStoreImg', image);
+            sessionStorage.setItem('currentStoreDesc', desc);
+            window.location.href = `elkarizma.html?title=${encodeURIComponent(title)}&price=${price}&fileUrl=${encodeURIComponent(fileUrl)}`;
+        };
+
+        async function loadStoreProducts() {
+            const container = document.querySelector('.store-content-area');
+            if (!container) return;
+
+            try {
+                const q = query(collection(db, "store_products"), orderBy("createdAt", "desc"));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) return;
+
+                let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8 w-full">';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const safeName = window.CharismaSecurity.safeRender(data.name || 'منتج كاريزما');
+                    const safeDesc = window.CharismaSecurity.safeRender(data.description || '');
+                    const safePrice = window.CharismaSecurity.safeRender(data.price || 0);
+                    const safeImg = window.CharismaSecurity.isValidURL(data.imageUrl) ? data.imageUrl : 'mr.jpeg';
+                    const fileUrl = data.fileUrl || '';
+
+                    // فحص الملكية بشكل دقيق (LocalStorage + DB Subscriptions)
+                    let isOwned = localStorage.getItem('ownedProduct_' + safeName.trim()) === 'true';
+                    
+                    // الفحص في اشتراكات الفايربيز
+                    if (!isOwned && window.userSubscriptions && window.userSubscriptions.length > 0) {
+                        if (window.userSubscriptions.some(sub => sub.toLowerCase().includes(safeName.toLowerCase()) || safeName.toLowerCase().includes(sub.toLowerCase()))) {
+                            isOwned = true;
+                        }
+                    }
+
+                    // بناء زر الأكشن بناءً على حالة الشراء بشكل محكم
+                    let actionBtnHTML = '';
+                    if (isOwned) {
+                        if (fileUrl) {
+                            actionBtnHTML = `<a href="${fileUrl}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all text-center flex items-center gap-1 justify-center w-full"><i class="fa-solid fa-eye"></i> عرض الملزمة</a>`;
+                        } else {
+                            actionBtnHTML = `<button onclick="alert('جاري تجهيز الرابط الخاص بالملزمة..')" class="bg-slate-600 hover:bg-slate-500 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all text-center flex items-center gap-1 justify-center w-full"><i class="fa-solid fa-clock"></i> جاري التجهيز</button>`;
+                        }
+                    } else {
+                        actionBtnHTML = `<button onclick="buyStoreProduct(decodeURIComponent('${encodeURIComponent(safeName)}'), '${safePrice}', decodeURIComponent('${encodeURIComponent(safeImg)}'), decodeURIComponent('${encodeURIComponent(safeDesc)}'), decodeURIComponent('${encodeURIComponent(fileUrl)}'))" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-md transition-all text-center flex items-center gap-1 justify-center w-full"><i class="fa-solid fa-cart-shopping"></i> شراء الآن</button>`;
+                    }
+
+                    html += `
+                    <div class="bg-slate-900/80 border border-blue-500/30 rounded-2xl overflow-hidden hover:border-blue-400 transition-all shadow-lg flex flex-col group text-right">
+                        <img src="${safeImg}" alt="${safeName}" class="w-full h-48 object-cover border-b border-blue-500/30 group-hover:scale-105 transition-transform duration-300">
+                        <div class="p-5 flex flex-col flex-grow">
+                            <h3 class="text-lg font-bold text-white mb-2">${safeName}</h3>
+                            <p class="text-slate-400 text-xs mb-4 line-clamp-2 flex-grow">${safeDesc}</p>
+                            <div class="flex justify-between items-center mt-auto border-t border-slate-700/50 pt-4">
+                                <div class="text-blue-400 font-black text-xl flex items-baseline gap-1 shrink-0">
+                                    ${safePrice} <span class="text-xs text-slate-300 font-bold">ج.م</span>
+                                </div>
+                                <div class="shrink-0 w-28">
+                                    ${actionBtnHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            } catch (err) { }
+        }
+    </script>
+
+    <script>
+        function filterPackages(category) {
+            const cards = document.querySelectorAll('.package-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                btn.className = "filter-btn bg-slate-800/80 text-slate-200 border border-slate-600 hover:border-blue-400 font-bold px-5 py-2.5 rounded-full transition-all text-sm shadow-sm";
+            });
+            event.target.className = "filter-btn active bg-blue-600 text-white font-extrabold px-5 py-2.5 rounded-full shadow-md shadow-blue-600/20 transition-all text-sm";
+
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); } });
+        }, observerOptions);
+        document.querySelectorAll('.reveal').forEach(section => { observer.observe(section); });
+
+        const heroCounterElement = document.getElementById('heroCounter');
+        let counterStarted = false;
+        const startHeroCounter = () => {
+            if (counterStarted) return;
+            counterStarted = true;
+            const target = +heroCounterElement.getAttribute('data-target');
+            let count = 0; const speed = 25; const increment = target / 60;
+            const updateCount = () => {
+                count += increment;
+                if (count < target) { heroCounterElement.innerText = Math.ceil(count); setTimeout(updateCount, speed); } 
+                else { heroCounterElement.innerText = target; }
+            };
+            updateCount();
+        };
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { counterStarted = false; startHeroCounter(); } });
+        }, { threshold: 0.4 });
+        if (heroCounterElement) { heroObserver.observe(document.getElementById('home')); }
+        
+    </script>
+
+</body>
+</html>

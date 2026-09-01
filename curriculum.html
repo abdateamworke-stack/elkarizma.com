@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الكاريزما | شاشة عرض الدروس والدورات</title>
+    <!-- استدعاء خط كايرو -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #070e27;
+            background-image: linear-gradient(rgba(7, 14, 39, 0.45), rgba(7, 14, 39, 0.65)), 
+                              url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* تنسيقات التابات (Tabs) */
+        .tab-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: #38bdf8; /* لون أزرق الكاريزما */
+            font-weight: 900;
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #38bdf8;
+            border-radius: 4px;
+        }
+
+        /* قفل الدروس */
+        .lesson-locked {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+
+        /* تصميم المرفقات/الملخصات */
+        .summary-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            color: #cbd5e1;
+            line-height: 1.8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen flex flex-col" oncontextmenu="return false;">
+
+    <!-- الهيدر العلوي -->
+    <header class="bg-blue-950/90 backdrop-blur-md border-b border-blue-700/50 py-3 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <div class="bg-blue-600 text-white p-2.5 rounded-2xl shadow-md shadow-blue-500/30">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
+            </div>
+            <div>
+                <a href="index.html"><span class="block text-base font-black text-white hover:text-blue-200 transition-colors">منصة الكاريزما</span></a>
+                <span class="block text-[10px] text-blue-300 font-semibold">مستر عمر درويش</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <div class="text-left hidden sm:block">
+                <span class="block text-xs font-bold text-white" id="headerStudentName">جاري التحميل...</span>
+                <span class="block text-[10px] text-blue-300 font-semibold">طالب متميز</span>
+            </div>
+            <img id="headerAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="صورة الطالب" class="w-10 h-10 rounded-full object-cover border-2 border-blue-400 shadow-md bg-blue-800">
+        </div>
+    </header>
+
+    <!-- صندوق رسائل التنبيه -->
+    <div id="pageNotification" class="max-w-7xl mx-auto w-full px-4 md:px-6 mt-4" style="display: none;">
+        <div id="notificationText" class="bg-blue-900/90 border border-blue-500 text-blue-100 px-4 py-3 rounded-2xl text-xs font-bold shadow-lg flex items-center gap-2">
+            <i class="fa-solid fa-circle-info text-blue-400 text-base"></i>
+            <span id="notificationMessageContent"></span>
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي (شبكة 3 لليسار ، 9 لليمين - ليعطي مساحة أكبر للفيديو) -->
+    <main class="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 md:p-6 flex-1 items-start">
+        
+        <!-- الجانب الأيمن: شريط اللوجو، التابات، والمحتوى المتغير (الفيديو/الملخص/الامتحان) -->
+        <div class="lg:col-span-8 bg-blue-950/85 border border-blue-600/50 rounded-3xl p-5 md:p-8 shadow-xl backdrop-blur-md flex flex-col gap-6 order-last lg:order-first min-h-[600px]">
+            
+            <!-- 1. شريط اللوجو واسم الباقة العُلوي (مثل التصميم المطلوب) -->
+            <div class="flex flex-col sm:flex-row items-center justify-between border-b border-blue-800/60 pb-5 gap-4">
+                <div class="flex items-center gap-4 text-center sm:text-right">
+                    <!-- لوجو مصغر للكاريزما -->
+                    <div class="w-14 h-14 bg-white rounded-xl flex items-center justify-center p-1 shadow-md border border-slate-200 shrink-0">
+                        <img src="mr2.png" alt="لوجو المنصة" class="w-full h-full object-contain rounded-lg">
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-black text-white">منصة الكاريزما التعليمية</h1>
+                        <!-- هنا سيظهر اسم الباقة اللي الطالب داخل منها -->
+                        <span id="headerPackageName" class="text-xs font-bold text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-800">جاري تحميل الباقة...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. التابات (Tabs) للدرس المحدد -->
+            <div id="lessonTabsContainer" class="flex items-center justify-center sm:justify-start gap-8 border-b border-blue-800/50 pb-2 hidden">
+                <button onclick="switchTab('video')" id="tab-video" class="tab-btn active text-slate-300 font-bold text-sm md:text-base flex items-center gap-2 pb-1">
+                    <i class="fa-solid fa-circle-play text-xs text-blue-400"></i> فيديو الشرح
+                </button>
+                <button onclick="switchTab('summary')" id="tab-summary" class="tab-btn text-slate-300 font-bold text-sm md:text-base flex items-center gap-2 pb-1">
+                    <i class="fa-solid fa-file-lines text-xs text-emerald-400"></i> ملخص الدرس
+                </button>
+                <button onclick="switchTab('exam')" id="tab-exam" class="tab-btn text-slate-300 font-bold text-sm md:text-base flex items-center gap-2 pb-1">
+                    <i class="fa-solid fa-clipboard-question text-xs text-amber-400"></i> اختبار المعرفة
+                </button>
+            </div>
+
+            <!-- 3. منطقة العرض الديناميكية (Dynamic Content Area) -->
+            
+            <!-- أ. شاشة الانتظار (قبل اختيار أي درس) -->
+            <div id="content-waiting" class="flex-grow flex items-center justify-center">
+                <div class="text-center text-slate-400">
+                    <div class="w-20 h-20 bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-800">
+                        <i class="fa-solid fa-hand-pointer text-3xl text-blue-500"></i>
+                    </div>
+                    <p class="font-bold text-lg text-white mb-1">ابدأ رحلتك الآن</p>
+                    <p class="text-xs">اختر درساً من القائمة الجانبية لعرض المحتوى.</p>
+                </div>
+            </div>
+
+            <!-- ب. تاب الفيديو -->
+            <div id="content-video" class="flex-grow hidden flex-col gap-4">
+                <div class="flex items-center justify-between">
+                    <h2 id="currentLessonTitleVideo" class="text-lg font-black text-white truncate max-w-[70%]">اسم الدرس</h2>
+                    <span id="lessonStatusBadge" class="bg-blue-900 text-blue-300 text-[10px] px-2.5 py-1 rounded-xl border border-blue-700 font-bold">جاري المشاهدة</span>
+                </div>
+                <!-- مشغل الفيديو -->
+                <div class="relative w-full pt-[56.25%] bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-700" oncontextmenu="return false;">
+                    <div id="videoWrapperContainer" class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                        <!-- سيتم حقن الفيديو هنا -->
+                    </div>
+                </div>
+                <!-- زر السنسور للفيديو -->
+                <button onclick="markVideoCompleted()" id="btnMarkVideo" class="ml-auto mt-2 bg-slate-700 text-slate-300 font-bold py-2 px-6 rounded-xl text-xs flex items-center gap-2 transition-all">
+                    <i class="fa-regular fa-circle-check"></i> حدد كـ 'تمت المشاهدة'
+                </button>
+            </div>
+
+            <!-- ج. تاب الملخص (مواد القراءة) -->
+            <div id="content-summary" class="flex-grow hidden flex-col gap-4">
+                <h2 id="currentLessonTitleSummary" class="text-lg font-black text-white">ملخص الدرس</h2>
+                <div id="summaryTextContainer" class="summary-box flex-grow overflow-y-auto max-h-[400px] custom-scrollbar">
+                    <!-- سيتم حقن النص أو المرفق هنا -->
+                </div>
+                <!-- زر السنسور للملخص -->
+                <button onclick="markSummaryCompleted()" id="btnMarkSummary" class="ml-auto mt-2 bg-slate-700 text-slate-300 font-bold py-2 px-6 rounded-xl text-xs flex items-center gap-2 transition-all">
+                    <i class="fa-regular fa-circle-check"></i> لقد قرأت الملخص
+                </button>
+            </div>
+
+            <!-- د. تاب الاختبار -->
+            <div id="content-exam" class="flex-grow hidden flex-col items-center justify-center text-center gap-6">
+                <div class="w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500 text-4xl border-2 border-amber-500/30">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black text-white mb-2">اختبار إتمام الدرس</h2>
+                    <p class="text-slate-400 text-sm max-w-md mx-auto">للانتقال للدرس التالي، يجب عليك اجتياز هذا الاختبار بنجاح للتأكد من فهمك للمحتوى.</p>
+                </div>
+                <button onclick="openExam()" class="bg-amber-600 hover:bg-amber-500 text-white font-black py-3 px-8 rounded-xl shadow-lg transition-all text-sm flex items-center gap-2">
+                    بدء الاختبار الآن <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- الجانب الأيسر: قائمة المحتويات والدروس -->
+        <aside class="lg:col-span-4 bg-slate-900 border border-slate-700 rounded-3xl p-5 shadow-xl backdrop-blur-md flex flex-col gap-4 order-first lg:order-last sticky top-24 max-h-[85vh]">
+            
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <h3 class="font-black text-white text-base">المحتويات</h3>
+                <span id="progressText" class="text-xs font-bold text-blue-400 bg-blue-900/30 px-2 py-1 rounded-lg">0% مكتمل</span>
+            </div>
+
+            <!-- شريط التقدم الكلي -->
+            <div class="w-full bg-slate-800 rounded-full h-2 mb-2 overflow-hidden">
+                <div id="progressBar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+
+            <!-- زر تحديث في حالة الطوارئ -->
+            <button onclick="loadPackageLessons()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 px-4 rounded-xl transition-all text-center text-[11px] flex items-center justify-center gap-2 border border-slate-700">
+                <i class="fa-solid fa-arrows-rotate"></i> تحديث القائمة
+            </button>
+
+            <!-- حاوية الدروس (Accordion Style) -->
+            <div id="lessonsContainer" class="space-y-3 overflow-y-auto flex-grow pr-1 custom-scrollbar">
+                <div class="text-center text-slate-500 text-xs py-8 font-bold">
+                    جاري جلب محتويات الباقة...
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- تخصيص شكل الـ Scrollbar ليتناسب مع التصميم -->
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #2563eb; }
+    </style>
+
+    <!-- سكربت الاتصال بـ Firebase والمنطق الذكي -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, getDocs, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
+            authDomain: "omar-12-5e10c.firebaseapp.com",
+            projectId: "omar-12-5e10c",
+            storageBucket: "omar-12-5e10c.firebasestorage.app",
+            messagingSenderId: "259543055483",
+            appId: "1:259543055483:web:45590ba2be3a52ce8776de",
+            measurementId: "G-RJCWWZJYJT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // جلب الـ ID
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentPackageId = urlParams.get('packageId') || localStorage.getItem('selectedPackageId');
+        if (currentPackageId) localStorage.setItem('selectedPackageId', currentPackageId);
+
+        let currentUserId = null;
+        let globalUserData = null;
+        let allPackageLessons = [];
+        window.selectedLessonData = null; // جعلناه عام عشان التابات تقرأه
+        let userProgress = {}; // يخزن تقدم الطالب في كل درس { lessonId: { video: true, summary: true, exam: true } }
+
+        // إشعارات الصفحة
+        window.showPageMessage = function(msg, isError = false) {
+            const notif = document.getElementById('pageNotification');
+            const msgContent = document.getElementById('notificationMessageContent');
+            const notifBox = notif.firstElementChild;
+            msgContent.innerText = msg;
+            notif.style.display = 'block';
+            notifBox.className = isError 
+                ? "bg-rose-950/90 border border-rose-500 text-rose-100 px-4 py-3 rounded-2xl text-xs font-bold shadow-lg flex items-center gap-2"
+                : "bg-blue-900/90 border border-blue-500 text-blue-100 px-4 py-3 rounded-2xl text-xs font-bold shadow-lg flex items-center gap-2";
+            setTimeout(() => { notif.style.display = 'none'; }, 5000);
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                try {
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userSnap = await getDoc(userDocRef);
+                    if (userSnap.exists()) {
+                        globalUserData = userSnap.data();
+                        document.getElementById('headerStudentName').innerText = globalUserData.name || "طالب الكاريزما";
+                        if (globalUserData.avatarUrl) document.getElementById('headerAvatar').src = globalUserData.avatarUrl;
+                        
+                        // جلب التقدم المحفوظ من الداتابيز
+                        userProgress = globalUserData.lessonProgress || {};
+                    }
+                } catch (err) {}
+            }
+            await fetchPackageDetails();
+            loadPackageLessons();
+        });
+
+        // جلب اسم الباقة
+        async function fetchPackageDetails() {
+            const nameDisplay = document.getElementById('headerPackageName');
+            try {
+                if(currentPackageId) {
+                    let pkgRef = doc(db, "packages", currentPackageId);
+                    let pkgSnap = await getDoc(pkgRef);
+                    if (pkgSnap.exists()) {
+                        nameDisplay.innerText = pkgSnap.data().title || "باقة دراسية";
+                        return;
+                    }
+                }
+            } catch (e) {}
+            nameDisplay.innerText = "باقة الكاريزما";
+        }
+
+        // جلب الدروس ورسم القائمة الجانبية بنظام (الوحدات + القفل)
+        window.loadPackageLessons = async function() {
+            const container = document.getElementById('lessonsContainer');
+            container.innerHTML = '<div class="text-center text-slate-500 text-xs py-8">جاري الجلب...</div>';
+
+            try {
+                const lessonsSnap = await getDocs(collection(db, "lessons"));
+                allPackageLessons = [];
+                lessonsSnap.forEach(lDoc => {
+                    const lData = lDoc.data();
+                    if (lData.packageId === currentPackageId || lData.pkgId === currentPackageId) {
+                        allPackageLessons.push({ id: lDoc.id, ...lData });
+                    }
+                });
+
+                if (allPackageLessons.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center p-6 bg-slate-800/50 rounded-2xl border border-slate-700 border-dashed">
+                            <i class="fa-solid fa-box-open text-3xl text-slate-600 mb-3"></i>
+                            <p class="text-slate-400 text-xs font-bold leading-relaxed">عفواً، لا توجد دروس مضافة في هذه الباقة حتى الآن. سيتم إضافتها قريباً من قبل المعلم.</p>
+                        </div>`;
+                    return;
+                }
+
+                // ترتيب الدروس وهمي (أو حسب حقل order لو موجود)
+                allPackageLessons.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                let groupedByUnit = {};
+                allPackageLessons.forEach(lesson => {
+                    let unitName = lesson.unitName || "دروس عامة";
+                    if (!groupedByUnit[unitName]) groupedByUnit[unitName] = [];
+                    groupedByUnit[unitName].push(lesson);
+                });
+
+                container.innerHTML = '';
+                let totalLessons = allPackageLessons.length;
+                let completedLessonsCount = 0;
+                let isPreviousLessonCompleted = true; // الدرس الأول دائماً مفتوح
+
+                Object.keys(groupedByUnit).forEach((unitName) => {
+                    // رسم عنوان الوحدة
+                    let unitDiv = document.createElement('div');
+                    unitDiv.className = "mb-4";
+                    
+                    let unitHeader = document.createElement('div');
+                    unitHeader.className = "flex items-center gap-2 text-sm font-black text-slate-300 bg-slate-800/40 p-2 rounded-lg mb-2 border border-slate-700/50";
+                    unitHeader.innerHTML = `<i class="fa-solid fa-layer-group text-blue-500"></i> ${unitName}`;
+                    unitDiv.appendChild(unitHeader);
+
+                    let listDiv = document.createElement('div');
+                    listDiv.className = "space-y-1.5 pl-2 border-r-2 border-slate-800 mr-2";
+
+                    groupedByUnit[unitName].forEach((lesson, index) => {
+                        let prog = userProgress[lesson.id] || {};
+                        let isFullyCompleted = prog.video && prog.summary && prog.exam; // هل أنهى الثلاث شروط؟
+                        if (isFullyCompleted) completedLessonsCount++;
+
+                        // منطق القفل (Sensor)
+                        let isLocked = !isPreviousLessonCompleted; 
+
+                        let lessonItem = document.createElement('div');
+                        lessonItem.className = `p-3 rounded-xl border transition-all flex justify-between items-center text-xs font-bold cursor-pointer relative overflow-hidden group
+                            ${isLocked ? 'bg-slate-800/20 border-transparent lesson-locked' : 
+                              (window.selectedLessonData?.id === lesson.id ? 'bg-blue-900/50 border-blue-500 text-white' : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:bg-slate-700')}`;
+                        
+                        let iconHtml = isLocked ? `<i class="fa-solid fa-lock text-slate-500 ml-2"></i>` 
+                                                : (isFullyCompleted ? `<i class="fa-solid fa-circle-check text-emerald-400 ml-2"></i>` : `<i class="fa-regular fa-circle-play text-blue-400 ml-2"></i>`);
+
+                        lessonItem.innerHTML = `
+                            <div class="flex items-center truncate max-w-[80%] z-10">
+                                ${iconHtml}
+                                <span class="truncate">${lesson.lessonTitle || lesson.title || "درس"}</span>
+                            </div>
+                            <span class="text-[9px] text-slate-500 font-mono z-10">${lesson.duration || ''}</span>
+                            ${window.selectedLessonData?.id === lesson.id ? `<div class="absolute left-0 top-0 w-1 h-full bg-blue-500"></div>` : ''}
+                        `;
+
+                        if (!isLocked) {
+                            lessonItem.onclick = () => {
+                                window.selectedLessonData = lesson;
+                                loadPackageLessons(); // إعادة الرسم لتحديد الدرس النشط
+                                openLessonContent(lesson);
+                            };
+                        }
+
+                        listDiv.appendChild(lessonItem);
+
+                        // تحديث حالة الدرس القادم (الدرس القادم يفتح فقط لو ده خلص)
+                        isPreviousLessonCompleted = isFullyCompleted; 
+                    });
+
+                    unitDiv.appendChild(listDiv);
+                    container.appendChild(unitDiv);
+                });
+
+                // تحديث شريط التقدم
+                let progressPercent = Math.round((completedLessonsCount / totalLessons) * 100);
+                document.getElementById('progressText').innerText = `${progressPercent}% مكتمل`;
+                document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+            } catch (err) {
+                container.innerHTML = '<div class="text-center text-rose-400 text-xs">خطأ في التحميل.</div>';
+            }
+        }
+
+        // دالة فتح محتوى الدرس في التابات
+        function openLessonContent(lesson) {
+            document.getElementById('content-waiting').classList.add('hidden');
+            document.getElementById('lessonTabsContainer').classList.remove('hidden');
+            
+            // تهيئة بيانات الدرس في التابات
+            document.getElementById('currentLessonTitleVideo').innerText = lesson.lessonTitle || "فيديو الشرح";
+            document.getElementById('currentLessonTitleSummary').innerText = "ملخص: " + (lesson.lessonTitle || "");
+            
+            // حقن الفيديو
+            const videoWrapper = document.getElementById('videoWrapperContainer');
+            const videoUrl = lesson.videoUrl || lesson.url || "";
+            if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                let embedUrl = videoUrl.includes('watch?v=') ? videoUrl.replace('watch?v=', 'embed/') : videoUrl.replace('youtu.be/', 'www.youtube.com/embed/');
+                embedUrl = embedUrl.split('&')[0];
+                videoWrapper.innerHTML = `<iframe src="${embedUrl}?modestbranding=1&rel=0" class="absolute top-0 left-0 w-full h-full border-0" allowfullscreen></iframe>`;
+            } else if (videoUrl) {
+                videoWrapper.innerHTML = `<video controls controlsList="nodownload" class="w-full h-full object-cover bg-black" oncontextmenu="return false;"><source src="${videoUrl}" type="video/mp4"></video>`;
+            } else {
+                videoWrapper.innerHTML = `<div class="flex items-center justify-center h-full text-slate-500 font-bold text-sm">لا يوجد فيديو مرفق بهذا الدرس.</div>`;
+            }
+
+            // حقن الملخص
+            const summaryContainer = document.getElementById('summaryTextContainer');
+            summaryContainer.innerHTML = lesson.summary || lesson.desc || lesson.content || "لا توجد مواد قراءة مرفقة بهذا الدرس.";
+
+            // تحديث حالة الأزرار بناءً على تقدم الطالب
+            let prog = userProgress[lesson.id] || {};
+            updateSensorButton('btnMarkVideo', prog.video);
+            updateSensorButton('btnMarkSummary', prog.summary);
+
+            // فتح التاب الأول افتراضياً
+            window.switchTab('video');
+        }
+
+        // دالة تغيير التابات UI
+        window.switchTab = function(tabName) {
+            ['video', 'summary', 'exam'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`content-${t}`).classList.remove('flex');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            document.getElementById(`content-${tabName}`).classList.add('flex');
+        }
+
+        // === نظام السنسور (Sensors) لتسجيل التقدم ===
+        function updateSensorButton(btnId, isCompleted) {
+            const btn = document.getElementById(btnId);
+            if (isCompleted) {
+                btn.className = "ml-auto mt-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500 font-bold py-2 px-6 rounded-xl text-xs flex items-center gap-2 cursor-default";
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> مكتمل`;
+                btn.disabled = true;
+            } else {
+                btn.className = "ml-auto mt-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-xl text-xs flex items-center gap-2 transition-all shadow-md";
+                btn.innerHTML = `<i class="fa-regular fa-circle-check"></i> حدد كـ 'تم'`;
+                btn.disabled = false;
+            }
+        }
+
+        async function saveProgressToDB(lessonId, type) {
+            if (!currentUserId || !lessonId) return;
+            if (!userProgress[lessonId]) userProgress[lessonId] = {};
+            userProgress[lessonId][type] = true;
+
+            try {
+                const userRef = doc(db, "users", currentUserId);
+                await updateDoc(userRef, {
+                    [`lessonProgress.${lessonId}.${type}`]: true
+                });
+                loadPackageLessons(); // لتحديث القفل في القائمة الجانبية
+            } catch(e) {}
+        }
+
+        window.markVideoCompleted = function() {
+            if(!window.selectedLessonData) return;
+            updateSensorButton('btnMarkVideo', true);
+            saveProgressToDB(window.selectedLessonData.id, 'video');
+            showPageMessage("تم تسجيل مشاهدة الفيديو بنجاح!");
+        }
+
+        window.markSummaryCompleted = function() {
+            if(!window.selectedLessonData) return;
+            updateSensorButton('btnMarkSummary', true);
+            saveProgressToDB(window.selectedLessonData.id, 'summary');
+            showPageMessage("تم إتمام القراءة بنجاح!");
+        }
+
+        window.openExam = async function() {
+            if(!window.selectedLessonData) return;
+            
+            // تسجيل إن الطالب دخل الامتحان (في السيناريو الحقيقي بيتسجل لما ينجح جوه صفحة الامتحان نفسها)
+            saveProgressToDB(window.selectedLessonData.id, 'exam');
+
+            window.location.href = `exam.html?lessonId=${window.selectedLessonData.id}`;
+        }
+    </script>
+</body>
+</html>

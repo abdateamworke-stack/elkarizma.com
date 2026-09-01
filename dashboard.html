@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 1. أمان: Content Security Policy (CSP) لمنع هجمات XSS والتدخلات الخارجية غير المصرح بها -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com https://apis.google.com https://*.googleapis.com https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com; frame-src 'self' https://www.youtube.com https://youtube.com;">
+    <!-- 2. أمان: حماية ضد التخمين والتجسس وتقليل تسريب المراجع (Referrer Policy) -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- 3. أمان: منع متصفحات IE القديمة من التخمين الخاطئ لأنواع الملفات -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+    <title>لوحة تحكم الطالب | منصة الكاريزما</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons (مع حماية SRI) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- خط Cairo العربي -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #1e3a8a;
+            /* خلفية خريطة العالم مدمجة مع التدرج اللوني */
+            background-image: linear-gradient(rgba(30, 58, 138, 0.85), rgba(15, 23, 42, 0.95)), url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen flex flex-col">
+
+    <!-- الهيدر العلوي -->
+    <header class="bg-blue-950/90 backdrop-blur-md border-b border-blue-700/50 py-3 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <div class="bg-blue-600 text-white p-2.5 rounded-2xl shadow-md shadow-blue-500/30">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
+            </div>
+            <div>
+                <!-- أمان: إضافة rel="noopener noreferrer" -->
+                <a href="index.html" rel="noopener noreferrer"><span class="block text-base font-black text-white hover:text-blue-200 transition-colors">منصة الكاريزما</span></a>
+                <span class="block text-[10px] text-blue-300 font-semibold">مستر عمر درويش</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <div class="text-left hidden sm:block">
+                <span class="block text-xs font-bold text-white" id="headerStudentName">جاري التحميل...</span>
+                <span class="block text-[10px] text-blue-300 font-semibold">طالب متميز</span>
+            </div>
+            <img id="headerAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="صورة الطالب" class="w-10 h-10 rounded-full object-cover border-2 border-blue-400 shadow-md bg-blue-800">
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
+
+        <!-- رسالة المعلم -->
+        <section class="bg-blue-950/70 border border-blue-600/40 rounded-3xl p-4 shadow-lg backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 sm:space-x-reverse">
+            <img src="file.enc" alt="صورة المعلم" class="w-14 h-14 rounded-2xl object-cover border-2 border-blue-400 shadow-md flex-shrink-0 bg-blue-800">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-black text-white text-sm">رسالة المعلم: عمر درويش</span>
+                    <span class="bg-blue-600 text-white text-[10px] px-2.5 py-0.5 rounded-full font-bold shadow-sm">توجيه وإرشاد</span>
+                </div>
+                <p class="text-blue-200 text-xs leading-relaxed">ازيك يا بطل عامل ايه؟ شد حيلك كده وركز معايا عشان نكسر الدنيا الفترة دي، وخلص دروسك وامتحاناتك أول بأول عشان نوصل للي بنحلم بيه، وأنا معاك خطوة بخطوة لحد ما نكسر صدارة الدفعة.</p>
+            </div>
+        </section>
+
+        <!-- شبكة المحتوى -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- بطاقة الطالب (زرقاء بالكامل) -->
+            <section class="bg-blue-950/80 border border-blue-600/50 rounded-3xl shadow-2xl overflow-hidden flex flex-col justify-between self-start backdrop-blur-sm">
+                <div>
+                    <!-- الشريط العُلوي للبطاقة -->
+                    <div class="h-14 bg-gradient-to-r from-blue-600 to-blue-700 relative flex items-center px-5 shadow-inner">
+                        <span class="text-white text-[11px] font-bold tracking-wider opacity-90">STUDENT PROFILE</span>
+                    </div>
+
+                    <!-- حاوية الصورة وبطاقة الباقة بشكل مرتب بدون أي تداخل -->
+                    <div class="px-6 pt-5 flex items-center justify-between gap-3">
+                        <div class="relative flex-shrink-0">
+                            <img id="cardAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="صورة الطالب" class="w-24 h-24 rounded-2xl object-cover border-4 border-blue-900 shadow-xl bg-blue-800">
+                        </div>
+
+                        <!-- صندوق الباقة -->
+                        <div class="w-36 bg-blue-900/60 border border-blue-600/40 rounded-2xl shadow-inner p-3 flex flex-col justify-center items-center text-center">
+                            <span class="text-[10px] text-blue-300 font-bold mb-1">حالة الباقة</span>
+                            <div id="packageStatusBadge" class="bg-blue-800 text-blue-100 text-[11px] font-black px-2.5 py-0.5 rounded-xl border border-blue-500 w-full truncate shadow-sm">
+                                غير مشترك
+                            </div>
+                            <span id="packageNameText" class="text-[10px] text-blue-200 font-bold mt-1.5 leading-tight w-full truncate">عامة</span>
+                        </div>
+                    </div>
+
+                    <!-- اسم الطالب البارز -->
+                    <div class="px-6 pt-4 pb-2 border-b border-blue-800/60">
+                        <h2 class="text-base font-black text-white truncate" id="firebase-name">جاري التحميل...</h2>
+                    </div>
+
+                    <!-- تفاصيل الطالب -->
+                    <div class="p-6 space-y-2.5 text-xs text-blue-200">
+                        <div class="text-[10px] font-black text-blue-400 tracking-wider uppercase mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-id-card text-blue-400"></i> بيانات الطالب الأساسية
+                        </div>
+                        
+                        <div class="flex justify-between items-center pb-2 border-b border-blue-900/50">
+                            <span class="text-blue-300 font-medium">Name:</span>
+                            <span class="font-bold text-white truncate max-w-[150px]" id="info-name">---</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-blue-900/50">
+                            <span class="text-blue-300 font-medium">Student ID:</span>
+                            <span class="font-mono font-bold text-blue-400 text-[11px]" id="firebase-id">KAR-XXXXXX</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-blue-900/50">
+                            <span class="text-blue-300 font-medium">Grade:</span>
+                            <span class="font-bold text-white" id="firebase-level">---</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-2 border-b border-blue-900/50">
+                            <span class="text-blue-300 font-medium">Phone:</span>
+                            <span class="font-mono font-bold text-white text-[11px]" id="firebase-phone">---</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-1">
+                            <span class="text-blue-300 font-medium">Parent Phone:</span>
+                            <span class="font-mono font-bold text-white text-[11px]" id="firebase-father-phone">---</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شريط أزرق سفلي للبطاقة -->
+                <div class="h-3 bg-gradient-to-r from-blue-600 to-blue-700 w-full"></div>
+            </section>
+
+            <!-- الباقات والأذكار والمنتجات والامتحانات -->
+            <div class="space-y-6 lg:col-span-2 flex flex-col">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- قسم الباقات -->
+                    <section class="bg-blue-950/80 border border-blue-600/50 rounded-3xl p-5 shadow-xl flex flex-col justify-between backdrop-blur-sm">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-blue-800/60 pb-3 mb-3">
+                                <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-box-archive text-blue-400"></i> الباقات المشترك بها
+                                </h2>
+                            </div>
+                            <div class="py-2" id="packageDisplayArea">
+                                <div class="bg-blue-900/50 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-2 text-blue-400 shadow-sm border border-blue-700/50">
+                                    <i class="fa-solid fa-folder-open text-base"></i>
+                                </div>
+                                <p class="text-blue-300 text-xs font-semibold text-center" id="packageDescText">لا يوجد باقة نشطة حالياً</p>
+                            </div>
+                        </div>
+                        <button onclick="window.location.href='index.html#packages'" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 mt-4 cursor-pointer">
+                            <i class="fa-solid fa-store"></i> عرض وتفعيل الباقات
+                        </button>
+                    </section>
+
+                    <!-- قسم الأذكار اليومية -->
+                    <section class="bg-blue-950/80 border border-blue-600/50 rounded-3xl p-5 shadow-xl flex flex-col justify-between backdrop-blur-sm">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-blue-800/60 pb-2 mb-3">
+                                <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-book-open text-blue-400"></i> الأذكار اليومية
+                                </h2>
+                                <span class="text-[10px] text-blue-300 font-bold bg-blue-900/80 px-2.5 py-1 rounded-xl border border-blue-700/60">حصن المسلم</span>
+                            </div>
+                            <!-- قائمة الأذكار -->
+                            <div class="space-y-2 text-[11px] text-blue-100">
+                                <div class="bg-blue-900/50 p-2.5 rounded-xl border border-blue-800 font-medium">1. سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ</div>
+                                <div class="bg-blue-900/50 p-2.5 rounded-xl border border-blue-800 font-medium">2. لا إله إلا أنت سبحانك إني كنت من الظالمين</div>
+                                <div class="bg-blue-900/50 p-2.5 rounded-xl border border-blue-800 font-medium">3. استغفر الله العظيم وأتوب إليه</div>
+                                <div class="bg-blue-900/50 p-2.5 rounded-xl border border-blue-800 font-medium">4. اللهم صل وسلم على نبينا محمد</div>
+                                <div class="bg-blue-900/50 p-2.5 rounded-xl border border-blue-800 font-medium">5. لا حول ولا قوة إلا بالله العلي العظيم</div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- قسم المنتجات التي تم شراؤها من الكاريزما استور -->
+<section class="bg-blue-950/80 border border-blue-600/50 rounded-3xl p-5 shadow-xl flex flex-col justify-between backdrop-blur-sm">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-blue-800/60 pb-3 mb-4">
+                            <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                                <i class="fa-solid fa-bag-shopping text-blue-400"></i> المنتجات التي تم شراؤها من الكاريزما استور
+                            </h2>
+                        </div>
+                        <div class="py-2" id="storeProductsDisplayArea">
+                            <!-- سيتم استبدال هذا الجزء بالكروت الجديدة -->
+                            <div class="bg-blue-900/50 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-2 text-blue-400 shadow-sm border border-blue-700/50">
+                                <i class="fa-solid fa-shopping-bag text-base"></i>
+                            </div>
+                            <p class="text-blue-300 text-xs font-semibold text-center" id="storeProductsDescText">لا توجد منتجات مشتراة حالياً</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="bg-blue-950/80 border border-blue-600/50 rounded-3xl p-5 shadow-xl backdrop-blur-sm flex-grow">
+                    <div class="flex items-center justify-between border-b border-blue-800/60 pb-3 mb-4">
+                        <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fa-solid fa-file-lines text-blue-400"></i> قائمة الامتحانات والدرجات
+                        </h2>
+                        <span class="text-[10px] text-blue-300 font-semibold">تُحدث وتُضاف تلقائياً لجميع الباقات</span>
+                    </div>
+                    
+                    <div id="examsListDisplayArea" class="space-y-3">
+                        <div class="bg-blue-900/40 border border-blue-800/60 p-4 rounded-2xl text-center">
+                            <div class="w-10 h-10 bg-blue-900/80 rounded-xl flex items-center justify-center mx-auto mb-2 text-blue-400 border border-blue-700/50">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                            </div>
+                            <p class="text-blue-300 text-xs font-semibold">لا توجد امتحانات مسجلة حتى الآن، ستظهر هنا فور إتمامها أو إضافتها.</p>
+                        </div>
+                    </div>
+                </section>
+                <!-- قائمة الامتحانات والدرجات الجديدة (تم الإبقاء عليها كما طلبت) -->
+                <section class="bg-blue-950/80 border border-blue-600/50 rounded-3xl p-5 shadow-xl backdrop-blur-sm flex-grow">
+                    <div class="flex items-center justify-between border-b border-blue-800/60 pb-3 mb-4">
+                        <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                            <i class="fa-solid fa-file-lines text-blue-400"></i> قائمة الامتحانات والدرجات
+                        </h2>
+                        <span class="text-[10px] text-blue-300 font-semibold">تُحدث وتُضاف تلقائياً لجميع الباقات</span>
+                    </div>
+                    
+                    <div id="examsListDisplayArea" class="space-y-3">
+                        <div class="bg-blue-900/40 border border-blue-800/60 p-4 rounded-2xl text-center">
+                            <div class="w-10 h-10 bg-blue-900/80 rounded-xl flex items-center justify-center mx-auto mb-2 text-blue-400 border border-blue-700/50">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                            </div>
+                            <p class="text-blue-300 text-xs font-semibold">لا توجد امتحانات مسجلة حتى الآن، ستظهر هنا فور إتمامها أو إضافتها.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- زر الدعم العائم يوجه لصفحة الدعم المستقلة -->
+    <div class="fixed bottom-6 left-6 z-50">
+        <a href="support.html" rel="noopener noreferrer" class="bg-white hover:bg-blue-50 text-blue-900 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl transition-all border-2 border-blue-600 font-black cursor-pointer shadow-blue-600/50 group" title="مركز الدعم والمساعدة">
+            <i class="fa-solid fa-headset group-hover:scale-110 transition-transform"></i>
+        </a>
+    </div>
+
+    <!-- فايربيس ومنطق البيانات -->
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // إعدادات فايربيس
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
+            authDomain: "omar-12-5e10c.firebaseapp.com",
+            projectId: "omar-12-5e10c",
+            storageBucket: "omar-12-5e10c.firebasestorage.app",
+            messagingSenderId: "259543055483",
+            appId: "1:259543055483:web:45590ba2be3a52ce8776de",
+            measurementId: "G-RJCWWZJYJT"
+        };
+
+        // دالة لتطهير المدخلات لمنع ثغرات XSS
+        function sanitizeText(str) {
+            if (!str) return '';
+            const temp = document.createElement('div');
+            temp.textContent = str;
+            return temp.innerHTML;
+        }
+
+        // دالة للتحقق والترشيح الآمن للروابط
+        function sanitizeUrl(url, fallback) {
+            if (!url) return fallback;
+            try {
+                const parsed = new URL(url, window.location.origin);
+                if (['http:', 'https:', 'data:'].includes(parsed.protocol)) {
+                    return parsed.href;
+                }
+            } catch (e) {
+                return fallback;
+            }
+            return fallback;
+        }
+
+        // جلب البيانات المخزنة محلياً بأمان
+        function getSafeLocalStorage(key) {
+            try {
+                const item = localStorage.getItem(key);
+                return item ? JSON.parse(item) : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserId = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            const localPackages = getSafeLocalStorage('userSubscribedPackages');
+            const localStoreProducts = getSafeLocalStorage('userStoreProducts');
+
+            function renderPackages(pkgs) {
+                if (pkgs.length > 0) {
+                    document.getElementById('packageStatusBadge').innerText = "مشترك";
+                    document.getElementById('packageStatusBadge').className = "bg-emerald-900/80 text-emerald-200 text-[11px] font-black px-2.5 py-0.5 rounded-xl border border-emerald-500 w-full truncate shadow-sm";
+                    
+                    document.getElementById('packageNameText').innerText = pkgs.map(p => sanitizeText(p.title)).join(' ، ');
+
+                    let htmlContent = '<div class="space-y-3">';
+                    pkgs.forEach((activePkg) => {
+                        const pkgImg = sanitizeUrl(activePkg.image || activePkg.img, "1.png");
+                        const pkgId = activePkg.id || activePkg.packageId || activePkg.title || '';
+                        const safeTitle = sanitizeText(activePkg.title);
+                        
+                        htmlContent += `
+                            <div class="bg-emerald-950/60 border border-emerald-600/50 p-3 rounded-2xl text-emerald-200 font-bold text-xs shadow-sm flex items-center gap-3">
+                                <img src="${pkgImg}" alt="صورة الباقة" class="w-12 h-12 rounded-xl object-cover border border-emerald-500/50 flex-shrink-0 bg-emerald-900">
+                                <div class="flex-grow text-right">
+                                    <div class="flex items-center gap-1 text-emerald-300 text-xs font-black mb-1">
+                                        <i class="fa-solid fa-check-circle text-emerald-400"></i>
+                                        <span class="leading-tight">${safeTitle}</span>
+                                    </div>
+                                    <p class="text-[10px] text-emerald-300/80">الباقة مفعلة وجاهزة للبدء 🚀</p>
+                                </div>
+                                <button onclick="goToPackageLessons('${encodeURIComponent(pkgId)}')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-2 px-3 rounded-xl text-[10px] transition-all shadow-md text-center flex-shrink-0 cursor-pointer">
+                                    دخول <i class="fa-solid fa-arrow-left mr-1"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
+                    htmlContent += '</div>';
+                    document.getElementById('packageDisplayArea').innerHTML = htmlContent;
+                }
+            }
+
+            // دالة التوجيه مع التحديث الإجباري للذاكرة المحلية
+            window.goToPackageLessons = function(encodedPkgId) {
+                const pkgId = decodeURIComponent(encodedPkgId);
+                if (pkgId) {
+                    localStorage.setItem('selectedPackageId', pkgId);
+                }
+                window.location.href = 'curriculum.html?packageId=' + encodeURIComponent(pkgId);
+            };
+
+            // == التعديل الجديد: شكل كارت الملزمة الفخم ==
+            if (localStoreProducts.length > 0) {
+                let storeHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">';
+                localStoreProducts.forEach(prod => {
+                    const prodImg = sanitizeUrl(prod.image, "https://cdn-icons-png.flaticon.com/512/3135/3135715.png");
+                    const prodTitle = sanitizeText(prod.title || prod.name);
+                    const prodDesc = sanitizeText(prod.desc || prod.description || "ملزمة الكاريزما للدرجة النهائية");
+                    const prodPrice = sanitizeText(prod.price || "---");
+                    const fileUrl = prod.fileUrl || '';
+                    
+                    storeHtml += `
+                        <div class="bg-[#1e293b] border border-blue-800/50 rounded-2xl overflow-hidden shadow-lg flex flex-col transition-transform hover:-translate-y-1">
+                            <img src="${prodImg}" alt="صورة الملزمة" class="w-full h-40 sm:h-48 object-cover border-b border-blue-800/50">
+                            <div class="p-4 flex flex-col flex-grow text-center">
+                                <h3 class="text-white text-sm sm:text-base font-black mb-1 leading-snug">${prodTitle}</h3>
+                                <p class="text-slate-400 text-[10px] sm:text-xs mb-4 flex-grow">${prodDesc}</p>
+                                
+                                <div class="border-t border-slate-700/50 pt-3 mt-auto flex justify-between items-center">
+                                    <div class="text-blue-400 font-black text-lg flex items-baseline gap-1 shrink-0">
+                                        ${prodPrice} <span class="text-[10px] text-blue-200">ج.م</span>
+                                    </div>
+                                    <div class="w-[60%]">
+                                        ${fileUrl ? `<a href="${sanitizeUrl(fileUrl)}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition-all shadow-md text-center flex items-center justify-center gap-1.5"><i class="fa-solid fa-eye"></i> عرض الملزمة</a>` : `<button onclick="alert('جاري تجهيز الرابط الخاص بك..')" class="w-full bg-slate-600 hover:bg-slate-500 text-white font-bold py-2 rounded-xl text-xs transition-all shadow-md text-center flex items-center justify-center gap-1.5"><i class="fa-solid fa-clock"></i> جاري التجهيز</button>`}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                storeHtml += '</div>';
+                document.getElementById('storeProductsDisplayArea').innerHTML = storeHtml;
+            }
+
+            if (user) {
+                currentUserId = user.uid;
+                try {
+                    let docSnap = null;
+                    const tablesToCheck = ["users", "students", "student", "Users", "Students"];
+                    
+                    for (let table of tablesToCheck) {
+                        const tempSnap = await getDoc(doc(db, table, currentUserId));
+                        if (tempSnap.exists()) { docSnap = tempSnap; break; }
+                    }
+
+                    if (!docSnap && user.email) {
+                        for (let table of tablesToCheck) {
+                            const q = query(collection(db, table), where("email", "==", user.email));
+                            const querySnapshot = await getDocs(q);
+                            if (!querySnapshot.empty) { docSnap = querySnapshot.docs[0]; break; }
+                        }
+                    }
+
+                    if (docSnap && docSnap.exists()) {
+                        const data = docSnap.data();
+                        
+                        const studentName = sanitizeText(data.name || data.fullName || user.displayName || "طالب المنصة");
+                        const studentGrade = sanitizeText(data.grade || data.level || data.class || data.educationalStage || "---");
+                        const studentPhone = sanitizeText(data.phone || data.phoneNumber || data.mobile || "---");
+                        const parentPhone = sanitizeText(data.parentPhone || data.fatherPhone || data.parentNumber || "---");
+                        const studentIdVal = sanitizeText(data.studentId || data.id || "KAR-" + currentUserId.substring(0, 6).toUpperCase());
+
+                        document.getElementById('firebase-name').innerText = studentName;
+                        document.getElementById('info-name').innerText = studentName;
+                        document.getElementById('headerStudentName').innerText = studentName;
+                        
+                        document.getElementById('firebase-id').innerText = studentIdVal;
+                        document.getElementById('firebase-level').innerText = studentGrade;
+                        document.getElementById('firebase-phone').innerText = studentPhone;
+                        document.getElementById('firebase-father-phone').innerText = parentPhone;
+
+                        let allPackages = [...localPackages];
+                        if (data.activePackageName && !allPackages.some(p => p.title === data.activePackageName)) {
+                            allPackages.push({ title: data.activePackageName, image: data.activePackageImage });
+                        }
+
+                        if (allPackages.length > 0) {
+                            renderPackages(allPackages);
+                        } else if (data.pendingPackageName) {
+                            const pendingPkg = sanitizeText(data.pendingPackageName);
+                            document.getElementById('packageStatusBadge').innerText = "معلقة";
+                            document.getElementById('packageStatusBadge').className = "bg-amber-900/80 text-amber-200 text-[11px] font-black px-2 py-0.5 rounded-xl border border-amber-500 w-full truncate shadow-sm";
+                            document.getElementById('packageNameText').innerText = pendingPkg;
+
+                            document.getElementById('packageDisplayArea').innerHTML = `
+                                <div class="bg-amber-950/40 border border-amber-600/40 p-3 rounded-2xl text-amber-200 text-xs shadow-sm space-y-2 text-right">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold">الباقة: ${pendingPkg}</span>
+                                        <span class="bg-amber-500/20 text-amber-300 text-[10px] px-2 py-0.5 rounded font-bold border border-amber-500/30">معلقة</span>
+                                    </div>
+                                    <p class="text-[10px] text-amber-300/80">أدخل كود التفعيل:</p>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="activationCodeInput" placeholder="أدخل الكود" maxlength="20" class="w-full bg-blue-900/80 border border-amber-500/50 rounded-xl px-3 py-2 text-white text-xs font-mono text-center focus:outline-none uppercase">
+                                        <button id="btn-activate-code" onclick="window.submitActivationCode()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition-all shadow cursor-pointer">تفعيل</button>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            document.getElementById('packageStatusBadge').innerText = "غير مشترك";
+                        }
+
+                        if (data.examsList && Array.isArray(data.examsList) && data.examsList.length > 0) {
+                            let examsHtml = '<div class="space-y-2">';
+                            data.examsList.forEach(exam => {
+                                const examName = sanitizeText(exam.name || exam.title || 'امتحان تعليمي');
+                                const examScore = sanitizeText(String(exam.score || exam.grade || '---'));
+                                examsHtml += `
+                                    <div class="bg-blue-900/50 border border-blue-800 p-3 rounded-2xl flex justify-between items-center text-xs shadow-sm">
+                                        <span class="font-bold text-white flex items-center gap-2">
+                                            <i class="fa-solid fa-circle-check text-emerald-400"></i> ${examName}
+                                        </span>
+                                        <span class="bg-blue-800/80 text-blue-200 px-3 py-1 rounded-xl font-mono font-bold border border-blue-700">
+                                            الدرجة: ${examScore}
+                                        </span>
+                                    </div>
+                                `;
+                            });
+                            examsHtml += '</div>';
+                            document.getElementById('examsListDisplayArea').innerHTML = examsHtml;
+                        }
+
+                        if (data.avatarUrl || user.photoURL) {
+                            const safeAvatar = sanitizeUrl(data.avatarUrl || user.photoURL, "https://cdn-icons-png.flaticon.com/512/3135/3135715.png");
+                            document.getElementById('cardAvatar').src = safeAvatar;
+                            document.getElementById('headerAvatar').src = safeAvatar;
+                        }
+                    } else {
+                        if (localPackages.length > 0) renderPackages(localPackages);
+                        const fallbackName = sanitizeText(user.displayName || "طالب الكاريزما");
+                        document.getElementById('firebase-name').innerText = fallbackName;
+                        document.getElementById('info-name').innerText = fallbackName;
+                        document.getElementById('headerStudentName').innerText = fallbackName;
+                        document.getElementById('firebase-id').innerText = "KAR-" + sanitizeText(currentUserId.substring(0, 6).toUpperCase());
+                    }
+
+                } catch (error) {
+                    // كتم الأخطاء
+                }
+            } else {
+                if (localPackages.length > 0) renderPackages(localPackages);
+                
+                const loggedUser = sanitizeText(localStorage.getItem('userName') || localStorage.getItem('currentUser') || "طالب الكاريزما");
+                document.getElementById('firebase-name').innerText = loggedUser;
+                document.getElementById('info-name').innerText = loggedUser;
+                document.getElementById('headerStudentName').innerText = loggedUser;
+            }
+        }); 
+
+        let isSubmittingCode = false;
+        window.submitActivationCode = async function() {
+            if (isSubmittingCode) return;
+
+            const codeInputEl = document.getElementById('activationCodeInput');
+            const activateBtn = document.getElementById('btn-activate-code');
+            if (!codeInputEl) return;
+            
+            const codeInput = codeInputEl.value.trim().replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 30);
+            
+            if (!codeInput) {
+                alert('يرجى إدخال كود التفعيل أولاً!');
+                return;
+            }
+
+            isSubmittingCode = true;
+            if (activateBtn) activateBtn.disabled = true;
+
+            try {
+                const codesRef = collection(db, "codes");
+                const q = query(codesRef, where("code", "==", codeInput), where("isUsed", "==", false));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    alert('عذراً، هذا الكود غير صحيح، منتهي الصلاحية، أو تم استخدامه من قبل!');
+                    return;
+                }
+
+                const codeDoc = querySnapshot.docs[0];  
+                const codeData = codeDoc.data();
+
+                await updateDoc(doc(db, "codes", codeDoc.id), {
+                    isUsed: true,
+                    usedBy: currentUserId,
+                    usedAt: new Date().toISOString()
+                });
+
+                let userSnap = null;
+                const tablesToCheck = ["users", "students", "student", "Users"];
+                for (let table of tablesToCheck) {
+                    const tempSnap = await getDoc(doc(db, table, currentUserId));
+                    if (tempSnap.exists()) {
+                        userSnap = tempSnap;
+                        await updateDoc(doc(db, table, currentUserId), {
+                            activePackageName: userSnap.data().pendingPackageName || codeData.packageTitle || "الباقة التعليمية",
+                            pendingPackageName: null
+                        });
+                        break;
+                    }
+                }
+
+                alert(`مبروك يا بطل! تم تفعيل الباقة بنجاح.`);
+                window.location.reload();
+
+            } catch (error) {
+                alert("حدث خطأ أثناء تفعيل الكود، حاول مرة أخرى.");
+            } finally {
+                isSubmittingCode = false;
+                if (activateBtn) activateBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>

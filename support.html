@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="file.enc">
+
+    <!-- === طبقات الأمان (Security Layers) === -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+
+    <title>مركز الدعم والمحادثة الفورية | منصة الكاريزما</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- خط Cairo العربي -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        // === نظام الحماية الشامل لتعقيم البيانات (Sanitization) ===
+        window.CharismaSecurity = {
+            sanitizeInput: (str) => {
+                if (typeof str !== 'string') return str;
+                return str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+            },
+            isValidURL: (url) => /^(https?:\/\/|data:image)/i.test(url),
+            safeRender: (data) => window.CharismaSecurity.sanitizeInput(String(data))
+        };
+
+        // === حماية الواجهة من الفحص والسرقة (Anti-Inspect & Anti-Copy) ===
+        document.addEventListener('contextmenu', event => event.preventDefault()); // منع الكليك يمين
+        document.onkeydown = function(e) {
+            // منع F12 و Ctrl+Shift+I و Ctrl+Shift+J و Ctrl+U
+            if (e.keyCode === 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+               (e.ctrlKey && e.keyCode === 85)) {
+                return false;
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            /* منع تحديد ونسخ النصوص للحماية */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-gray-100 min-h-screen flex flex-col justify-between">
+
+    <!-- الهيدر العلوي -->
+    <header
+        class="bg-blue-950/90 backdrop-blur-md border-b border-blue-700/50 py-3 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <div class="bg-blue-600 text-white p-2.5 rounded-2xl shadow-md shadow-blue-500/30">
+                <i class="fa-solid fa-headset text-lg"></i>
+            </div>
+            <div>
+                <span class="block text-base font-black text-white">مركز الدعم والمحادثة الفورية</span>
+                <span class="block text-[10px] text-blue-300 font-semibold">منصة الكاريزما • مستر عمر درويش</span>
+            </div>
+        </div>
+        <div>
+            <!-- أمان: إضافة rel="noopener noreferrer" -->
+            <a href="dashboard.html" rel="noopener noreferrer"
+                class="bg-white text-blue-900 hover:bg-blue-50 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>العودة للوحة التحكم</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي (الأزرار الثلاثة المنفصلة) -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6" id="mainContentSection">
+        <div
+            class="max-w-xl w-full bg-blue-950/80 border border-blue-600/50 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md text-center space-y-6">
+
+            <div
+                class="w-20 h-20 bg-white text-blue-600 rounded-3xl flex items-center justify-center mx-auto shadow-xl border-4 border-blue-600/30">
+                <i class="fa-solid fa-comments text-3xl"></i>
+            </div>
+
+            <div>
+                <h1 class="text-2xl font-black text-white mb-2">كيف يمكننا مساعدتك اليوم يا بطل؟</h1>
+                <p class="text-blue-200 text-xs leading-relaxed">كل قسم منفصل تماماً عن الآخر، اختر القسم المناسب لتفتح
+                    معك نافذة المحادثة الخاصة به.</p>
+            </div>
+
+            <!-- الأزرار الثلاثة -->
+            <div class="space-y-3 pt-2">
+
+                <!-- 1. الدعم الفني -->
+                <button onclick="openChat('support', 'الدعم الفني', 'استفسار عام ودعم فني')"
+                    class="w-full bg-white hover:bg-blue-50 text-blue-900 font-extrabold p-4 rounded-2xl transition-all shadow-lg flex items-center justify-between group border border-blue-200 cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-headset text-base"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-sm font-black">التواصل مع الدعم الفني</span>
+                            <span class="block text-[10px] text-slate-500 font-medium">لحل أي مشكلة تقنية أو استفسار
+                                عام</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-left text-blue-600"></i>
+                </button>
+
+                <!-- 2. إيصال الدفع -->
+                <button onclick="openChat('receipts', 'إيصال الدفع', 'إرسال صورة إيصال التحويل للحصول على كود التفعيل')"
+                    class="w-full bg-white hover:bg-blue-50 text-blue-900 font-extrabold p-4 rounded-2xl transition-all shadow-lg flex items-center justify-between group border border-blue-200 cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-receipt text-base"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-sm font-black">إرسال إيصال الدفع (شات داخلي)</span>
+                            <span class="block text-[10px] text-slate-500 font-medium">أرسل إسكرين التحويل واستلم كود
+                                التفعيل هنا</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-left text-blue-600"></i>
+                </button>
+
+                <!-- 3. سؤال للمستر -->
+                <button onclick="openChat('questions', 'سؤال للمستر', 'استفسار دراسي موجه للمستر عمر درويش')"
+                    class="w-full bg-white hover:bg-blue-50 text-blue-900 font-extrabold p-4 rounded-2xl transition-all shadow-lg flex items-center justify-between group border border-blue-200 cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-circle-question text-base"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="block text-sm font-black">إرسال سؤال للمستر عمر</span>
+                            <span class="block text-[10px] text-slate-500 font-medium">اسأل المستر مباشرة في أي جزئية
+                                تقف معك</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-left text-blue-600"></i>
+                </button>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- واجهة الشات الداخلي -->
+    <div id="chatBoxContainer" class="hidden flex-grow p-4 sm:p-6 max-w-3xl mx-auto w-full">
+        <div
+            class="bg-blue-950/90 border border-blue-600/60 rounded-3xl shadow-2xl backdrop-blur-md flex flex-col h-[75vh] overflow-hidden">
+
+            <!-- هيدر الشات -->
+            <div class="bg-blue-900/90 border-b border-blue-700/50 p-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-md">
+                        <i id="chatHeaderIcon" class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <h2 id="chatTitle" class="text-sm font-black text-white">الدعم الفني</h2>
+                        <span id="chatSubTitle" class="text-[10px] text-blue-300 font-semibold block">متصل الآن • محادثة
+                            منفصلة</span>
+                    </div>
+                </div>
+                <button onclick="closeChat()"
+                    class="bg-blue-800/80 hover:bg-red-600 text-white w-9 h-9 rounded-xl flex items-center justify-center text-xs transition-colors cursor-pointer border border-blue-700">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- رسائل الشات -->
+            <div id="messagesContainer" class="flex-grow p-4 overflow-y-auto space-y-3 no-scrollbar flex flex-col">
+                <div class="text-center my-auto text-blue-300 text-xs font-semibold">
+                    <i class="fa-solid fa-spinner fa-spin text-lg mb-2 block"></i>
+                    جاري تحميل المحادثة...
+                </div>
+            </div>
+
+            <!-- شريط الكتابة -->
+            <div class="bg-blue-900/80 border-t border-blue-700/50 p-3 flex items-center gap-2">
+                <label for="imageInputFile"
+                    class="bg-blue-800 hover:bg-blue-700 text-blue-200 hover:text-white p-3 rounded-xl cursor-pointer transition-colors flex items-center justify-center border border-blue-600/50 shadow-sm"
+                    title="إرفاق صورة">
+                    <i class="fa-solid fa-image text-base"></i>
+                </label>
+                <input type="file" id="imageInputFile" accept="image/*" class="hidden"
+                    onchange="previewSelectedImage(this)">
+
+                <!-- أمان: إضافة autocomplete="off" لمنع التخمين -->
+                <input type="text" id="messageInputText" placeholder="اكتب رسالتك هنا يا بطل..." autocomplete="off"
+                    class="flex-grow bg-blue-950/80 border border-blue-700/60 rounded-xl px-4 py-2.5 text-white text-xs focus:outline-none focus:border-blue-400 font-medium"
+                    onkeypress="handleKeyPress(event)">
+
+                <button onclick="sendMessage()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5 cursor-pointer">
+                    <span>إرسال</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+
+            <!-- معاينة الصورة -->
+            <div id="imagePreviewContainer"
+                class="hidden bg-blue-900/90 border-t border-blue-700 px-4 py-2 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <img id="selectedImagePreview" src="" alt="معاينة"
+                        class="w-12 h-12 object-cover rounded-lg border border-blue-500">
+                    <span class="text-[11px] text-blue-200 font-bold">تم اختيار صورة الإيصال للإرسال</span>
+                </div>
+                <button onclick="cancelImageSelection()"
+                    class="text-red-400 hover:text-red-300 text-xs font-bold px-2 py-1">إلغاء</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- الفوتر -->
+    <footer class="text-center text-xs text-blue-300 py-6 border-t border-blue-800/60">
+        جميع الحقوق محفوظة © منصة الكاريزما - مستر عمر درويش
+    </footer>
+
+    <!-- فايربيس والمنطق البرمجي المتوافق مع لوحة التحكم -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
+            authDomain: "omar-12-5e10c.firebaseapp.com",
+            projectId: "omar-12-5e10c",
+            storageBucket: "omar-12-5e10c.firebasestorage.app",
+            messagingSenderId: "259543055483",
+            appId: "1:259543055483:web:45590ba2be3a52ce8776de",
+            measurementId: "G-RJCWWZJYJT"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let currentCollectionKey = 'support';
+        let unsubscribeMessages = null;
+        let selectedImageBase64 = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                auth.signInAnonymously().catch(err => {
+                    currentUser = { uid: 'guest_' + Math.random().toString(36).substring(7), displayName: 'زائر المنصة' };
+                });
+            }
+        });
+
+        window.openChat = function (collectionKey, title, subtitle) {
+            currentCollectionKey = window.CharismaSecurity.safeRender(collectionKey);
+            document.getElementById('mainContentSection').classList.add('hidden');
+            document.getElementById('chatBoxContainer').classList.remove('hidden');
+
+            document.getElementById('chatTitle').innerText = window.CharismaSecurity.safeRender(title);
+            document.getElementById('chatSubTitle').innerText = window.CharismaSecurity.safeRender(subtitle);
+
+            const iconEl = document.getElementById('chatHeaderIcon');
+            if (currentCollectionKey === 'receipts') iconEl.className = "fa-solid fa-receipt";
+            else if (currentCollectionKey === 'questions') iconEl.className = "fa-solid fa-circle-question";
+            else iconEl.className = "fa-solid fa-headset";
+
+            loadUserMessages();
+        }
+
+        window.closeChat = function () {
+            document.getElementById('chatBoxContainer').classList.add('hidden');
+            document.getElementById('mainContentSection').classList.remove('hidden');
+            if (unsubscribeMessages) unsubscribeMessages();
+        }
+
+        function getActiveMessagesReference(userId) {
+            // توجيه الإيصالات إلى مجموعة subscription_chats لتظهر في لوحة تحكم الأدمن فوراً
+            if (currentCollectionKey === 'receipts') {
+                return collection(db, "subscription_chats", userId, "messages");
+            } else {
+                // توجيه الدعم الفني والأسئلة إلى مجموعة support_chats لتظهر في شات الإدارة
+                return collection(db, "support_chats", userId, "messages");
+            }
+        }
+
+        function loadUserMessages() {
+            if (!currentUser) return;
+            const userId = currentUser.uid;
+
+            const messagesRef = getActiveMessagesReference(userId);
+            const q = query(messagesRef, orderBy("timestamp", "asc"));
+
+            const container = document.getElementById('messagesContainer');
+
+            if (unsubscribeMessages) unsubscribeMessages();
+
+            unsubscribeMessages = onSnapshot(q, (snapshot) => {
+                container.innerHTML = '';
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <div class="text-center my-auto p-6 bg-blue-900/30 rounded-2xl border border-blue-800/50 max-w-md mx-auto">
+                            <i class="fa-solid fa-comments text-3xl text-blue-400 mb-2"></i>
+                            <p class="text-xs font-bold text-white mb-1">مرحباً بك يا بطل</p>
+                            <p class="text-[10px] text-blue-300">أرسل رسالتك أو صورة الإيصال هنا، وسيتم الرد عليك من الإدارة قريباً.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                snapshot.forEach((docSnap) => {
+                    const msg = docSnap.data();
+                    const isStudent = msg.sender === 'student';
+                    
+                    // أمان: تطهير الرسالة واسم المرسل قبل عرضهما لمنع حقن السكربتات
+                    const safeText = window.CharismaSecurity.safeRender(msg.text || msg.message || '');
+                    const safeSenderName = window.CharismaSecurity.safeRender(msg.senderName || 'الإدارة / المستر');
+
+                    let imageHtml = '';
+                    if (msg.imageUrl && window.CharismaSecurity.isValidURL(msg.imageUrl)) {
+                        imageHtml = `<a href="${msg.imageUrl}" target="_blank" rel="noopener noreferrer"><img src="${msg.imageUrl}" class="mt-2 rounded-xl max-w-xs max-h-48 object-cover border border-blue-500 shadow-md"></a>`;
+                    }
+
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `flex flex-col ${isStudent ? 'items-end' : 'items-start'} mb-3`;
+
+                    messageDiv.innerHTML = `
+                        <div class="max-w-[80%] rounded-2xl px-4 py-3 text-xs shadow-md ${isStudent ? 'bg-blue-600 text-white rounded-bl-2xl rounded-tr-2xl rounded-tl-2xl' : 'bg-blue-900 border border-blue-600 text-blue-100 rounded-br-2xl rounded-tr-2xl rounded-tl-2xl'}">
+                            <span class="block text-[9px] font-bold mb-1 opacity-80">${isStudent ? 'أنت' : safeSenderName}</span>
+                            <p class="font-medium leading-relaxed" style="word-break: break-word;">${safeText}</p>
+                            ${imageHtml}
+                        </div>
+                    `;
+                    container.appendChild(messageDiv);
+                });
+                container.scrollTop = container.scrollHeight;
+            });
+        }
+
+        window.previewSelectedImage = function (input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    selectedImageBase64 = e.target.result;
+                    document.getElementById('selectedImagePreview').src = selectedImageBase64;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        window.cancelImageSelection = function () {
+            selectedImageBase64 = null;
+            document.getElementById('imageInputFile').value = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+        }
+
+        // أمان: منع إرسال الرسائل بشكل متكرر وسريع (Rate Limiting)
+        let isSending = false;
+        window.sendMessage = async function () {
+            if (isSending) return;
+            
+            const textInput = document.getElementById('messageInputText');
+            // تطهير المدخل قبل الإرسال كخط دفاع أول
+            const text = window.CharismaSecurity.safeRender(textInput.value.trim());
+
+            if (!text && !selectedImageBase64) return;
+            if (!currentUser) {
+                alert('يرجى تسجيل الدخول أولاً');
+                return;
+            }
+
+            isSending = true;
+            const userId = currentUser.uid;
+
+            try {
+                const messagesRef = getActiveMessagesReference(userId);
+
+                await addDoc(messagesRef, {
+                    sender: 'student',
+                    senderName: window.CharismaSecurity.safeRender(currentUser.displayName || 'طالب المنصة'),
+                    text: text,
+                    message: text,
+                    imageUrl: selectedImageBase64 || null,
+                    timestamp: serverTimestamp(),
+                    createdAt: serverTimestamp()
+                });
+
+                textInput.value = '';
+                cancelImageSelection();
+
+            } catch (error) {
+                // إخفاء الأخطاء الحساسة في الكونسول
+                alert("حدث خطأ أثناء الإرسال. تأكد من حجم الصورة أو جودة الاتصال بالإنترنت.");
+            } finally {
+                isSending = false;
+            }
+        }
+
+        window.handleKeyPress = function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+
+</html>

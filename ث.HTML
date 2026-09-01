@@ -1,0 +1,426 @@
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- === طبقات الحماية الـ 15 (Security Layers) === -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <link rel="icon" type="image/png" href="file.enc">
+
+    <title>إتمام شراء المنتج | منصة الكاريزما</title>
+    <!-- استيراد مكتبة Tailwind CSS وخط كايرو -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.92), rgba(30, 58, 138, 0.92), rgba(15, 23, 42, 0.92)), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-animate {
+            animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+
+    <script>
+        // === منظومة الحماية الدفاعية ===
+        (function () {
+            if (window.top !== window.self) window.top.location = window.self.location;
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('dragstart', event => event.preventDefault());
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key)) ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                }
+            });
+
+            Object.freeze(window.location);
+
+            window.CharismaSecurity = {
+                sanitize: (str) => {
+                    if (typeof str !== 'string') return '';
+                    return str.replace(/[<>&"']/g, m => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[m]));
+                },
+                isSpamming: (() => {
+                    let lastClick = 0;
+                    return () => {
+                        const now = Date.now();
+                        if (now - lastClick < 2000) return true; 
+                        lastClick = now;
+                        return false;
+                    };
+                })()
+            };
+        })();
+    </script>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+
+    <header class="w-full bg-white/95 backdrop-blur-md text-slate-800 px-4 md:px-6 h-20 sticky top-0 z-50 shadow-sm border-b border-slate-200 flex items-center">
+        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <a href="index.html" class="flex items-center shrink-0">
+                <!-- اللوجو مربع كما طلبت -->
+                <img src="mr.jpeg" alt="منصة الكاريزما" class="w-14 h-14 md:w-20 md:h-20 object-cover rounded-lg border border-slate-200 shadow-sm">
+            </a>
+            <div class="flex items-center gap-3">
+                <span id="welcomeUser" class="font-black text-xs md:text-sm text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">أهلاً بك يا بطل</span>
+                <a href="index.html#charisma-store" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-3 py-2 rounded-xl text-xs transition-all">العودة للمتجر</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="py-12 px-4 md:px-6 flex-grow">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="text-center mb-10">
+                <h1 class="text-3xl lg:text-4xl font-black text-white">إتمام شراء المنتج من الكاريزما استور</h1>
+                <p class="text-slate-300 mt-2 text-sm md:text-base">احصل على أقوى الملازم والملخصات الحصرية لتضمن الدرجة النهائية.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <div class="lg:col-span-7 bg-slate-900/95 border border-slate-700/80 rounded-3xl p-6 md:p-8 shadow-2xl">
+                    <h2 class="text-xl font-black text-blue-400 mb-4 flex items-center gap-2">
+                        <span>💳</span> خطوات الدفع عبر فودافون كاش
+                    </h2>
+
+                    <div class="space-y-4 text-slate-200 text-sm md:text-base leading-relaxed">
+                        <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl">
+                            <p class="font-bold text-slate-300 mb-1">1. تحويل المبلغ المطلوب:</p>
+                            <p>قم بتحويل قيمة المنتج الموضحة في الكارت عبر محفظة فودافون كاش على الرقم التالي:</p>
+                            <div class="mt-3 bg-blue-950/80 border-2 border-blue-500/60 p-3 rounded-xl flex items-center justify-between">
+                                <span id="vodafoneNumber" class="font-black text-lg md:text-xl text-blue-300 tracking-wider">01098087028</span>
+                                <button onclick="copyNumber()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all cursor-pointer">نسخ الرقم</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800/80 border border-slate-700 p-4 rounded-2xl">
+                            <p class="font-bold text-slate-300 mb-1">2. إرسال إثبات الدفع (اسكرين شوت):</p>
+                            <p class="text-xs md:text-sm text-slate-300">عند التأكد من عملية الإرسال، قم بتصوير الشاشة لعملية التحويل، ثم قم بإرسالها مباشرة إلى الدعم الفني لاستلام كود التفعيل.</p>
+                        </div>
+
+                        <div class="bg-amber-950/40 border border-amber-500/40 p-4 rounded-2xl">
+                            <p class="font-bold text-amber-300 mb-1">⚠️ تعليمات عند الانتهاء واستلام الكود:</p>
+                            <p class="text-xs md:text-sm text-amber-200/90">بعد استلام الكود من الدعم، ضعه في خانة التفعيل وسنقوم بتوجيهك فوراً للوحة التحكم الخاصة بك لتجد المنتج هناك!</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <a id="supportBtn" href="support.html" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 px-6 rounded-xl text-center transition-all shadow-lg flex items-center justify-center gap-2 text-sm md:text-base">
+                            <span>💬 إرسال الاسكرين للدعم الفني واستلام الكود</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5">
+                    <div class="sticky top-28 space-y-4">
+                        <h3 class="text-sm font-bold text-slate-400 mb-1 text-center">المنتج الذي قمت باختياره:</h3>
+
+                        <div id="dynamicPackageCard" class="bg-slate-900/95 border-2 border-blue-500 rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden pt-8 text-white">
+                            <span class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-extrabold px-4 py-1 rounded-full shadow">المنتج المختار</span>
+
+                            <div class="w-28 h-28 mb-4 relative mt-2 mx-auto">
+                                <div class="absolute inset-0 bg-blue-400/20 rounded-full blur-xl"></div>
+                                <!-- صورة المنتج مربعة -->
+                                <img id="cardImage" src="mr.jpeg" alt="صورة المنتج" class="w-28 h-28 object-cover rounded-lg border-4 border-blue-500 relative z-10 shadow-lg mx-auto">
+                            </div>
+
+                            <h3 id="cardTitle" class="font-black text-xl text-white mb-1">تحميل المنتج...</h3>
+                            <p id="cardDesc" class="text-slate-300 text-xs mb-4 line-clamp-2">جاري تحميل تفاصيل المنتج...</p>
+
+                            <div class="w-full border-t border-slate-800/80 my-2"></div>
+
+                            <div class="w-full bg-slate-800/90 border border-slate-700/80 p-3 rounded-2xl flex items-center justify-center gap-3 my-4">
+                                <div id="cardPrice" class="bg-blue-600 text-white font-black text-xl px-4 py-1.5 rounded-xl shadow">0</div>
+                                <div class="text-right">
+                                    <span class="block text-xs text-slate-300 font-bold">ج.م</span>
+                                    <span class="block text-[11px] text-blue-400 font-extrabold">للمنتج</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/95 border border-blue-500/60 rounded-3xl p-5 shadow-xl text-center space-y-3">
+                            <label for="activationCodeInput" class="block text-xs font-bold text-blue-300">أدخل كود التفعيل المستلم من الدعم هنا:</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="activationCodeInput" autocomplete="off" placeholder="مثال: KAR-XXXXXX" class="flex-grow bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 text-center font-bold tracking-widest uppercase">
+                                <button id="btn-activate-code" onclick="verifyAndActivateCode()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all shadow-md cursor-pointer">
+                                    تفعيل المنتج
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-slate-400">سيتم التحقق من الكود وتوجيهك لملزمتك فوراً 🔒</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- === نافذة الإشعارات المدمجة === -->
+    <div id="charismaModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-slate-900 border-2 border-blue-500/50 rounded-3xl w-full max-w-sm p-6 text-center shadow-2xl modal-animate relative">
+            <div id="modalIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner border-2"></div>
+            <h3 id="modalTitle" class="text-xl font-black text-white mb-2">تنبيه</h3>
+            <p id="modalText" class="text-slate-300 text-sm mb-6 leading-relaxed"></p>
+            <button id="modalBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm cursor-pointer">
+                حسناً
+            </button>
+        </div>
+    </div>
+
+    <footer class="w-full text-center py-6 text-xs text-slate-300 border-t border-slate-800 bg-slate-950 mt-12">
+        جميع الحقوق محفوظة © منصة الكاريزما - مستر عمر درويش
+    </footer>
+
+    <!-- السكربت البرمجي -->
+    <script type="module">
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // إعدادات فايربيس (Store Project)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
+            authDomain: "omar-12-5e10c.firebaseapp.com",
+            projectId: "omar-12-5e10c",
+            storageBucket: "omar-12-5e10c.firebasestorage.app",
+            messagingSenderId: "259543055483",
+            appId: "1:259543055483:web:45590ba2be3a52ce8776de"
+        };
+
+        const app = getApps().length === 0 ? initializeApp(firebaseConfig, "StoreApp") : getApps().find(a => a.name === "StoreApp") || initializeApp(firebaseConfig, "StoreApp");
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let modalCallback = null;
+        window.showMsg = function (title, text, type = 'error', callback = null) {
+            const modal = document.getElementById('charismaModal');
+            const mIcon = document.getElementById('modalIcon');
+            const mTitle = document.getElementById('modalTitle');
+            const mText = document.getElementById('modalText');
+            const mBtn = document.getElementById('modalBtn');
+
+            modalCallback = callback;
+            mTitle.textContent = title;
+            mText.innerHTML = text;
+
+            if (type === 'success') {
+                mIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                mIcon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner border-2 border-emerald-500 bg-emerald-500/20 text-emerald-400';
+                mBtn.className = 'w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm cursor-pointer';
+            } else if (type === 'info') {
+                mIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
+                mIcon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner border-2 border-blue-500 bg-blue-500/20 text-blue-400';
+                mBtn.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm cursor-pointer';
+            } else {
+                mIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                mIcon.className = 'w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner border-2 border-rose-500 bg-rose-500/20 text-rose-400';
+                mBtn.className = 'w-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-3 rounded-xl transition-all shadow-md text-sm cursor-pointer';
+            }
+
+            modal.classList.remove('hidden');
+        };
+
+        document.getElementById('modalBtn').addEventListener('click', () => {
+            document.getElementById('charismaModal').classList.add('hidden');
+            if (modalCallback) modalCallback();
+        });
+
+        let activeUser = null;
+        onAuthStateChanged(auth, (user) => { if (user) activeUser = user; });
+
+        const currentUser = localStorage.getItem('userName') || localStorage.getItem('currentUser') || localStorage.getItem('user');
+        
+        if (!currentUser && !auth.currentUser) {
+            window.showMsg('تنبيه هام', 'يجب تسجيل الدخول أولاً لتتمكن من الشراء يا بطل!', 'error', () => {
+                window.location.href = 'login.html';
+            });
+        } else {
+            let displayName = currentUser || "بطلنا";
+            try {
+                const pUser = JSON.parse(currentUser);
+                if (typeof pUser === 'object' && pUser !== null) displayName = pUser.name || 'بطلنا';
+            } catch (e) { }
+            document.getElementById('welcomeUser').textContent = `أهلاً بك، ${window.CharismaSecurity.sanitize(displayName)}`;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const title = window.CharismaSecurity.sanitize(urlParams.get('title') || 'منتج كاريزما');
+        const price = window.CharismaSecurity.sanitize(urlParams.get('price') || '0');
+        const image = window.CharismaSecurity.sanitize(urlParams.get('image') || 'mr.jpeg');
+        const desc = window.CharismaSecurity.sanitize(urlParams.get('desc') || '');
+        const fileUrl = urlParams.get('fileUrl') || ''; 
+
+        document.getElementById('cardTitle').textContent = title;
+        document.getElementById('cardPrice').textContent = price;
+        document.getElementById('cardImage').src = window.CharismaSecurity.isValidURL(image) ? image : 'mr.jpeg';
+        document.getElementById('cardDesc').textContent = desc;
+
+        const supportBtn = document.getElementById('supportBtn');
+        const encodedMsg = encodeURIComponent(`مرحباً فريق الدعم، قمت بتحويل مبلغ ${price} جنيه لشراء منتج: "${title}" وهذه الإسكرين شوت:`);
+        supportBtn.href = `support.html?text=${encodedMsg}`;
+
+        window.copyNumber = function () {
+            navigator.clipboard.writeText('01098087028');
+            window.showMsg('تم بنجاح', 'تم نسخ رقم فودافون كاش: 01098087028', 'success');
+        }
+
+        let isSubmittingCode = false;
+
+        window.verifyAndActivateCode = async function () {
+            if (isSubmittingCode) return;
+            if (window.CharismaSecurity.isSpamming()) return; 
+
+            const rawCode = document.getElementById('activationCodeInput').value.trim().toUpperCase();
+            const codeInput = rawCode.replace(/[^A-Z0-9_-]/g, '').substring(0, 30);
+
+            if (!codeInput) {
+                window.showMsg('تنبيه', 'يرجى إدخال كود التفعيل أولاً وتأكد من صحة الحروف!', 'error');
+                return;
+            }
+
+            const userObj = auth.currentUser || activeUser;
+            if (!userObj) {
+                window.showMsg('تنبيه أمني', 'يُرجى تسجيل الدخول بحسابك للتمكن من تفعيل المنتج!', 'error', () => {
+                    window.location.href = 'login.html';
+                });
+                return;
+            }
+
+            const userId = userObj.uid;
+            const activateBtn = document.getElementById('btn-activate-code');
+
+            isSubmittingCode = true;
+            if (activateBtn) {
+                activateBtn.disabled = true;
+                activateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التفعيل...';
+            }
+
+            try {
+                let codeDocId = null;
+                let codeData = null;
+
+                const q = query(collection(db, "codes"), where("code", "==", codeInput));
+                const qs = await getDocs(q);
+
+                if (!qs.empty) {
+                    codeDocId = qs.docs[0].id;
+                    codeData = qs.docs[0].data();
+                } else {
+                    const docRef = doc(db, "codes", codeInput);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        codeDocId = docSnap.id;
+                        codeData = docSnap.data();
+                    }
+                }
+
+                if (!codeData) {
+                    window.showMsg('كود غير صحيح', 'عذراً يا بطل، هذا الكود غير صحيح، تأكد من كتابته بشكل سليم.', 'error');
+                    return;
+                }
+
+                if (codeData.isUsed === true || codeData.used === true) {
+                    window.showMsg('كود مستخدم', 'عذراً، هذا الكود تم استخدامه من قبل ولن يعمل مرة أخرى.', 'error');
+                    return;
+                }
+
+                await updateDoc(doc(db, "codes", codeDocId), {
+                    isUsed: true,
+                    used: true,
+                    usedBy: userId,
+                    usedAt: new Date().toISOString()
+                });
+
+                const safeKey = title.replace(/[.#$/\[\]]/g, '_'); 
+                await setDoc(doc(db, "users", userId), {
+                    storeProducts: { [safeKey]: true }
+                }, { merge: true });
+
+                localStorage.setItem('ownedProduct_' + title.trim(), 'true');
+                
+                let myStoreProducts = JSON.parse(localStorage.getItem('userStoreProducts')) || [];
+                if (!myStoreProducts.some(p => p.title === title)) {
+                    myStoreProducts.push({ title: title, price: price, image: image, desc: desc, fileUrl: fileUrl });
+                    localStorage.setItem('userStoreProducts', JSON.stringify(myStoreProducts));
+                }
+
+                window.showMsg('تم التفعيل بنجاح!', 'ألف مبروك يا بطل! تم تفعيل المنتج بنجاح، سيتم نقلك للوحة التحكم لفتح ملزمتك...', 'success', () => {
+                    window.location.href = 'dashboard.html#storeProductsDisplayArea';
+                });
+
+            } catch (error) {
+                window.showMsg('حدث خطأ', 'برجاء التأكد من اتصالك بالإنترنت ومن أنك قمت بتسجيل الدخول بشكل صحيح.', 'error');
+            } finally {
+                isSubmittingCode = false;
+                if (activateBtn) {
+                    activateBtn.disabled = false;
+                    activateBtn.innerHTML = 'تفعيل المنتج';
+                }
+            }
+        }
+    </script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+
+</html>
