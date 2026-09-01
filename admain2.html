@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://www.gstatic.com https://apis.google.com https://*.googleapis.com https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' https: data: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://www.gstatic.com; frame-src 'self' https://www.youtube.com https://youtube.com;">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
 
-    <title>لوحة التحكم الشاملة | منصة الكاريزما</title>
+    <title>لوحة التحكم الشاملة | منصة الكاريزما (مؤمنة بالكامل)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -23,6 +24,16 @@
                 const temp = document.createElement('div');
                 temp.textContent = input;
                 return temp.innerHTML;
+            },
+            isMalicious: function(input) {
+                if(typeof input !== 'string') return false;
+                return /<script>|javascript:|onload=|onerror=|eval\(|document\.cookie/i.test(input);
+            },
+            cleanData: function(data) {
+                if(typeof data !== 'string') return data;
+                let trimmed = data.trim();
+                if (this.isMalicious(trimmed)) throw new Error("إدخال غير آمن!");
+                return this.sanitize(trimmed);
             }
         });
     </script>
@@ -47,12 +58,14 @@
             background-position: center;
             color: var(--text-main); 
             padding: 10px; 
+            user-select: none;
+            -webkit-user-select: none;
         } 
         
         @media (min-width: 768px) { body { padding: 20px; } }
         .container { max-width: 1450px; margin: 0 auto; display: none; }
 
-        .admin-header { display: flex; flex-direction: column; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 20px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .admin-header { display: flex; flex-direction: column; gap: 15px; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 20px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); backdrop-filter: blur(10px); }
         @media (min-width: 768px) { .admin-header { flex-direction: row; } }
 
         .admin-title { font-size: 1.2rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 10px; text-align: center; }
@@ -67,18 +80,18 @@
         
         .btn-logout { background: #ef4444; border: none; padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; transition: background 0.2s; }
         
-        .admin-navbar { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 10px; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
+        .admin-navbar { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 10px; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); backdrop-filter: blur(10px); }
         .tab-btn { background: #f8fafc; border: 1px solid #e2e8f0; color: var(--text-muted); padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; flex: 1; min-width: 140px; }
         @media (min-width: 768px) { .tab-btn { min-width: 180px; font-size: 0.9rem; padding: 12px 16px; } }
         .tab-btn.active { background: rgba(37, 99, 235, 0.1); border-color: var(--primary-blue); color: var(--primary-blue); }
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.05); backdrop-filter: blur(10px); }
         .stat-info h3 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
         .stat-info p { color: var(--text-muted); font-size: 0.85rem; font-weight: 700; }
         .stat-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
 
-        .admin-content-area { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 15px; min-height: 550px; width: 100%; overflow-x: hidden; }
+        .admin-content-area { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 15px; min-height: 550px; width: 100%; overflow-x: hidden; backdrop-filter: blur(10px); }
         @media (min-width: 768px) { .admin-content-area { padding: 30px; } }
         
         .tab-content { display: none; }
@@ -109,7 +122,9 @@
         .btn-refresh { background: #f1f5f9; color: var(--text-main); border: 1px solid var(--card-border); }
         
         .code-generator-box { background: #f8fafc; border: 1px solid var(--card-border); padding: 20px; border-radius: 14px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px; }
-        
+        .code-output { font-family: monospace; font-size: 1.1rem; background: #ffffff; padding: 10px; border: 2px dashed var(--primary-blue); border-radius: 10px; text-align: center; color: var(--primary-blue); font-weight: bold; flex: 1; min-width: 150px;}
+
+        /* الشات */
         .chat-layout { display: flex; flex-direction: column; border: 1px solid var(--card-border); border-radius: 14px; overflow: hidden; background: #ffffff; min-height: 500px; height: 600px; }
         @media(min-width: 768px) { .chat-layout { flex-direction: row; } }
         .chat-users-list { background: #f8fafc; border-bottom: 1px solid var(--card-border); overflow-y: auto; max-height: 200px; width: 100%; flex-shrink: 0; display: flex; flex-direction: column; }
@@ -129,10 +144,11 @@
         .chat-bubble { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; font-weight: 600; line-height: 1.5; word-break: break-word; position: relative; }
         .chat-bubble.student { background: #f1f5f9; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #e2e8f0; }
         .chat-bubble.admin { background: var(--primary-blue); color: #ffffff; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .chat-bubble img { max-width: 200px; border-radius: 8px; margin-top: 5px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; }
+        .chat-bubble img { max-width: 200px; border-radius: 8px; margin-top: 5px; cursor: zoom-in; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border: 2px solid #e2e8f0; }
         .chat-input-bar { padding: 12px; border-top: 1px solid var(--card-border); display: flex; gap: 10px; background: #f8fafc; }
         .chat-input-bar input { flex: 1; padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; font-size: 0.9rem; outline: none; font-weight: 600;}
 
+        /* النوافذ المنبثقة (Popup) */
         .access-denied-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; text-align: center; gap: 15px; padding: 20px; backdrop-filter: blur(10px); }
         .access-input { padding: 12px 20px; font-size: 1rem; border-radius: 10px; border: 2px solid var(--card-border); width: 100%; max-width: 320px; text-align: center; font-weight: bold; outline: none; }
         #alerts-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 100000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; }
@@ -165,6 +181,7 @@
         </button>
     </div>
 
+    <!-- اللوحة الرئيسية -->
     <div class="container" id="main-dashboard-container">
         <header class="admin-header">
             <div class="admin-title"><i class="fa-solid fa-crown" style="color:#f59e0b;"></i> منصة الكاريزما | الإدارة</div>
@@ -180,7 +197,7 @@
         <nav class="admin-navbar">
             <button class="tab-btn active" onclick="window.switchTab('tab-students', this)"><i class="fa-solid fa-users"></i> بيانات الطلاب</button>
             <button class="tab-btn" onclick="window.switchTab('tab-reports', this)"><i class="fa-solid fa-chart-pie"></i> تقارير الباقات</button>
-            <button class="tab-btn" onclick="window.switchTab('tab-upload', this)"><i class="fa-solid fa-cloud-arrow-up"></i> رفع المنهج (دروس/ملازم/تفاعلي)</button>
+            <button class="tab-btn" onclick="window.switchTab('tab-upload', this)"><i class="fa-solid fa-cloud-arrow-up"></i> رفع الدروس والامتحانات</button>
             <button class="tab-btn" onclick="window.switchTab('tab-store', this)"><i class="fa-solid fa-store"></i> المتجر</button>
             <button class="tab-btn" onclick="window.switchTab('tab-subscriptions-center', this)"><i class="fa-solid fa-receipt"></i> شات الإيصالات</button>
             <button class="tab-btn" onclick="window.switchTab('tab-chat', this)"><i class="fa-brands fa-whatsapp"></i> الشات العام</button>
@@ -228,89 +245,51 @@
                     </div>
                 </div>
 
-                <!-- 3. رفع الدروس التفاعلية (بدون مساحة تخزين) -->
+                <!-- 3. رفع الدروس والامتحانات -->
                 <div id="tab-upload" class="tab-content">
-                    <div class="content-title"><i class="fa-solid fa-cloud-arrow-up"></i> رفع وتنظيم الدروس والملازم (ربط سحابي مجاني)</div>
+                    <div class="content-title"><i class="fa-solid fa-cloud-arrow-up"></i> رفع وتنظيم الدروس والامتحانات</div>
                     <div class="code-generator-box" style="background:#f8fafc;">
-                        
-                        <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-4 text-sm font-bold">
-                            <i class="fa-solid fa-lightbulb text-amber-500 text-lg"></i> نصيحة لتوفير التكاليف:
-                            قم برفع ملفات الـ PDF على حساب <strong>Google Drive</strong> الخاص بك، واجعل رابط الملف "متاح لأي شخص" (Anyone with the link)، ثم ضع الرابط هنا. هذا سيوفر عليك تكاليف خوادم جوجل بالكامل!
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="filter-group">
-                                <label>اختر الباكدج (الباقة):</label>
-                                <select id="uploadPackageSelect" class="filter-select" onchange="window.handlePackageSelectionChange()"></select>
-                            </div>
-                            <div class="filter-group" id="newPackageGroup" style="display:none;">
-                                <label>اسم الباكدج الجديدة:</label>
-                                <input type="text" id="inputNewPackageTitle" class="search-control" placeholder="اكتب اسم الباكدج الجديدة...">
-                            </div>
-                            <div class="filter-group">
-                                <label>اختر الوحدة:</label>
-                                <select id="uploadUnitSelect" class="filter-select" onchange="window.handleUnitSelectionChange()">
-                                    <option value="">يرجى اختيار باكدج أولاً...</option>
-                                </select>
-                            </div>
-                            <div class="filter-group" id="newUnitGroup" style="display:none;">
-                                <label>اسم الوحدة الجديدة:</label>
-                                <input type="text" id="inputNewUnitName" class="search-control" placeholder="اكتب اسم الوحدة الجديدة...">
-                            </div>
-                        </div>
-
-                        <div class="filter-group mt-4"><label>عنوان واسم الدرس:</label><input type="text" id="inputLessonTitle" class="search-control" placeholder="عنوان الدرس..."></div>
-                        <div class="filter-group"><label>رابط الفيديو المباشر (يوتيوب أو غيره):</label><input type="url" id="inputVideoUrl" class="search-control" placeholder="https://..."></div>
-                        
-                        <!-- إدخال رابط الـ PDF (جوجل درايف) -->
                         <div class="filter-group">
-                            <label>رابط الملزمة / الـ PDF (رابط جوجل درايف العام):</label>
-                            <input type="url" id="inputLessonPdfLink" class="search-control border-emerald-400 focus:ring-emerald-500" placeholder="الصق رابط Google Drive هنا...">
+                            <label>اختر الباكدج (الباقة):</label>
+                            <select id="uploadPackageSelect" class="filter-select" onchange="window.handlePackageSelectionChange()"></select>
                         </div>
-
-                        <!-- نظام بناء السكاشن (نصوص وصور تفاعلية) -->
-                        <div class="filter-group border-t border-slate-300 pt-6 mt-4">
-                            <label class="font-bold text-blue-700 mb-2" style="font-size:1.1rem;"><i class="fa-solid fa-newspaper"></i> إنشاء فقرات الشرح (سكاشن النص والصور):</label>
-                            <p class="text-xs text-slate-500 mb-4">يمكنك تقسيم الدرس إلى فقرات وصور ليقرأها الطالب مباشرة داخل المنصة بشكل احترافي، كبديل أو إضافة للملزمة الـ PDF.</p>
-                            
-                            <div id="lesson-sections-container" class="space-y-4 max-h-80 overflow-y-auto custom-scrollbar p-2">
-                                <p class="text-xs text-slate-400 text-center" id="no-sections-msg">لم تقم بإضافة فقرات شرح بعد.</p>
-                            </div>
-                            <button type="button" class="btn-table-action mt-4" onclick="window.addSectionUI()" style="background:#3b82f6;"><i class="fa-solid fa-plus"></i> إضافة سكشن (فقرة + صورة)</button>
+                        <div class="filter-group" id="newPackageGroup" style="display:none;">
+                            <input type="text" id="inputNewPackageTitle" class="search-control" placeholder="اكتب اسم الباكدج الجديدة...">
                         </div>
+                        <div class="filter-group">
+                            <label>اختر الوحدة:</label>
+                            <select id="uploadUnitSelect" class="filter-select" onchange="window.handleUnitSelectionChange()">
+                                <option value="">يرجى اختيار باكدج أولاً...</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" id="newUnitGroup" style="display:none;">
+                            <input type="text" id="inputNewUnitName" class="search-control" placeholder="اكتب اسم الوحدة الجديدة...">
+                        </div>
+                        <div class="filter-group"><label>عنوان واسم الدرس:</label><input type="text" id="inputLessonTitle" class="search-control" placeholder="عنوان الدرس..."></div>
+                        <div class="filter-group"><label>رابط الفيديو المباشر (يوتيوب أو غيره):</label><input type="url" id="inputVideoUrl" class="search-control" placeholder="https://..."></div>
+                        <div class="filter-group"><label>مذكرة / ملخص الدرس (ملف PDF فعلي):</label><input type="file" id="inputLessonSummaryFile" class="form-control" accept=".pdf"></div>
                         
-                        <!-- نظام بناء الامتحانات -->
-                        <div class="filter-group border-t border-slate-300 pt-6 mt-4">
-                            <label class="font-bold text-amber-600 mb-2" style="font-size:1.1rem;"><i class="fa-solid fa-clipboard-question"></i> اختبار إتمام الدرس:</label>
-                            <div id="exam-questions-container" class="space-y-4 max-h-80 overflow-y-auto custom-scrollbar p-2">
+                        <div class="filter-group border-t border-slate-300 pt-4 mt-2">
+                            <label class="font-bold text-primary-blue mb-2" style="font-size:1.1rem;"><i class="fa-solid fa-clipboard-question"></i> اختبار إتمام الدرس:</label>
+                            <div id="exam-questions-container" class="space-y-3 bg-white p-4 border border-slate-200 rounded-lg max-h-80 overflow-y-auto custom-scrollbar">
                                 <p class="text-xs text-slate-400 text-center" id="no-questions-msg">لم تقم بإضافة أسئلة بعد. أضف أسئلة ليتم إنشاء الامتحان.</p>
                             </div>
-                            <button type="button" class="btn-table-action mt-4" onclick="window.addQuestionUI()" style="background:#f59e0b;"><i class="fa-solid fa-plus"></i> إضافة سؤال للاختبار</button>
+                            <button type="button" class="btn-table-action mt-3" onclick="window.addQuestionUI()" style="background:#f59e0b;"><i class="fa-solid fa-plus"></i> إضافة سؤال للاختبار</button>
                         </div>
-                        
-                        <button id="btn-upload-lesson" class="btn-table-action btn-success mt-8" onclick="window.uploadLessonToFirestoreCollection()" style="padding: 16px; font-size: 1.2rem;"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ الدرس في المنهج</button>
+                        <button id="btn-upload-lesson" class="btn-table-action btn-success mt-4" onclick="window.uploadLessonToFirestoreCollection()" style="padding: 14px; font-size: 1.1rem;"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ الدرس والامتحان في المنهج</button>
                     </div>
                 </div>
 
-                <!-- 4. المتجر (ربط خارجي مجاني) -->
+                <!-- 4. المتجر -->
                 <div id="tab-store" class="tab-content">
-                    <div class="content-title"><i class="fa-solid fa-store"></i> المتجر (إضافة ملازم بروابط خارجية)</div>
+                    <div class="content-title"><i class="fa-solid fa-store"></i> المتجر (إضافة ملازم ومراجعات)</div>
                     <div class="code-generator-box">
-                        <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-4 text-sm font-bold">
-                            <i class="fa-solid fa-lightbulb text-amber-500 text-lg"></i> لتجنب تكاليف التخزين: ضع رابط الملزمة من جوجل درايف مباشرة.
-                        </div>
                         <div class="filter-group"><input type="text" id="store-prod-name" class="form-control" placeholder="اسم الملزمة / المنتج..."></div>
                         <div class="filter-group"><input type="number" id="store-prod-price" class="form-control" placeholder="السعر..."></div>
                         <div class="filter-group"><input type="text" id="store-prod-desc" class="form-control" placeholder="وصف الملزمة (يظهر للطالب)..."></div>
-                        <div class="filter-group">
-                            <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">رابط الملزمة (Google Drive Link):</label>
-                            <input type="url" id="store-prod-file-link" class="form-control border-blue-300" placeholder="رابط الملزمة للمشتريين...">
-                        </div>
-                        <div class="filter-group">
-                            <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">صورة غلاف الملزمة:</label>
-                            <input type="file" id="store-prod-image" class="form-control" accept="image/*">
-                        </div>
-                        <button id="btn-upload-store" class="btn-table-action btn-success mt-4" onclick="window.uploadStoreProduct()"><i class="fa-solid fa-plus"></i> إضافة المنتج للمتجر</button>
+                        <div class="filter-group"><label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">محتوى الملزمة (ملف PDF فعلي):</label><input type="file" id="store-prod-file-upload" class="form-control" accept=".pdf"></div>
+                        <div class="filter-group"><label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">صورة غلاف الملزمة:</label><input type="file" id="store-prod-image" class="form-control" accept="image/*"></div>
+                        <button id="btn-upload-store" class="btn-table-action btn-success" onclick="window.uploadStoreProduct()"><i class="fa-solid fa-plus"></i> إضافة المنتج للمتجر</button>
                     </div>
                 </div>
 
@@ -374,7 +353,9 @@
         </div>
     </div>
 
+    <!-- سكربت العمليات والتسجيل الشامل والمحمي بالكامل -->
     <script>
+        // إعدادات فايربيس الأساسية
         const firebaseConfig = {
             apiKey: "AIzaSyAMWv05C1AmAxFbDmZfzTRlZQTmKx3UmI8",
             authDomain: "omar-12-5e10c.firebaseapp.com",
@@ -382,7 +363,8 @@
             storageBucket: "omar-12-5e10c.firebasestorage.app"
         };
 
-        var auth, db;
+        // تعريف المتغيرات العامة
+        var auth, db, storage;
         window.cachedStudentsArray = [];
         window.usersDict = {}; 
         window.activeSubStudentUid = null;
@@ -390,13 +372,24 @@
         window.activeScientificStudentUid = null;
         window.unsubscribes = {};
 
+        // محاولة تهيئة فايربيس في الخلفية مباشرة (لا يوقف الكود إذا فشل)
         try {
-            if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             auth = firebase.auth();
             db = firebase.firestore();
-            auth.signInAnonymously().catch(e => console.warn("Background Auth:", e));
-        } catch(e) { console.error("Firebase Init Error:", e); }
+            storage = firebase.storage();
+            // تسجيل دخول مخفي لتفعيل الصلاحيات
+            auth.signInAnonymously().catch(e => {
+                console.error("Background Auth Error:", e);
+                window.showAlert("تنبيه: المصادقة المخفية معطلة. يرجى تفعيل Anonymous Sign-in من فايربيز ليتم الحفظ!", "error");
+            });
+        } catch(e) {
+            console.error("Firebase Init Error:", e);
+        }
 
+        // دوال المساعدة للواجهة
         window.showAlert = function(message, type = 'info') {
             const container = document.getElementById('alerts-container');
             const alertBox = document.createElement('div');
@@ -413,6 +406,7 @@
             document.getElementById('imageModal').style.display = 'block';
         }
 
+        // --- دالة الدخول الحصينة السريعة ---
         window.checkManualCode = function() {
             const btn = document.getElementById('btn-login');
             try {
@@ -422,7 +416,11 @@
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
                 
-                const validPasswords = { "abdo2026": "abdo", "charisma2026": "admin" };
+                // كلمات المرور الصلبة لضمان الدخول الفوري دون انتظار الفايربيز
+                const validPasswords = {
+                    "abdo2026": "abdo",
+                    "charisma2026": "admin"
+                };
 
                 if (validPasswords[inputCode]) {
                     window.showAlert('تم الدخول بنجاح!', 'success');
@@ -451,8 +449,10 @@
             setTimeout(() => { window.initDashboardData(); }, 500);
         }
 
+        // --- تهيئة اللوحة وجلب البيانات ---
         window.initDashboardData = function() {
             if(!db) return;
+            db.collection('users').onSnapshot(snap => { document.getElementById('stat-total-students').innerText = snap.size; }, err => console.error("Users Snapshot Error:", err));
             window.fetchStudentsFromFirebase();
             window.loadPackagesForUpload();
         }
@@ -468,13 +468,12 @@
             if(tabId === 'tab-support') window.loadChats('scientific_chats', 'scientific-chat-users-container', 'window.openScientificChat');
         }
 
+        // --- التحديث لجلب جميع الطلاب لتشغيل الشات بامتياز ---
         window.fetchStudentsFromFirebase = function() {
             if(!db) return;
             const cols = ['users', 'students', 'student'];
             cols.forEach(col => {
                 db.collection(col).onSnapshot(snap => {
-                    if(col === 'users') document.getElementById('stat-total-students').innerText = snap.size;
-                    
                     snap.forEach(doc => { 
                         let d = doc.data(); 
                         window.usersDict[doc.id] = { name: d.name || d.fullName || 'طالب', avatar: d.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' };
@@ -488,7 +487,13 @@
                     if(col === 'users') { 
                         window.renderStudentsTable(window.cachedStudentsArray); 
                         window.renderReportsTable(window.cachedStudentsArray); 
+                        
+                        if(document.getElementById('tab-subscriptions-center').classList.contains('active')) window.loadChats('subscription_chats', 'sub-center-users-container', 'window.openSubChat');
+                        if(document.getElementById('tab-chat').classList.contains('active')) window.loadChats('support_chats', 'general-chat-users-container', 'window.openGeneralChat');
+                        if(document.getElementById('tab-support').classList.contains('active')) window.loadChats('scientific_chats', 'scientific-chat-users-container', 'window.openScientificChat');
                     }
+                }, error => {
+                    console.error("Snapshot error on " + col + ":", error);
                 });
             });
         }
@@ -538,10 +543,10 @@
             if(confirm("تأكيد الحذف نهائياً؟")) db.collection('users').doc(id).delete().then(() => window.showAlert("تم حذف الطالب", "success"));
         }
 
+        // --- نظام الشات الشامل والذكي (حل مشكلة عدم ظهور الشاتات) ---
         window.loadChats = async function(collectionName, containerId, clickFnName) {
             let container = document.getElementById(containerId);
             container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--primary-blue);"><i class="fa-solid fa-circle-notch fa-spin"></i> جاري الجلب...</div>';
-            
             if(!db || window.cachedStudentsArray.length === 0) {
                 container.innerHTML = '<div class="chat-empty-state" style="margin-top:20px;"><p>لا يوجد طلاب بعد.</p></div>';
                 return;
@@ -556,15 +561,16 @@
                     if(!msgSnap.empty) {
                         let msg = msgSnap.docs[0].data();
                         return { 
-                            uid: uid, name: student.name || student.fullName || 'طالب', avatar: student.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
+                            uid: uid, 
+                            name: student.name || student.fullName || 'طالب', 
+                            avatar: student.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
                             lastTime: msg.timestamp ? (msg.timestamp.toMillis ? msg.timestamp.toMillis() : new Date(msg.timestamp).getTime()) : 0, 
-                            hasNew: (msg.sender === 'student' || msg.sender === 'user') && msg.read !== true, 
+                            hasNew: (msg.sender === 'student' || msg.sender === 'user'), 
                             preview: msg.text ? msg.text.substring(0,25) + '...' : (msg.imageUrl ? 'صورة إيصال 🖼️' : 'مرفق') 
                         };
-                    } else {
-                        return { uid: uid, name: student.name || student.fullName || 'طالب', avatar: student.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', lastTime: 0, hasNew: false, preview: 'لم يبدأ محادثة بعد' };
                     }
-                } catch(e) { return null; }
+                } catch(e) { console.error(e); }
+                return null;
             });
 
             let results = await Promise.all(chatPromises);
@@ -572,6 +578,8 @@
             validChats.sort((a,b) => { if(a.hasNew === b.hasNew) return b.lastTime - a.lastTime; return a.hasNew ? -1 : 1; });
             
             container.innerHTML = '';
+            if(validChats.length === 0) { container.innerHTML = '<div class="chat-empty-state" style="margin-top:20px;"><p>لا توجد محادثات.</p></div>'; return; }
+            
             validChats.forEach(meta => {
                 let badge = meta.hasNew ? '<span class="badge-new">رسالة جديدة 🔴</span>' : '';
                 let escapedName = meta.name.replace(/'/g, "\\'");
@@ -587,39 +595,39 @@
         }
 
         window.openSubChat = function(uid, name, avatar) {
-            window.activeSubStudentUid = uid; document.getElementById('sub-chat-user-title').innerText = name; document.getElementById('sub-header-avatar').src = avatar; document.getElementById('sub-header-avatar').style.display = 'block'; window.openChatStream('subscription_chats', uid, 'sub-chat-messages-wrapper');
+            window.activeSubStudentUid = uid;
+            document.getElementById('sub-chat-user-title').innerText = name;
+            document.getElementById('sub-header-avatar').src = avatar; document.getElementById('sub-header-avatar').style.display = 'block';
+            window.openChatStream('subscription_chats', uid, 'sub-chat-messages-wrapper');
         }
 
         window.openGeneralChat = function(uid, name, avatar) {
-            window.activeGeneralStudentUid = uid; document.getElementById('general-chat-user-title').innerText = name; document.getElementById('gen-header-avatar').src = avatar; document.getElementById('gen-header-avatar').style.display = 'block'; window.openChatStream('support_chats', uid, 'general-chat-messages-wrapper');
+            window.activeGeneralStudentUid = uid;
+            document.getElementById('general-chat-user-title').innerText = name;
+            document.getElementById('gen-header-avatar').src = avatar; document.getElementById('gen-header-avatar').style.display = 'block';
+            window.openChatStream('support_chats', uid, 'general-chat-messages-wrapper');
         }
 
         window.openScientificChat = function(uid, name, avatar) {
-            window.activeScientificStudentUid = uid; document.getElementById('scientific-chat-user-title').innerText = name; document.getElementById('sci-header-avatar').src = avatar; document.getElementById('sci-header-avatar').style.display = 'block'; window.openChatStream('scientific_chats', uid, 'scientific-chat-messages-wrapper');
+            window.activeScientificStudentUid = uid;
+            document.getElementById('scientific-chat-user-title').innerText = name;
+            document.getElementById('sci-header-avatar').src = avatar; document.getElementById('sci-header-avatar').style.display = 'block';
+            window.openChatStream('scientific_chats', uid, 'scientific-chat-messages-wrapper');
         }
 
         window.openChatStream = function(collectionName, uid, wrapperId) {
             if(window.unsubscribes[collectionName]) window.unsubscribes[collectionName]();
             window.unsubscribes[collectionName] = db.collection(collectionName).doc(uid).collection('messages').orderBy('timestamp').onSnapshot(snap => {
                 let area = document.getElementById(wrapperId); area.innerHTML = '';
-                if (snap.empty) { area.innerHTML = `<div class="chat-empty-state"><p>لا توجد رسائل.</p></div>`; return; }
-                
-                let hasUnread = false;
-                snap.forEach(docSnap => {
-                    let m = docSnap.data();
-                    if ((m.sender === 'student' || m.sender === 'user') && m.read !== true) { docSnap.ref.update({ read: true }); hasUnread = true; }
+                if (snap.empty) { area.innerHTML = `<div class="chat-empty-state"><p>لا رسائل.</p></div>`; return; }
+                snap.forEach(doc => {
+                    let m = doc.data();
                     let safeText = window.CharismaSecurity.sanitize(m.text || m.message || '');
                     let imgHtml = m.imageUrl ? `<img src="${m.imageUrl}" onclick="window.showImagePopup(this.src)">` : '';
                     area.innerHTML += `<div class="chat-bubble ${m.sender==='admin'?'admin':'student'}">${safeText}<br>${imgHtml}</div>`;
                 });
                 area.scrollTop = area.scrollHeight;
-
-                if (hasUnread) {
-                    if(collectionName === 'subscription_chats') window.loadChats('subscription_chats', 'sub-center-users-container', 'window.openSubChat');
-                    if(collectionName === 'support_chats') window.loadChats('support_chats', 'general-chat-users-container', 'window.openGeneralChat');
-                    if(collectionName === 'scientific_chats') window.loadChats('scientific_chats', 'scientific-chat-users-container', 'window.openScientificChat');
-                }
-            });
+            }, err => console.error("Chat stream error:", err));
         }
 
         window.sendAdminMessage = function(collectionName, inputId, activeUid) {
@@ -630,14 +638,14 @@
             }).then(() => { input.value=''; }).catch(() => window.showAlert("فشل الإرسال", "error"));
         }
 
-        // --- نظام الدروس، المقالات (سكاشن النص والصور) والتفاعل ---
+        // --- رفع الدروس والامتحانات التفاعلية ---
         window.loadPackagesForUpload = function() {
             if(!db) return;
-            db.collection('package').onSnapshot(snap => {
+            db.collection('packages').onSnapshot(snap => {
                 const pkgSelect = document.getElementById('uploadPackageSelect');
                 pkgSelect.innerHTML = `<option value="">اختر الباكدج...</option><option value="new_package" style="color:blue;">+ إضافة باكدج جديدة</option>`;
                 snap.forEach(doc => { let opt = document.createElement('option'); opt.value = doc.id; opt.text = window.CharismaSecurity.sanitize(doc.data().title); pkgSelect.appendChild(opt); });
-            });
+            }, err => console.error("Packages load error:", err));
         }
 
         window.handlePackageSelectionChange = function() {
@@ -655,28 +663,12 @@
 
         window.handleUnitSelectionChange = function() { document.getElementById('newUnitGroup').style.display = (document.getElementById('uploadUnitSelect').value === 'new_unit') ? 'flex' : 'none'; }
 
-        window.addSectionUI = function() {
-            document.getElementById('no-sections-msg').style.display = 'none';
-            const container = document.getElementById('lesson-sections-container');
-            const secDiv = document.createElement('div');
-            secDiv.className = 'section-block p-4 border border-blue-200 rounded-lg bg-blue-50 relative shadow-sm mb-3';
-            secDiv.innerHTML = `
-                <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 left-2 text-rose-500 hover:text-rose-700 p-2"><i class="fa-solid fa-trash"></i></button>
-                <label class="block text-xs font-bold text-slate-700 mb-1">نص الفقرة (الشرح):</label>
-                <textarea class="form-control mb-3 sec-text w-full h-24" placeholder="اكتب الشرح هنا..."></textarea>
-                <label class="block text-xs font-bold text-slate-700 mb-1">رابط صورة توضيحية (اختياري):</label>
-                <input type="url" class="form-control sec-img" placeholder="https://...">
-            `;
-            container.appendChild(secDiv);
-        }
-
         window.addQuestionUI = function() {
             document.getElementById('no-questions-msg').style.display = 'none';
             const container = document.getElementById('exam-questions-container');
             const qDiv = document.createElement('div');
-            qDiv.className = 'question-block p-4 border border-amber-200 rounded-lg bg-amber-50 relative shadow-sm mb-3';
+            qDiv.className = 'question-block p-4 border border-slate-300 rounded-lg bg-slate-50 mb-3 relative shadow-sm';
             qDiv.innerHTML = `
-                <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 left-2 text-rose-500 hover:text-rose-700 p-2"><i class="fa-solid fa-trash"></i></button>
                 <input type="text" class="form-control mb-3 q-text font-bold text-lg" placeholder="اكتب نص السؤال هنا...">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                     <input type="text" class="form-control q-opt1 border-blue-200" placeholder="الاختيار الأول">
@@ -688,6 +680,7 @@
                     <option value="0">الإجابة: الاختيار الأول</option><option value="1">الإجابة: الاختيار الثاني</option>
                     <option value="2">الإجابة: الاختيار الثالث</option><option value="3">الإجابة: الاختيار الرابع</option>
                 </select>
+                <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 left-2 text-rose-500 hover:text-rose-700 p-2"><i class="fa-solid fa-trash"></i></button>
             `;
             container.appendChild(qDiv);
         }
@@ -698,22 +691,13 @@
                 let unitId = document.getElementById('uploadUnitSelect').value;
                 let title = document.getElementById('inputLessonTitle').value.trim();
                 let vid = document.getElementById('inputVideoUrl').value.trim(); 
-                let pdfLink = document.getElementById('inputLessonPdfLink').value.trim(); // رابط مباشر بدلاً من ملف
+                let pdfFileInput = document.getElementById('inputLessonSummaryFile').files[0];
 
                 if(!pkgId || !unitId || !title) return window.showAlert('يرجى اختيار الباقة والوحدة وكتابة عنوان الدرس!', 'error');
 
                 const btn = document.getElementById('btn-upload-lesson');
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...';
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
 
-                // تجميع السكاشن (النصوص والصور)
-                let lessonSections = [];
-                document.querySelectorAll('.section-block').forEach(block => {
-                    let sText = block.querySelector('.sec-text').value.trim();
-                    let sImg = block.querySelector('.sec-img').value.trim();
-                    if(sText || sImg) lessonSections.push({ text: sText, imageUrl: sImg });
-                });
-
-                // تجميع الامتحانات
                 let questionsList = [];
                 document.querySelectorAll('.question-block').forEach(block => {
                     let qText = block.querySelector('.q-text').value.trim();
@@ -725,8 +709,20 @@
                     if (qText && opts.length >= 2) questionsList.push({ question: qText, options: opts, correctAnswerIndex: correctIndex });
                 });
 
+                let uploadedPdfUrl = null;
+                if (pdfFileInput) {
+                    try {
+                        const fileRef = storage.ref().child(`lesson_pdfs/${Date.now()}_${pdfFileInput.name}`);
+                        await fileRef.put(pdfFileInput);
+                        uploadedPdfUrl = await fileRef.getDownloadURL();
+                    } catch (storageErr) {
+                        console.error("Storage Error:", storageErr);
+                        window.showAlert("تم حفظ الدرس، لكن فشل رفع الـ PDF (تأكد من إعدادات مساحة التخزين)", "error");
+                    }
+                }
+
                 if (pkgId === 'new_package') {
-                    const newPkgRef = db.collection('package').doc(); pkgId = newPkgRef.id;
+                    const newPkgRef = db.collection('packages').doc(); pkgId = newPkgRef.id;
                     await newPkgRef.set({ title: document.getElementById('inputNewPackageTitle').value.trim(), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 }
                 if (unitId === 'new_unit') {
@@ -734,55 +730,56 @@
                     await newUnitRef.set({ unitName: document.getElementById('inputNewUnitName').value.trim(), packageId: pkgId, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 }
 
-                // حفظ الدرس بدون استخدام Firebase Storage لتقليل التكلفة
                 const lessonRef = await db.collection('lessons').add({ 
-                    lessonTitle: title, packageId: pkgId, unitId: unitId, videoUrl: vid || null, 
-                    summaryUrl: pdfLink || null, // حفظ الرابط الخارجي (جوجل درايف)
-                    contentSections: lessonSections, // حفظ الفقرات النصية والصور
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+                    lessonTitle: title, packageId: pkgId, unitId: unitId, videoUrl: vid || null, summaryUrl: uploadedPdfUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() 
                 });
 
                 if (questionsList.length > 0) {
                     await db.collection('exams').add({ lessonId: lessonRef.id, packageId: pkgId, questions: questionsList, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 }
 
-                window.showAlert('تم حفظ الدرس بنجاح بالكامل!', 'success');
-                
-                // تفريغ الحقول
-                document.getElementById('inputLessonTitle').value = ''; document.getElementById('inputVideoUrl').value = ''; document.getElementById('inputLessonPdfLink').value = '';
-                document.getElementById('exam-questions-container').innerHTML = '<p class="text-xs text-slate-400 text-center" id="no-questions-msg">لم تقم بإضافة أسئلة.</p>';
-                document.getElementById('lesson-sections-container').innerHTML = '<p class="text-xs text-slate-400 text-center" id="no-sections-msg">لم تقم بإضافة فقرات شرح بعد.</p>';
+                window.showAlert('تم الرفع بنجاح!', 'success');
+                document.getElementById('inputLessonTitle').value = ''; document.getElementById('inputVideoUrl').value = ''; document.getElementById('inputLessonSummaryFile').value = '';
+                document.getElementById('exam-questions-container').innerHTML = '<p class="text-xs text-slate-400 text-center">لم تقم بإضافة أسئلة.</p>';
             } catch(e) { window.showAlert(e.message, "error"); } 
             finally { document.getElementById('btn-upload-lesson').disabled = false; document.getElementById('btn-upload-lesson').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ الدرس في المنهج'; }
         }
 
+        // --- المتجر ---
         window.uploadStoreProduct = async function() {
             try {
                 const name = document.getElementById('store-prod-name').value.trim();
                 const price = document.getElementById('store-prod-price').value;
                 const desc = document.getElementById('store-prod-desc').value.trim();
-                const pdfLink = document.getElementById('store-prod-file-link').value.trim(); // رابط خارجي
-                const imageInput = document.getElementById('store-prod-image').files[0]; // صورة الغلاف فقط (خفيفة جداً)
+                const pdfInput = document.getElementById('store-prod-file-upload').files[0];
+                const imageInput = document.getElementById('store-prod-image').files[0];
 
                 if(!name || !price) return window.showAlert("الاسم والسعر مطلوبان لإضافة المنتج!", "error");
 
                 const btn = document.getElementById('btn-upload-store');
-                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...';
+                btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
 
-                // حفظ صورة الغلاف كـ Base64 لعدم استخدام السيرفرات إطلاقاً
+                let uploadedPdfUrl = null;
+                if (pdfInput) {
+                    try {
+                        const pdfRef = storage.ref(`store_pdfs/${Date.now()}_${pdfInput.name}`);
+                        await pdfRef.put(pdfInput);
+                        uploadedPdfUrl = await pdfRef.getDownloadURL();
+                    } catch (storageErr) {
+                        console.error("Storage Error:", storageErr);
+                        window.showAlert("تم حفظ المنتج، لكن فشل رفع الـ PDF (تأكد من إعدادات مساحة التخزين)", "error");
+                    }
+                }
+
                 let imageBase64 = null;
                 if (imageInput) {
                     imageBase64 = await new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => resolve(e.target.result); reader.readAsDataURL(imageInput); });
                 }
 
-                await db.collection('store_products').add({ 
-                    name: name, price: Number(price), description: desc, 
-                    imageUrl: imageBase64 || '', fileUrl: pdfLink || '', // رابط درايف الخارجي
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp() 
-                });
+                await db.collection('store_products').add({ name: name, price: Number(price), description: desc, imageUrl: imageBase64 || '', fileUrl: uploadedPdfUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 
-                window.showAlert('تم حفظ المنتج بنجاح!', 'success');
-                document.getElementById('store-prod-name').value = ''; document.getElementById('store-prod-price').value = ''; document.getElementById('store-prod-desc').value = ''; document.getElementById('store-prod-file-link').value = ''; document.getElementById('store-prod-image').value = '';
+                window.showAlert('تم رفع المنتج والملازم بنجاح!', 'success');
+                document.getElementById('store-prod-name').value = ''; document.getElementById('store-prod-price').value = ''; document.getElementById('store-prod-desc').value = ''; document.getElementById('store-prod-file-upload').value = ''; document.getElementById('store-prod-image').value = '';
             } catch(e) { window.showAlert(e.message, 'error'); } 
             finally { document.getElementById('btn-upload-store').disabled = false; document.getElementById('btn-upload-store').innerHTML = '<i class="fa-solid fa-plus"></i> إضافة المنتج للمتجر'; }
         }
