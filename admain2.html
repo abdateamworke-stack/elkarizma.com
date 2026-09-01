@@ -18,6 +18,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
     <script>
+        // إيقاف الحماية مؤقتاً لتسهيل الفحص
         window.CharismaSecurity = Object.freeze({
             sanitize: function(input) {
                 if(typeof input !== 'string') return input;
@@ -267,7 +268,12 @@
                         </div>
                         <div class="filter-group"><label>عنوان واسم الدرس:</label><input type="text" id="inputLessonTitle" class="search-control" placeholder="عنوان الدرس..."></div>
                         <div class="filter-group"><label>رابط الفيديو المباشر (يوتيوب أو غيره):</label><input type="url" id="inputVideoUrl" class="search-control" placeholder="https://..."></div>
-                        <div class="filter-group"><label>مذكرة / ملخص الدرس (ملف PDF فعلي):</label><input type="file" id="inputLessonSummaryFile" class="form-control" accept=".pdf"></div>
+                        
+                        <!-- تعديل هام: خانة رابط المذكرة كبديل لرفع الملف -->
+                        <div class="filter-group">
+                            <label>رابط مذكرة / ملخص الدرس (رابط جوجل درايف):</label>
+                            <input type="url" id="inputLessonPdfLink" class="form-control" placeholder="انسخ رابط جوجل درايف هنا...">
+                        </div>
                         
                         <div class="filter-group border-t border-slate-300 pt-4 mt-2">
                             <label class="font-bold text-primary-blue mb-2" style="font-size:1.1rem;"><i class="fa-solid fa-clipboard-question"></i> اختبار إتمام الدرس:</label>
@@ -287,8 +293,18 @@
                         <div class="filter-group"><input type="text" id="store-prod-name" class="form-control" placeholder="اسم الملزمة / المنتج..."></div>
                         <div class="filter-group"><input type="number" id="store-prod-price" class="form-control" placeholder="السعر..."></div>
                         <div class="filter-group"><input type="text" id="store-prod-desc" class="form-control" placeholder="وصف الملزمة (يظهر للطالب)..."></div>
-                        <div class="filter-group"><label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">محتوى الملزمة (ملف PDF فعلي):</label><input type="file" id="store-prod-file-upload" class="form-control" accept=".pdf"></div>
-                        <div class="filter-group"><label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">صورة غلاف الملزمة:</label><input type="file" id="store-prod-image" class="form-control" accept="image/*"></div>
+                        
+                        <!-- تعديل هام: خانة رابط محتوى المنتج كبديل لرفع الملف -->
+                        <div class="filter-group">
+                            <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">رابط محتوى الملزمة (جوجل درايف):</label>
+                            <input type="url" id="store-prod-file-link" class="form-control" placeholder="رابط الملزمة...">
+                        </div>
+                        
+                        <!-- تركنا رفع صورة الغلاف كملف لأنها خفيفة جداً ويتم تحويلها لـ Base64 -->
+                        <div class="filter-group">
+                            <label style="font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: -5px;">صورة غلاف الملزمة:</label>
+                            <input type="file" id="store-prod-image" class="form-control" accept="image/*">
+                        </div>
                         <button id="btn-upload-store" class="btn-table-action btn-success" onclick="window.uploadStoreProduct()"><i class="fa-solid fa-plus"></i> إضافة المنتج للمتجر</button>
                     </div>
                 </div>
@@ -565,12 +581,20 @@
                             name: student.name || student.fullName || 'طالب', 
                             avatar: student.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
                             lastTime: msg.timestamp ? (msg.timestamp.toMillis ? msg.timestamp.toMillis() : new Date(msg.timestamp).getTime()) : 0, 
-                            hasNew: (msg.sender === 'student' || msg.sender === 'user'), 
+                            hasNew: (msg.sender === 'student' || msg.sender === 'user') && msg.read !== true, 
                             preview: msg.text ? msg.text.substring(0,25) + '...' : (msg.imageUrl ? 'صورة إيصال 🖼️' : 'مرفق') 
                         };
+                    } else {
+                        return { 
+                            uid: uid, 
+                            name: student.name || student.fullName || 'طالب', 
+                            avatar: student.avatarUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', 
+                            lastTime: 0, 
+                            hasNew: false, 
+                            preview: 'لم يبدأ محادثة بعد' 
+                        };
                     }
-                } catch(e) { console.error(e); }
-                return null;
+                } catch(e) { return null; }
             });
 
             let results = await Promise.all(chatPromises);
@@ -619,15 +643,29 @@
             if(window.unsubscribes[collectionName]) window.unsubscribes[collectionName]();
             window.unsubscribes[collectionName] = db.collection(collectionName).doc(uid).collection('messages').orderBy('timestamp').onSnapshot(snap => {
                 let area = document.getElementById(wrapperId); area.innerHTML = '';
-                if (snap.empty) { area.innerHTML = `<div class="chat-empty-state"><p>لا رسائل.</p></div>`; return; }
-                snap.forEach(doc => {
-                    let m = doc.data();
+                if (snap.empty) { area.innerHTML = `<div class="chat-empty-state"><p>لا توجد رسائل.</p></div>`; return; }
+                
+                let hasUnread = false;
+
+                snap.forEach(docSnap => {
+                    let m = docSnap.data();
+                    if ((m.sender === 'student' || m.sender === 'user') && m.read !== true) {
+                        docSnap.ref.update({ read: true });
+                        hasUnread = true;
+                    }
                     let safeText = window.CharismaSecurity.sanitize(m.text || m.message || '');
                     let imgHtml = m.imageUrl ? `<img src="${m.imageUrl}" onclick="window.showImagePopup(this.src)">` : '';
                     area.innerHTML += `<div class="chat-bubble ${m.sender==='admin'?'admin':'student'}">${safeText}<br>${imgHtml}</div>`;
                 });
+                
                 area.scrollTop = area.scrollHeight;
-            }, err => console.error("Chat stream error:", err));
+
+                if (hasUnread) {
+                    if(collectionName === 'subscription_chats') window.loadChats('subscription_chats', 'sub-center-users-container', 'window.openSubChat');
+                    if(collectionName === 'support_chats') window.loadChats('support_chats', 'general-chat-users-container', 'window.openGeneralChat');
+                    if(collectionName === 'scientific_chats') window.loadChats('scientific_chats', 'scientific-chat-users-container', 'window.openScientificChat');
+                }
+            });
         }
 
         window.sendAdminMessage = function(collectionName, inputId, activeUid) {
@@ -639,14 +677,15 @@
         }
 
         // --- رفع الدروس والامتحانات التفاعلية ---
-window.loadPackagesForUpload = function() {
-    if(!db) return;
-    db.collection('package').onSnapshot(snap => { // تم التعديل لـ package
-        const pkgSelect = document.getElementById('uploadPackageSelect');
-        pkgSelect.innerHTML = `<option value="">اختر الباكدج...</option><option value="new_package" style="color:blue;">+ إضافة باكدج جديدة</option>`;
-        snap.forEach(doc => { let opt = document.createElement('option'); opt.value = doc.id; opt.text = window.CharismaSecurity.sanitize(doc.data().title); pkgSelect.appendChild(opt); });
-    }, err => console.error("Packages load error:", err));
-}
+        window.loadPackagesForUpload = function() {
+            if(!db) return;
+            db.collection('package').onSnapshot(snap => {
+                const pkgSelect = document.getElementById('uploadPackageSelect');
+                pkgSelect.innerHTML = `<option value="">اختر الباكدج...</option><option value="new_package" style="color:blue;">+ إضافة باكدج جديدة</option>`;
+                snap.forEach(doc => { let opt = document.createElement('option'); opt.value = doc.id; opt.text = window.CharismaSecurity.sanitize(doc.data().title); pkgSelect.appendChild(opt); });
+            }, err => console.error("Packages load error:", err));
+        }
+
         window.handlePackageSelectionChange = function() {
             const pkgId = document.getElementById('uploadPackageSelect').value;
             document.getElementById('newPackageGroup').style.display = (pkgId === 'new_package') ? 'flex' : 'none';
@@ -690,7 +729,7 @@ window.loadPackagesForUpload = function() {
                 let unitId = document.getElementById('uploadUnitSelect').value;
                 let title = document.getElementById('inputLessonTitle').value.trim();
                 let vid = document.getElementById('inputVideoUrl').value.trim(); 
-                let pdfFileInput = document.getElementById('inputLessonSummaryFile').files[0];
+                let pdfLink = document.getElementById('inputLessonPdfLink').value.trim();
 
                 if(!pkgId || !unitId || !title) return window.showAlert('يرجى اختيار الباقة والوحدة وكتابة عنوان الدرس!', 'error');
 
@@ -708,20 +747,8 @@ window.loadPackagesForUpload = function() {
                     if (qText && opts.length >= 2) questionsList.push({ question: qText, options: opts, correctAnswerIndex: correctIndex });
                 });
 
-                let uploadedPdfUrl = null;
-                if (pdfFileInput) {
-                    try {
-                        const fileRef = storage.ref().child(`lesson_pdfs/${Date.now()}_${pdfFileInput.name}`);
-                        await fileRef.put(pdfFileInput);
-                        uploadedPdfUrl = await fileRef.getDownloadURL();
-                    } catch (storageErr) {
-                        console.error("Storage Error:", storageErr);
-                        window.showAlert("تم حفظ الدرس، لكن فشل رفع الـ PDF (تأكد من إعدادات مساحة التخزين)", "error");
-                    }
-                }
-
                 if (pkgId === 'new_package') {
-                    const newPkgRef = db.collection('packages').doc(); pkgId = newPkgRef.id;
+                    const newPkgRef = db.collection('package').doc(); pkgId = newPkgRef.id;
                     await newPkgRef.set({ title: document.getElementById('inputNewPackageTitle').value.trim(), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                 }
                 if (unitId === 'new_unit') {
@@ -730,7 +757,7 @@ window.loadPackagesForUpload = function() {
                 }
 
                 const lessonRef = await db.collection('lessons').add({ 
-                    lessonTitle: title, packageId: pkgId, unitId: unitId, videoUrl: vid || null, summaryUrl: uploadedPdfUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+                    lessonTitle: title, packageId: pkgId, unitId: unitId, videoUrl: vid || null, summaryUrl: pdfLink || null, createdAt: firebase.firestore.FieldValue.serverTimestamp() 
                 });
 
                 if (questionsList.length > 0) {
@@ -738,10 +765,10 @@ window.loadPackagesForUpload = function() {
                 }
 
                 window.showAlert('تم الرفع بنجاح!', 'success');
-                document.getElementById('inputLessonTitle').value = ''; document.getElementById('inputVideoUrl').value = ''; document.getElementById('inputLessonSummaryFile').value = '';
+                document.getElementById('inputLessonTitle').value = ''; document.getElementById('inputVideoUrl').value = ''; document.getElementById('inputLessonPdfLink').value = '';
                 document.getElementById('exam-questions-container').innerHTML = '<p class="text-xs text-slate-400 text-center">لم تقم بإضافة أسئلة.</p>';
             } catch(e) { window.showAlert(e.message, "error"); } 
-            finally { document.getElementById('btn-upload-lesson').disabled = false; document.getElementById('btn-upload-lesson').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ الدرس في المنهج'; }
+            finally { document.getElementById('btn-upload-lesson').disabled = false; document.getElementById('btn-upload-lesson').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ الدرس والامتحان في المنهج'; }
         }
 
         // --- المتجر ---
@@ -750,7 +777,7 @@ window.loadPackagesForUpload = function() {
                 const name = document.getElementById('store-prod-name').value.trim();
                 const price = document.getElementById('store-prod-price').value;
                 const desc = document.getElementById('store-prod-desc').value.trim();
-                const pdfInput = document.getElementById('store-prod-file-upload').files[0];
+                const pdfLink = document.getElementById('store-prod-file-link').value.trim();
                 const imageInput = document.getElementById('store-prod-image').files[0];
 
                 if(!name || !price) return window.showAlert("الاسم والسعر مطلوبان لإضافة المنتج!", "error");
@@ -758,27 +785,15 @@ window.loadPackagesForUpload = function() {
                 const btn = document.getElementById('btn-upload-store');
                 btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
 
-                let uploadedPdfUrl = null;
-                if (pdfInput) {
-                    try {
-                        const pdfRef = storage.ref(`store_pdfs/${Date.now()}_${pdfInput.name}`);
-                        await pdfRef.put(pdfInput);
-                        uploadedPdfUrl = await pdfRef.getDownloadURL();
-                    } catch (storageErr) {
-                        console.error("Storage Error:", storageErr);
-                        window.showAlert("تم حفظ المنتج، لكن فشل رفع الـ PDF (تأكد من إعدادات مساحة التخزين)", "error");
-                    }
-                }
-
                 let imageBase64 = null;
                 if (imageInput) {
                     imageBase64 = await new Promise((resolve) => { const reader = new FileReader(); reader.onload = (e) => resolve(e.target.result); reader.readAsDataURL(imageInput); });
                 }
 
-                await db.collection('store_products').add({ name: name, price: Number(price), description: desc, imageUrl: imageBase64 || '', fileUrl: uploadedPdfUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                await db.collection('store_products').add({ name: name, price: Number(price), description: desc, imageUrl: imageBase64 || '', fileUrl: pdfLink || '', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
 
                 window.showAlert('تم رفع المنتج والملازم بنجاح!', 'success');
-                document.getElementById('store-prod-name').value = ''; document.getElementById('store-prod-price').value = ''; document.getElementById('store-prod-desc').value = ''; document.getElementById('store-prod-file-upload').value = ''; document.getElementById('store-prod-image').value = '';
+                document.getElementById('store-prod-name').value = ''; document.getElementById('store-prod-price').value = ''; document.getElementById('store-prod-desc').value = ''; document.getElementById('store-prod-file-link').value = ''; document.getElementById('store-prod-image').value = '';
             } catch(e) { window.showAlert(e.message, 'error'); } 
             finally { document.getElementById('btn-upload-store').disabled = false; document.getElementById('btn-upload-store').innerHTML = '<i class="fa-solid fa-plus"></i> إضافة المنتج للمتجر'; }
         }
